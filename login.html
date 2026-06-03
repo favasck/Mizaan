@@ -6,7 +6,7 @@
 <title>Mizaan ميزان – Sign In</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_cmVmaW5lZC13YWxydXMtODkuY2xlcmsuYWNjb3VudHMuZGV2JA" src="https://refined-walrus-89.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+<script async crossorigin="anonymous" data-clerk-publishable-key="pk_live_Y2xlcmsubWl6YWFuLnFhJA" src="https://clerk.mizaan.qa/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -139,14 +139,25 @@ async function initLogin() {
   document.getElementById('auth-loading').style.display = 'none';
   document.getElementById('clerk-auth').style.display = 'block';
 
-  const base = window.location.origin + window.location.pathname.replace('login.html','');
+  const base = 'https://www.mizaan.qa/';
   
-  window.Clerk.mountSignIn(document.getElementById('clerk-auth'), {
-    afterSignInUrl: base + 'dashboard.html',
-    afterSignUpUrl: base + 'dashboard.html',
-    signUpUrl: base + 'login.html',
-    signUpForceRedirectUrl: base + 'dashboard.html',
-  });
+  // Check URL param to decide sign-in vs sign-up
+  const isSignUp = new URLSearchParams(window.location.search).get('mode') === 'signup';
+  const target = document.getElementById('clerk-auth');
+
+  if (isSignUp) {
+    window.Clerk.mountSignUp(target, {
+      afterSignUpUrl: base + 'dashboard.html',
+      signInUrl: base + 'login.html',
+    });
+  } else {
+    window.Clerk.mountSignIn(target, {
+      afterSignInUrl: base + 'dashboard.html',
+      afterSignUpUrl: base + 'dashboard.html',
+      signUpUrl: base + 'login.html?mode=signup',
+      signUpForceRedirectUrl: base + 'dashboard.html',
+    });
+  }
 }
 document.addEventListener('DOMContentLoaded', initLogin);
 </script>

@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
-<script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_cmVmaW5lZC13YWxydXMtODkuY2xlcmsuYWNjb3VudHMuZGV2JA" src="https://refined-walrus-89.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+<script async crossorigin="anonymous" data-clerk-publishable-key="pk_live_Y2xlcmsubWl6YWFuLnFhJA" src="https://clerk.mizaan.qa/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
 <script>
 // Auth guard — robust version
 async function initClerkAuth() {
@@ -571,7 +571,7 @@ const CFG={WA:'97455171999',FIRM:'Guardian Consulting',KEY:'mz_workspace'};
 async function signOut(){
   if(!confirm('Sign out of Mizaan?'))return;
   await window.Clerk?.signOut();
-  window.location.href='login.html';
+  window.location.href='https://www.mizaan.qa/login.html';
 }
 let lang='en';
 let WS=null; // workspace data
