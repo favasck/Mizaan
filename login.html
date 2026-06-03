@@ -6,7 +6,10 @@
 <title>Mizaan ميزان – Sign In</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script async crossorigin="anonymous" data-clerk-publishable-key="pk_live_Y2xlcmsubWl6YWFuLnFhJA" src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+<script>
+  window.__clerk_publishable_key = 'pk_live_Y2xlcmsubWl6YWFuLnFhJA';
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js" crossorigin="anonymous"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -118,17 +121,12 @@ body{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}
 
 <script>
 async function initLogin() {
-  // Wait for Clerk script tag to fire
-  const maxWait = 15000;
-  const start = Date.now();
-  while (!window.Clerk && Date.now() - start < maxWait) {
-    await new Promise(r => setTimeout(r, 150));
-  }
-  if (!window.Clerk) {
+  try {
+    await window.Clerk.load();
+  } catch(e) {
     document.getElementById('auth-loading').innerHTML = '<div class="loading-mark">م</div><div class="loading-text">Could not load login. <a href="" style="color:#7c1522">Refresh</a></div>';
     return;
   }
-  try { await window.Clerk.load({ afterSignInUrl: 'https://www.mizaan.qa/dashboard.html' }); } catch(e) { console.warn('Clerk load:', e); }
 
   // Already signed in — go straight to dashboard
   if (window.Clerk.user) {
