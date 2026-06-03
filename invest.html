@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Mizaan — Investment Readiness Score</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --m:#7c1522;--m2:#9c2232;--mbg:rgba(124,21,34,.06);--mbd:rgba(124,21,34,.18);
+  --gold:#b8892a;--gold2:#d4a843;--gold-bg:#fdf8ed;
+  --cream:#f8f4ef;--cream2:#f0ebe3;--cream3:#e4dcd2;--bg:#fff;
+  --ink:#0f0d0b;--ink2:#2d2926;--ink3:#6b6058;--ink4:#9a8e87;
+  --green:#14532d;--gbg:#f0fdf4;--gbd:rgba(20,83,45,.18);
+  --amber:#92400e;--abg:#fffbeb;--abd:rgba(146,64,14,.18);
+  --red:#b91c1c;--rbg:#fef2f2;--rbd:rgba(185,28,28,.18);
+  --blue:#1e3a5f;--bbg:#eff6ff;--bbd:rgba(30,58,95,.18);
+  --r:10px;--rl:18px;--rxl:24px;
+  --sh:0 1px 3px rgba(0,0,0,.05),0 4px 20px rgba(0,0,0,.07);
+  --sh2:0 8px 40px rgba(0,0,0,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Syne',sans-serif;background:var(--cream);color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh}
+body.rtl{direction:rtl;font-family:'Noto Naskh Arabic','Syne',sans-serif}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;background:var(--m);box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.nav-l{display:flex;align-items:center;gap:10px}
+.nav-mark{width:32px;height:32px;background:var(--gold2);border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;color:var(--ink)}
+.nav-name{font-size:15px;font-weight:700;color:white}
+.nav-ar{font-family:'Noto Naskh Arabic',serif;font-size:12px;color:rgba(255,255,255,.35);margin-left:6px}
+.nav-r{display:flex;gap:8px}
+.nb{height:32px;padding:0 14px;border-radius:100px;font-size:12px;font-weight:600;cursor:pointer;font-family:'Syne',sans-serif;transition:all .15s;border:none}
+.nb-ghost{background:rgba(255,255,255,.1);color:rgba(255,255,255,.82);border:1px solid rgba(255,255,255,.18)}
+.nb-ghost:hover{background:rgba(255,255,255,.2)}
+.nb-back{background:rgba(255,255,255,.1);color:rgba(255,255,255,.82);border:1px solid rgba(255,255,255,.18);text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.nb-back:hover{background:rgba(255,255,255,.2)}
+.wrap{max-width:600px;margin:0 auto;padding:82px 20px 80px}
+.prog-wrap{margin-bottom:28px}
+.prog-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--ink4);margin-bottom:8px;align-items:center}
+.prog-pillar{font-size:11px;font-weight:600;color:var(--m);text-transform:uppercase;letter-spacing:.07em}
+.prog-bar{height:4px;background:var(--cream3);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--m),var(--gold2));transition:width .5s ease}
+.prog-dots{display:flex;gap:3px;margin-top:8px;justify-content:center;flex-wrap:wrap}
+.prog-dot{width:5px;height:5px;border-radius:50%;background:var(--cream3);transition:all .3s;flex-shrink:0}
+.prog-dot.done{background:var(--m)}
+.prog-dot.active{background:var(--gold2);transform:scale(1.4)}
+.id-card,.q-card,.res-free{background:var(--bg);border:1px solid var(--cream3);border-radius:var(--rxl);padding:36px;box-shadow:var(--sh);position:relative;overflow:hidden;animation:qi .3s ease}
+.id-card::before,.q-card::before,.res-free::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--m),var(--gold2))}
+@keyframes qi{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.id-icon{width:64px;height:64px;background:linear-gradient(135deg,var(--mbg),var(--gold-bg));border:1px solid var(--mbd);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 14px}
+.id-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:500;color:var(--ink);letter-spacing:-.02em;margin-bottom:8px;text-align:center}
+.id-sub{font-size:13px;color:var(--ink3);line-height:1.7;max-width:400px;margin:0 auto 20px;text-align:center}
+.value-strip{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:20px}
+.vs-item{background:var(--cream);border:1px solid var(--cream3);border-radius:var(--r);padding:10px;text-align:center}
+.vs-num{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;color:var(--m)}
+.vs-lbl{font-size:9.5px;color:var(--ink3);margin-top:2px;line-height:1.3}
+.pillars-row{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:24px}
+.pp-item{background:var(--cream);border:1px solid var(--cream3);border-radius:var(--r);padding:10px 12px;text-align:center}
+.pp-ic{font-size:20px;margin-bottom:4px}
+.pp-lbl{font-size:9.5px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;line-height:1.3}
+.fg{margin-bottom:14px}
+.fl{display:block;font-size:10.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);margin-bottom:6px}
+.fl em{color:var(--m);font-style:normal;margin-left:2px}
+.fi{width:100%;background:var(--cream);border:1.5px solid var(--cream3);color:var(--ink);padding:11px 13px;border-radius:var(--r);font-size:13px;font-family:'Syne',sans-serif;transition:all .15s;outline:none;-webkit-appearance:none}
+.fi:focus{border-color:var(--m);background:white;box-shadow:0 0 0 3px rgba(124,21,34,.08)}
+.fi::placeholder{color:var(--ink4)}
+.fi option{background:white}
+.fi-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-start{width:100%;height:52px;background:var(--m);color:white;border:none;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:9px;margin-top:4px}
+.btn-start:hover{background:var(--m2);box-shadow:0 4px 20px rgba(124,21,34,.28);transform:translateY(-1px)}
+.f-priv{font-size:11px;color:var(--ink4);text-align:center;margin-top:9px}
+.q-pillar{display:inline-flex;align-items:center;gap:7px;background:var(--mbg);border:1px solid var(--mbd);border-radius:100px;padding:4px 13px;margin-bottom:14px;font-size:11px;font-weight:600;color:var(--m);text-transform:uppercase;letter-spacing:.07em}
+.q-text{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:500;color:var(--ink);line-height:1.38;margin-bottom:22px;letter-spacing:-.01em}
+.opts{display:flex;flex-direction:column;gap:9px}
+.opt{display:flex;align-items:flex-start;gap:13px;padding:13px 16px;border:1.5px solid var(--cream3);border-radius:var(--r);cursor:pointer;transition:all .18s;background:var(--cream);user-select:none}
+.opt:hover{border-color:rgba(124,21,34,.3);background:white}
+.opt.sel{border-color:var(--m);background:var(--mbg)}
+.opt-letter{width:28px;height:28px;border-radius:7px;background:var(--cream3);border:1px solid var(--cream2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--ink3);flex-shrink:0;transition:all .18s;margin-top:1px}
+.opt.sel .opt-letter{background:var(--m);border-color:var(--m);color:white}
+.opt-text{font-size:12.5px;color:var(--ink2);line-height:1.5;flex:1}
+.opt.sel .opt-text{color:var(--ink)}
+.q-nav{display:flex;gap:10px;margin-top:22px}
+.btn-next{flex:1;height:46px;background:var(--m);color:white;border:none;border-radius:var(--r);font-size:13.5px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-next:hover{background:var(--m2);transform:translateY(-1px);box-shadow:0 4px 18px rgba(124,21,34,.28)}
+.btn-next:disabled{background:var(--cream3);color:var(--ink4);cursor:not-allowed;transform:none;box-shadow:none}
+.btn-prev{height:46px;width:46px;background:transparent;border:1.5px solid var(--cream3);border-radius:var(--r);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ink3);transition:all .15s;flex-shrink:0}
+.btn-prev:hover{color:var(--ink);border-color:var(--ink3)}
+.sec-head{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--ink3);margin:22px 0 12px;display:flex;align-items:center;gap:8px}
+.sec-head::after{content:'';flex:1;height:1px;background:var(--cream3)}
+.score-hero{text-align:center;padding-bottom:24px;border-bottom:1px solid var(--cream2);margin-bottom:4px}
+.sh-num{font-family:'Cormorant Garamond',serif;font-size:80px;font-weight:500;line-height:1;margin-bottom:4px}
+.sh-grade{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+.sh-sub{font-size:13px;color:var(--ink3);max-width:340px;margin:0 auto;line-height:1.65}
+.radar-wrap{display:flex;justify-content:center;align-items:center;margin:8px 0 16px;width:100%}
+.radar-wrap canvas{width:100%!important;max-width:340px}
+.strength-card{background:var(--gbg);border:1px solid var(--gbd);border-radius:var(--rl);padding:14px 18px;margin-bottom:4px;display:flex;align-items:center;gap:12px}
+.sc-ic{font-size:22px;flex-shrink:0}
+.sc-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--green);margin-bottom:3px}
+.sc-val{font-size:14px;font-weight:600;color:var(--green)}
+.sc-sub{font-size:11.5px;color:var(--green);opacity:.75;margin-top:2px}
+.locked-section{position:relative;border-radius:var(--rl);overflow:hidden;margin-bottom:4px}
+.locked-blur-content{filter:blur(5px);pointer-events:none;user-select:none;padding:20px;background:var(--cream);border:1px solid var(--cream3);border-radius:var(--rl)}
+.locked-ov{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:linear-gradient(to bottom,rgba(248,244,239,.3),rgba(248,244,239,.95));border-radius:var(--rl)}
+.lo-lock{font-size:28px}
+.lo-title{font-size:14px;font-weight:600;color:var(--ink2);text-align:center}
+.lo-sub{font-size:12px;color:var(--ink3);text-align:center;max-width:260px;line-height:1.5}
+.price-card{background:linear-gradient(135deg,var(--gold-bg),var(--bg));border:2px solid rgba(184,137,42,.3);border-radius:var(--rxl);padding:28px 24px;margin-bottom:14px;position:relative;overflow:hidden}
+.price-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold2))}
+.pc-eyebrow{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--gold);margin-bottom:8px;text-align:center}
+.pc-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;color:var(--ink);margin-bottom:6px;text-align:center;letter-spacing:-.01em}
+.pc-sub{font-size:12.5px;color:var(--ink3);line-height:1.65;text-align:center;margin-bottom:18px}
+.pc-includes{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:18px}
+.pc-item{display:flex;align-items:flex-start;gap:7px;font-size:11.5px;color:var(--ink2);line-height:1.4}
+.pc-item::before{content:'✓';color:var(--gold);font-weight:700;flex-shrink:0;margin-top:1px}
+.pc-price{font-family:'Cormorant Garamond',serif;font-size:36px;color:var(--gold);text-align:center;margin-bottom:16px}
+.pc-price small{font-size:14px;font-family:'Syne',sans-serif;color:var(--ink3);font-weight:400}
+.btn-wa{width:100%;height:52px;display:flex;align-items:center;justify-content:center;gap:10px;background:#16a34a;color:white;border:none;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;transition:all .2s;margin-bottom:9px}
+.btn-wa:hover{background:#15803d;transform:translateY(-1px);box-shadow:0 6px 22px rgba(22,163,74,.28)}
+.btn-sec{width:100%;height:42px;background:transparent;color:var(--ink3);border:1.5px solid var(--cream3);border-radius:var(--r);font-size:13px;cursor:pointer;font-family:'Syne',sans-serif;transition:all .15s}
+.btn-sec:hover{color:var(--ink);border-color:var(--ink3)}
+.opt-in-box{background:var(--bbg);border:1px solid var(--bbd);border-radius:var(--r);padding:14px 16px;margin-bottom:14px}
+.oi-title{font-size:12.5px;font-weight:600;color:var(--blue);margin-bottom:4px}
+.oi-sub{font-size:11.5px;color:var(--blue);opacity:.8;line-height:1.55;margin-bottom:10px}
+.oi-toggle{display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none}
+.oi-pip{width:38px;height:21px;border-radius:11px;background:var(--cream3);border:2px solid var(--cream3);position:relative;transition:all .2s;flex-shrink:0}
+.oi-pip::after{content:'';position:absolute;top:2px;left:2px;width:13px;height:13px;background:var(--ink4);border-radius:50%;transition:all .2s}
+.oi-toggle.on .oi-pip{background:var(--blue);border-color:var(--blue)}
+.oi-toggle.on .oi-pip::after{left:17px;background:white}
+.oi-lbl{font-size:12px;color:var(--blue);line-height:1.4}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:white;padding:10px 22px;border-radius:100px;font-size:13px;z-index:600;box-shadow:var(--sh2);white-space:nowrap;animation:tu .25s ease}
+@keyframes tu{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
+@media(max-width:600px){
+  .nav{padding:0 1rem}.id-card,.q-card,.res-free{padding:24px 18px}
+  .pillars-row,.value-strip{grid-template-columns:1fr 1fr}
+  .fi-row{grid-template-columns:1fr}
+  .pc-includes{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-l">
+    <div class="nav-mark">م</div>
+    <span class="nav-name">Mizaan</span>
+    <span class="nav-ar">ميزان</span>
+  </div>
+  <div class="nav-r">
+    <button class="nb nb-ghost" onclick="toggleLang()" id="lang-btn">العربية</button>
+    <a class="nb nb-back" href="index.html">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      <span id="back-lbl">Back</span>
+    </a>
+  </div>
+</nav>
+
+<div class="wrap" id="wrap"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<script>
+const WA='97455171999';
+let lang='en',answers={},identity={},currentQ=-1,optIn=false;
+
+const PILLARS=[
+  {key:'financial', ic:'💰',en:'Financial Health',  ar:'الصحة المالية',  w:.25,en_desc:'Accounting, audit & forecasting', ar_desc:'المحاسبة والتدقيق والتوقعات'},
+  {key:'compliance',ic:'⚖️', en:'Compliance',        ar:'الامتثال',       w:.20,en_desc:'GTA, CR, licenses & governance',  ar_desc:'هيئة الضرائب والسجل والحوكمة'},
+  {key:'business',  ic:'🎯',en:'Business Model',    ar:'نموذج الأعمال',  w:.20,en_desc:'Revenue, customers & value prop', ar_desc:'الإيرادات والعملاء والقيمة'},
+  {key:'operations',ic:'⚙️', en:'Operations',        ar:'العمليات',       w:.15,en_desc:'Processes, tech & risk planning', ar_desc:'العمليات والتقنية وإدارة المخاطر'},
+  {key:'leadership',ic:'👥',en:'Leadership',         ar:'القيادة',        w:.10,en_desc:'Structure, HR & succession',      ar_desc:'الهيكل والموارد البشرية والخلافة'},
+  {key:'growth',    ic:'📈',en:'Growth Potential',   ar:'إمكانية النمو',  w:.10,en_desc:'Strategy, market & scalability',  ar_desc:'الاستراتيجية والسوق والتوسع'},
+];
+
+const QS=[
+  {p:'financial',en:'How are your financial records maintained?',ar:'كيف يتم الاحتفاظ بسجلاتك المالية؟',
+   opts:[{en:'External accounting firm handles everything',ar:'شركة محاسبة خارجية تتولى كل شيء',s:4},{en:'In-house dedicated accountant',ar:'محاسب داخلي متخصص',s:3},{en:'Owner uses accounting software',ar:'المالك يستخدم برنامج محاسبة',s:1},{en:'Manual records or no formal tracking',ar:'سجلات يدوية أو لا تتبع رسمي',s:0}]},
+  {p:'financial',en:'Are your financials audited by an external auditor?',ar:'هل تُدقَّق قوائمك المالية من قِبَل مدقق خارجي؟',
+   opts:[{en:'Yes — audited annually by a GTA-registered firm',ar:'نعم — مدقق سنوياً من شركة مسجلة لدى هيئة الضرائب',s:4},{en:'Yes — reviewed but not formally audited',ar:'نعم — مراجعة غير رسمية',s:2},{en:'Only when required for specific purposes',ar:'عند الحاجة لأغراض محددة فقط',s:1},{en:'Never reviewed by an external party',ar:'لم يُراجع من طرف خارجي أبداً',s:0}]},
+  {p:'financial',en:'How would you describe your business profitability?',ar:'كيف تصف ربحية عملك؟',
+   opts:[{en:'Consistently profitable and growing for 3+ years',ar:'مربح باستمرار وينمو منذ أكثر من 3 سنوات',s:4},{en:'Profitable but results vary year to year',ar:'مربح لكن النتائج تتفاوت من سنة لأخرى',s:2},{en:'Breaking even — early growth stage',ar:'عند نقطة التعادل — مرحلة النمو المبكرة',s:1},{en:'Currently operating at a loss',ar:'يعمل حالياً بخسارة',s:0}]},
+  {p:'financial',en:'Do you prepare financial forecasts and track performance against them?',ar:'هل تُعدّ توقعات مالية وتتابع الأداء مقارنةً بها؟',
+   opts:[{en:'Detailed quarterly forecasts with variance analysis',ar:'توقعات فصلية مفصلة مع تحليل الانحراف',s:4},{en:'Annual budget prepared and reviewed periodically',ar:'ميزانية سنوية تُعدّ وتُراجع دورياً',s:3},{en:'Occasional informal estimates only',ar:'تقديرات غير رسمية أحياناً فقط',s:1},{en:'No forecasting or budget planning',ar:'لا توقعات أو تخطيط للميزانية',s:0}]},
+  {p:'compliance',en:'What is your GTA income tax filing status?',ar:'ما وضع إيداع ضريبة الدخل لديك مع هيئة الضرائب؟',
+   opts:[{en:'All returns filed on time — fully up to date',ar:'جميع الإقرارات مقدمة في الوقت المحدد',s:4},{en:'Filed but occasionally with minor delays',ar:'مُيداعة مع تأخيرات بسيطة أحياناً',s:2},{en:'1–2 years of returns outstanding',ar:'سنة إلى سنتين من الإقرارات غير مقدمة',s:1},{en:'3 or more years outstanding',ar:'3 سنوات أو أكثر غير مقدمة',s:0}]},
+  {p:'compliance',en:'Are your CR and Trade License current and valid?',ar:'هل سجلك التجاري ورخصتك التجارية سارية المفعول؟',
+   opts:[{en:'Both valid with renewal calendared well in advance',ar:'كلاهما ساريان مع تخطيط مسبق للتجديد',s:4},{en:'Both valid but renewal is coming up soon',ar:'كلاهما ساريان لكن التجديد قريب',s:2},{en:'One document has expired or is at risk',ar:'أحد المستندات منتهٍ أو في خطر',s:1},{en:'Both expired or compliance status unclear',ar:'كلاهما منتهٍ أو وضع الامتثال غير واضح',s:0}]},
+  {p:'compliance',en:'Does your business have documented internal policies and procedures?',ar:'هل يمتلك عملك سياسات وإجراءات داخلية موثقة؟',
+   opts:[{en:'Fully documented, accessible, and regularly updated',ar:'موثقة بالكامل ومتاحة ومحدثة بانتظام',s:4},{en:'Key policies documented but not all updated',ar:'السياسات الرئيسية موثقة لكن ليست كلها محدثة',s:2},{en:'A few policies exist informally',ar:'بعض السياسات موجودة بشكل غير رسمي',s:1},{en:'No documented policies or procedures',ar:'لا سياسات أو إجراءات موثقة',s:0}]},
+  {p:'compliance',en:'Is there a designated person monitoring legal and regulatory changes?',ar:'هل هناك شخص مخصص لمتابعة التغييرات القانونية والتنظيمية؟',
+   opts:[{en:'Dedicated compliance officer or legal counsel',ar:'مسؤول امتثال أو مستشار قانوني مخصص',s:4},{en:'A team member handles this alongside other duties',ar:'أحد أعضاء الفريق يتولى هذا مع مهام أخرى',s:2},{en:'We rely on our accountant or external advisors',ar:'نعتمد على محاسبنا أو مستشارين خارجيين',s:1},{en:'Nobody monitors regulatory changes',ar:'لا أحد يتابع التغييرات التنظيمية',s:0}]},
+  {p:'business',en:'How diversified is your customer base?',ar:'ما مدى تنوع قاعدة عملائك؟',
+   opts:[{en:'No customer exceeds 20% of revenue — well diversified',ar:'لا يتجاوز أي عميل 20% من الإيرادات',s:4},{en:'A few key clients with manageable concentration',ar:'عملاء رئيسيون محدودون مع تركيز معقول',s:2},{en:'One or two clients represent most revenue',ar:'عميل أو اثنان يمثلان معظم الإيرادات',s:1},{en:'Fully dependent on a single client',ar:'اعتماد كامل على عميل واحد',s:0}]},
+  {p:'business',en:'How clearly defined is your competitive advantage?',ar:'ما مدى وضوح ميزتك التنافسية؟',
+   opts:[{en:'Strong, documented, clearly communicated to all stakeholders',ar:'قوية وموثقة ومُبلَّغ بها لجميع أصحاب المصلحة',s:4},{en:'Well understood internally but not formally documented',ar:'مفهومة داخلياً لكن غير موثقة رسمياً',s:2},{en:'We have some advantages but not clearly defined',ar:'لدينا بعض المزايا لكنها غير محددة بوضوح',s:1},{en:'No clear competitive advantage identified',ar:'لم نحدد ميزة تنافسية واضحة',s:0}]},
+  {p:'business',en:'How consistent and predictable is your annual revenue?',ar:'ما مدى انتظام وقابلية التنبؤ بإيراداتك السنوية؟',
+   opts:[{en:'Growing consistently year over year with good visibility',ar:'ينمو باستمرار سنة بعد سنة مع رؤية جيدة',s:4},{en:'Stable but not growing significantly',ar:'مستقرة لكن لا نمو يُذكر',s:2},{en:'Seasonal or difficult to predict',ar:'موسمية أو يصعب التنبؤ بها',s:1},{en:'Declining or highly volatile',ar:'في تراجع أو شديدة التقلب',s:0}]},
+  {p:'business',en:'Do you have a formal process to acquire new customers?',ar:'هل لديك عملية رسمية لاكتساب عملاء جدد؟',
+   opts:[{en:'Structured sales and marketing process with targets',ar:'عملية مبيعات وتسويق منظمة مع أهداف',s:4},{en:'Some marketing activity but no structured process',ar:'بعض أنشطة التسويق دون عملية منظمة',s:2},{en:'Mainly word of mouth and referrals',ar:'الاعتماد أساساً على التوصيات',s:1},{en:'No formal customer acquisition approach',ar:'لا نهج رسمي لاكتساب العملاء',s:0}]},
+  {p:'operations',en:'Are your core business processes formally documented?',ar:'هل عمليات عملك الأساسية موثقة رسمياً؟',
+   opts:[{en:'All key processes documented and consistently followed',ar:'جميع العمليات الرئيسية موثقة ومتبعة باستمرار',s:4},{en:'Most documented with some informal exceptions',ar:'معظمها موثق مع بعض الاستثناءات غير الرسمية',s:2},{en:'Partially documented — mostly in people\'s heads',ar:'موثق جزئياً — معظمه في أذهان الناس',s:1},{en:'Tasks handled reactively as they arise',ar:'المهام تُعالج بشكل تفاعلي حسب الحاجة',s:0}]},
+  {p:'operations',en:'What best describes your business technology setup?',ar:'ما الذي يصف بشكل أفضل منظومتك التقنية؟',
+   opts:[{en:'Integrated ERP or business management platform',ar:'نظام ERP أو منصة إدارة أعمال متكاملة',s:4},{en:'Accounting software plus CRM or POS system',ar:'برنامج محاسبة مع CRM أو نقاط بيع',s:3},{en:'Spreadsheets and email for most operations',ar:'جداول بيانات والبريد الإلكتروني لمعظم العمليات',s:1},{en:'WhatsApp and manual records only',ar:'واتساب والسجلات اليدوية فقط',s:0}]},
+  {p:'operations',en:'Do you have documented contingency plans for business disruptions?',ar:'هل لديك خطط طوارئ موثقة لاضطرابات الأعمال؟',
+   opts:[{en:'Formal plans for key risks, tested and updated regularly',ar:'خطط رسمية للمخاطر الرئيسية، مختبرة ومحدثة',s:4},{en:'Some risk planning exists but not formally documented',ar:'بعض التخطيط للمخاطر موجود لكن غير موثق',s:2},{en:'Informal awareness only — no written plans',ar:'وعي غير رسمي فقط — لا خطط مكتوبة',s:1},{en:'No contingency planning in place',ar:'لا تخطيط للطوارئ على الإطلاق',s:0}]},
+  {p:'leadership',en:'How is leadership and decision-making structured?',ar:'كيف يتم هيكلة القيادة واتخاذ القرار؟',
+   opts:[{en:'Formal management structure with clear roles, delegation and KPIs',ar:'هيكل إداري رسمي مع أدوار ومفوضيات ومؤشرات أداء',s:4},{en:'Small leadership team with defined but informal roles',ar:'فريق قيادي صغير بأدوار محددة غير رسمية',s:2},{en:'Owner-led with occasional input from team',ar:'يقوده المالك مع مدخلات أحياناً من الفريق',s:1},{en:'Owner makes all decisions independently',ar:'المالك يتخذ جميع القرارات باستقلالية',s:0}]},
+  {p:'leadership',en:'Does your business have a succession or continuity plan?',ar:'هل يمتلك عملك خطة خلافة أو استمرارية؟',
+   opts:[{en:'Formal succession plan with capable management in place',ar:'خطة خلافة رسمية مع إدارة قادرة',s:4},{en:'Key people identified who could step up',ar:'أشخاص رئيسيون محددون يمكنهم التقدم',s:2},{en:'Some thought given but nothing documented',ar:'بعض التفكير لكن لا شيء موثق',s:1},{en:'Business is fully dependent on the owner',ar:'العمل يعتمد بالكامل على المالك',s:0}]},
+  {p:'leadership',en:'Do you have a dedicated financial manager, accountant or CFO?',ar:'هل لديك مدير مالي أو محاسب أو CFO مخصص؟',
+   opts:[{en:'Full-time financial manager or CFO overseeing all finances',ar:'مدير مالي أو CFO بدوام كامل يشرف على المالية',s:4},{en:'Part-time or external accountant handles key tasks',ar:'محاسب بدوام جزئي أو خارجي للمهام الرئيسية',s:2},{en:'Owner manages all financial decisions',ar:'المالك يدير جميع القرارات المالية',s:1},{en:'No designated financial management',ar:'لا إدارة مالية مخصصة',s:0}]},
+  {p:'growth',en:'Does your business have a formal documented strategic plan?',ar:'هل يمتلك عملك خطة استراتيجية رسمية موثقة؟',
+   opts:[{en:'Formal written plan reviewed and updated at least annually',ar:'خطة مكتوبة رسمية تُراجع وتُحدَّث سنوياً',s:4},{en:'Strategic goals exist but not formally written down',ar:'أهداف استراتيجية موجودة لكن غير مكتوبة رسمياً',s:2},{en:'Some direction but reactive to market conditions',ar:'بعض التوجه لكن تفاعلي مع ظروف السوق',s:1},{en:'No strategic plan — day-to-day focus only',ar:'لا خطة استراتيجية — تركيز يومي فقط',s:0}]},
+  {p:'growth',en:'How actively do you track and benchmark against competitors?',ar:'ما مدى نشاطك في تتبع ومقارنة المنافسين؟',
+   opts:[{en:'Regular competitor analysis, market research and benchmarking',ar:'تحليل منتظم للمنافسين وأبحاث السوق والمقارنة',s:4},{en:'Aware of competitors but no formal tracking',ar:'على دراية بالمنافسين دون عملية تتبع رسمية',s:2},{en:'Occasional awareness, mainly through client feedback',ar:'وعي متقطع، أساساً من ردود فعل العملاء',s:1},{en:'Not actively monitoring the competitive landscape',ar:'لا مراقبة نشطة للمشهد التنافسي',s:0}]},
+  {p:'growth',en:'How scalable is your business model beyond its current size?',ar:'ما مدى قابلية نموذج عملك للتوسع بعد حجمه الحالي؟',
+   opts:[{en:'Highly scalable — systems and team ready to grow',ar:'قابل للتوسع بشكل كبير — الأنظمة والفريق جاهزان للنمو',s:4},{en:'Scalable with some investment in systems and people',ar:'قابل للتوسع مع استثمار في الأنظمة والناس',s:2},{en:'Growth would require significant restructuring',ar:'النمو يتطلب إعادة هيكلة كبيرة',s:1},{en:'Built for current scale only',ar:'مبني للحجم الحالي فقط',s:0}]},
+];
+const TOTAL=QS.length;
+
+function t(en,ar){return lang==='ar'?ar:en;}
+function toggleLang(){
+  lang=lang==='en'?'ar':'en';
+  document.body.classList.toggle('rtl',lang==='ar');
+  document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+  document.getElementById('lang-btn').textContent=lang==='en'?'العربية':'English';
+  document.getElementById('back-lbl').textContent=t('Back','رجوع');
+  rerender();
+}
+function rerender(){
+  if(currentQ===-1)renderIdentity();
+  else if(currentQ>=TOTAL)renderFreeResults();
+  else renderQuestion(currentQ);
+}
+
+function renderIdentity(){
+  document.getElementById('wrap').innerHTML=`
+  <div class="id-card">
+    <div class="id-icon">📊</div>
+    <div class="id-title">${t('Investment Readiness Score','نقاط الجاهزية للاستثمار')}</div>
+    <div class="id-sub">${t('Answer questions across 6 key areas. Get your score instantly — no sensitive financial data required.','أجب على أسئلة في 6 مجالات رئيسية. احصل على نتيجتك فوراً — لا بيانات مالية حساسة مطلوبة.')}</div>
+    <div class="value-strip">
+      <div class="vs-item"><div class="vs-num">6</div><div class="vs-lbl">${t('Scored pillars','محاور التقييم')}</div></div>
+      <div class="vs-item"><div class="vs-num">100</div><div class="vs-lbl">${t('Point scale','مقياس النقاط')}</div></div>
+      <div class="vs-item"><div class="vs-num">~5</div><div class="vs-lbl">${t('Minutes only','دقائق فقط')}</div></div>
+    </div>
+    <div class="pillars-row">
+      ${PILLARS.map(p=>`<div class="pp-item"><div class="pp-ic">${p.ic}</div><div class="pp-lbl">${t(p.en,p.ar)}</div></div>`).join('')}
+    </div>
+    <div class="fg"><label class="fl">${t('Company Name','اسم الشركة')} <em>*</em></label><input class="fi" id="id-co" type="text" placeholder="${t('Al Rashid Trading W.L.L.','شركة الراشد للتجارة')}"></div>
+    <div class="fi-row">
+      <div class="fg" style="margin-bottom:0"><label class="fl">${t('Your Name','اسمك')} <em>*</em></label><input class="fi" id="id-name" type="text" placeholder="${t('Ahmed Al-Rashid','أحمد الراشد')}"></div>
+      <div class="fg" style="margin-bottom:0"><label class="fl">${t('WhatsApp','واتساب')} <em>*</em></label><input class="fi" id="id-phone" type="tel" placeholder="+974 5XXX XXXX"></div>
+    </div>
+    <div class="fg" style="margin-top:14px"><label class="fl">${t('Industry / Sector','القطاع')}</label>
+      <select class="fi" id="id-sector">
+        <option value="trading">${t('Trading / Services','التجارة / الخدمات')}</option>
+        <option value="construction">${t('Construction / Contracting','الإنشاء / المقاولات')}</option>
+        <option value="fmcg">${t('F&B / Retail / FMCG','الأغذية / التجزئة')}</option>
+        <option value="hospitality">${t('Hospitality / Tourism','الضيافة / السياحة')}</option>
+        <option value="tech">${t('Technology / Digital','التكنولوجيا / الرقمي')}</option>
+        <option value="manufacturing">${t('Manufacturing','التصنيع')}</option>
+        <option value="other">${t('Other','أخرى')}</option>
+      </select>
+    </div>
+    <button class="btn-start" onclick="startAssessment()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      ${t('Start Questionnaire','ابدأ الاستبيان')}
+    </button>
+    <div class="f-priv">🔒 ${t('No financial figures asked. 5 minutes to complete.','لا أرقام مالية مطلوبة. 5 دقائق للإكمال.')}</div>
+  </div>`;
+}
+
+function startAssessment(){
+  const co=document.getElementById('id-co').value.trim();
+  const nm=document.getElementById('id-name').value.trim();
+  const ph=document.getElementById('id-phone').value.trim();
+  if(!co){toast(t('Company name is required.','اسم الشركة مطلوب.'));return;}
+  if(!nm){toast(t('Your name is required.','اسمك مطلوب.'));return;}
+  if(!ph){toast(t('WhatsApp number is required.','رقم واتساب مطلوب.'));return;}
+  identity={co,nm,ph,sector:document.getElementById('id-sector').value};
+  currentQ=0;renderQuestion(0);window.scrollTo(0,0);
+}
+
+const ROMAN=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV','XVI','XVII','XVIII','XIX','XX','XXI'];
+function renderQuestion(i){
+  const q=QS[i];
+  const pct=Math.round(((i+1)/TOTAL)*100);
+  const sel=answers[i];
+  const letters=['A','B','C','D'];
+  document.getElementById('wrap').innerHTML=`
+  <div class="prog-wrap">
+    <div class="prog-meta">
+      <span style="font-size:11px;font-weight:600;color:var(--ink3)">${t('Question','سؤال')} ${ROMAN[i]}</span>
+      <span style="font-size:11px;color:var(--ink4)">${pct}%</span>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" style="width:${pct}%"></div></div>
+  </div>
+  <div class="q-card">
+    <div style="font-size:11px;font-weight:600;color:var(--m);margin-bottom:10px;letter-spacing:.04em">${ROMAN[i]}</div>
+    <div class="q-text">${t(q.en,q.ar)}</div>
+    <div class="opts">
+      ${q.opts.map((o,oi)=>`
+      <div class="opt${sel===oi?' sel':''}" onclick="selectOpt(${oi})">
+        <div class="opt-letter">${letters[oi]}</div>
+        <div class="opt-text">${t(o.en,o.ar)}</div>
+      </div>`).join('')}
+    </div>
+    <div class="q-nav">
+      ${i>0?`<button class="btn-prev" onclick="prevQ()"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg></button>`:''}
+      <button class="btn-next" onclick="nextQ()" ${sel===undefined?'disabled':''} id="btn-nxt">
+        ${i===TOTAL-1
+          ?`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg> ${t('See My Score','اعرض نتيجتي')}`
+          :`${t('Next','التالي')} <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`}
+      </button>
+    </div>
+  </div>`;
+}
+
+function selectOpt(oi){
+  answers[currentQ]=oi;
+  document.querySelectorAll('.opt').forEach((el,idx)=>el.classList.toggle('sel',idx===oi));
+  document.getElementById('btn-nxt')?.removeAttribute('disabled');
+  if(currentQ<TOTAL-1)setTimeout(()=>nextQ(),300);
+}
+function nextQ(){
+  if(answers[currentQ]===undefined){toast(t('Please select an answer.','يرجى اختيار إجابة.'));return;}
+  currentQ++;
+  if(currentQ>=TOTAL)renderFreeResults();else renderQuestion(currentQ);
+  window.scrollTo(0,0);
+}
+function prevQ(){if(currentQ>0){currentQ--;renderQuestion(currentQ);window.scrollTo(0,0);}}
+
+function calcScore(){
+  const ps={};PILLARS.forEach(p=>{ps[p.key]={raw:0,max:0};});
+  QS.forEach((q,i)=>{
+    if(answers[i]!==undefined){
+      ps[q.p].raw+=q.opts[answers[i]].s;
+      ps[q.p].max+=Math.max(...q.opts.map(o=>o.s));
+    }
+  });
+  const pcts={};PILLARS.forEach(p=>{pcts[p.key]=ps[p.key].max>0?Math.round((ps[p.key].raw/ps[p.key].max)*100):0;});
+  let total=0;PILLARS.forEach(p=>{total+=pcts[p.key]*p.w;});
+  return{pcts,total:Math.round(total)};
+}
+function getBand(s){
+  if(s>=80)return{en:'Investment Ready',ar:'جاهز للاستثمار',sub:{en:'Your profile is strong. Ready to engage investors and QDB.',ar:'ملفك قوي. جاهز للتعامل مع المستثمرين وبنك قطر للتنمية.'},col:'#14532d',bg:'#f0fdf4'};
+  if(s>=60)return{en:'Growth Ready',ar:'جاهز للنمو',sub:{en:'Solid foundation. Strengthen key areas to attract investment.',ar:'أساس متين. قوّ المجالات الرئيسية لجذب الاستثمار.'},col:'#1e3a5f',bg:'#eff6ff'};
+  if(s>=40)return{en:'Developing',ar:'في طور التطوير',sub:{en:'Good start. Compliance and operations improvements will significantly raise your score.',ar:'بداية جيدة. تحسينات الامتثال والعمليات ستزيد نتيجتك بشكل كبير.'},col:'#92400e',bg:'#fffbeb'};
+  return{en:'Early Stage',ar:'مرحلة مبكرة',sub:{en:'Build compliance and financial foundations before approaching investors.',ar:'ابنِ أسس الامتثال والمالية قبل التواصل مع المستثمرين.'},col:'#b91c1c',bg:'#fef2f2'};
+}
+function etaMonths(score){
+  const g=80-score;
+  if(g<=0)return t('Already investment ready','جاهز للاستثمار الآن');
+  if(g<=10)return t('~3 months with focused effort','~3 أشهر بجهد مركّز');
+  if(g<=20)return t('~6 months with structured support','~6 أشهر بدعم منظم');
+  if(g<=30)return t('~9–12 months with a clear roadmap','~9-12 شهراً مع خارطة طريق واضحة');
+  return t('12–18 months — start with compliance first','12-18 شهراً — ابدأ بالامتثال أولاً');
+}
+function gapAction(key){
+  const a={
+    financial:{en:'Engage a GTA-registered auditor and prepare annual audited accounts.',ar:'استعن بمدقق مسجل لدى هيئة الضرائب وأعدّ القوائم المالية المدققة.'},
+    compliance:{en:'File all outstanding GTA returns immediately and renew any expired documents.',ar:'قدّم جميع إقرارات هيئة الضرائب المتأخرة فوراً وجدّد المستندات المنتهية.'},
+    business:{en:'Document your value proposition and build a structured customer acquisition process.',ar:'وثّق عرض القيمة وضع عملية منظمة لاكتساب العملاء.'},
+    operations:{en:'Document core processes and implement accounting or ERP software.',ar:'وثّق العمليات الأساسية ونفّذ برنامج محاسبة أو ERP.'},
+    leadership:{en:'Define management roles formally and identify a succession candidate.',ar:'حدّد أدوار الإدارة رسمياً وحدّد مرشحاً للخلافة.'},
+    growth:{en:'Write a 1-page strategic plan with 3 measurable goals for the next 12 months.',ar:'اكتب خطة استراتيجية من صفحة واحدة مع 3 أهداف قابلة للقياس للـ12 شهراً القادمة.'},
+  };
+  return a[key]||{en:'Work with your advisor to improve this area.',ar:'اعمل مع مستشارك لتحسين هذا المجال.'};
+}
+
+function renderFreeResults(){
+  const{pcts,total}=calcScore();
+  const band=getBand(total);
+  const sorted=[...PILLARS].map(p=>({...p,pct:pcts[p.key]})).sort((a,b)=>b.pct-a.pct);
+  const topPillar=sorted[0];
+  const gaps=sorted.slice().reverse().slice(0,3);
+
+  try{
+    const leads=JSON.parse(localStorage.getItem('mz_leads')||'[]');
+    leads.push({id:'inv_'+Date.now(),name:identity.nm,phone:identity.ph,company:identity.co,sector:identity.sector,investScore:total,investBand:band.en,pillarPcts:pcts,optIn:false,ts:Date.now(),type:'invest',date:new Date().toLocaleDateString('en-GB'),time:new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})});
+    localStorage.setItem('mz_leads',JSON.stringify(leads));
+  }catch(e){}
+
+  document.getElementById('wrap').innerHTML=`
+  <div class="res-free">
+
+    <div class="score-hero">
+      <div class="sh-num" style="color:${band.col}">${total}<span style="font-size:36px;opacity:.4;font-weight:400">/100</span></div>
+      <div class="sh-grade" style="color:${band.col}">${t(band.en,band.ar)}</div>
+      <div class="sh-sub">${t(band.sub.en,band.sub.ar)}</div>
+    </div>
+
+    <div class="sec-head">${t('Score overview — 6 pillars','نظرة عامة — 6 محاور')}</div>
+    <div class="radar-wrap"><canvas id="rc" width="300" height="300"></canvas></div>
+
+    <div class="sec-head">${t('Your top strength','أبرز نقاط قوتك')}</div>
+    <div class="strength-card">
+      <div class="sc-ic">${topPillar.ic}</div>
+      <div>
+        <div class="sc-lbl">${t('Strongest pillar','المحور الأقوى')}</div>
+        <div class="sc-val">${t(topPillar.en,topPillar.ar)} — ${topPillar.pct}%</div>
+        <div class="sc-sub">${t(topPillar.en_desc,topPillar.ar_desc)}</div>
+      </div>
+    </div>
+
+    <div class="sec-head">${t('Detailed breakdown — unlock below','التفاصيل الكاملة — افتح أدناه')}</div>
+    <div class="locked-section">
+      <div class="locked-blur-content">
+        ${PILLARS.map(p=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+          <span style="font-size:14px;width:22px">${p.ic}</span>
+          <span style="font-size:12px;width:110px;font-weight:600">${t(p.en,p.ar)}</span>
+          <div style="flex:1;height:8px;background:var(--cream3);border-radius:4px"><div style="width:${pcts[p.key]}%;height:100%;background:var(--m);border-radius:4px"></div></div>
+          <span style="font-size:12px;font-weight:700;width:32px;text-align:right">${pcts[p.key]}%</span>
+        </div>`).join('')}
+        <div style="margin-top:14px;background:var(--rbg);border-radius:8px;padding:12px;font-size:11px;color:var(--red)">
+          ${gaps.map(g=>`↑ ${t(g.en,g.ar)} — ${g.pct}%`).join(' &nbsp;·&nbsp; ')}
+        </div>
+        <div style="margin-top:10px;background:var(--bbg);border-radius:8px;padding:12px;font-size:11px;color:var(--blue)">
+          ${t('Estimated time to Investment Ready','الوقت المقدر للوصول لمستوى الجاهزية')}: ${etaMonths(total)}
+        </div>
+        <div style="margin-top:10px;background:var(--abg);border-radius:8px;padding:12px;font-size:11px;color:var(--amber)">
+          ${t('QDB financing readiness assessment included','تقييم جاهزية تمويل بنك قطر للتنمية مضمّن')}
+        </div>
+      </div>
+      <div class="locked-ov">
+        <div class="lo-lock">🔒</div>
+        <div class="lo-title">${t('Full scorecard unlocks with QAR 99','التقرير الكامل مقابل 99 ريال')}</div>
+        <div class="lo-sub">${t('All 6 pillar scores, improvement actions, QDB readiness, roadmap — PDF delivered via WhatsApp.','نتائج المحاور الستة، إجراءات التحسين، جاهزية بنك قطر، خارطة الطريق — PDF عبر واتساب.')}</div>
+      </div>
+    </div>
+
+    <div class="price-card">
+      <div class="pc-eyebrow">${t('Your personalised investment scorecard','بطاقة نتيجتك الاستثمارية الشخصية')}</div>
+      <div class="pc-title">${t('Investment Readiness Report — PDF','تقرير الجاهزية للاستثمار — PDF')}</div>
+      <div class="pc-sub">${t('A professional PDF scorecard with everything your investor or banker needs to see — delivered via WhatsApp within 24 hours.','بطاقة نتيجة PDF احترافية بكل ما يحتاج المستثمر أو المصرفي رؤيته — تُسلَّم عبر واتساب خلال 24 ساعة.')}</div>
+      <div class="pc-includes">
+        <div class="pc-item">${t('All 6 pillar scores with %','نتائج المحاور الستة بالنسب')}</div>
+        <div class="pc-item">${t('Top 3 gaps + specific actions','أبرز 3 ثغرات + إجراءات محددة')}</div>
+        <div class="pc-item">${t('QDB financing readiness','جاهزية تمويل بنك قطر للتنمية')}</div>
+        <div class="pc-item">${t('Estimated time to 80+ score','الوقت لتحقيق 80+ نقطة')}</div>
+        <div class="pc-item">${t('Step-by-step roadmap PDF','خارطة طريق خطوة بخطوة PDF')}</div>
+        <div class="pc-item">${t('Investor network opt-in','الانضمام لشبكة المستثمرين')}</div>
+      </div>
+      <div class="pc-price">QAR 99<small style="font-size:13px;color:var(--ink3);font-family:'Syne',sans-serif;font-weight:400"> · ${t('one-time','دفعة واحدة')}</small></div>
+
+      <div class="opt-in-box">
+        <div class="oi-title">${t('Join the Mizaan Investor Network','انضم لشبكة مستثمري ميزان')}</div>
+        <div class="oi-sub">${t("Add your profile to our network. If an investor shows interest in your sector, we'll reach out — no obligation, no fees.",'أضف ملفك لشبكتنا. إذا أبدى مستثمر اهتماماً بقطاعك سنتواصل معك — بلا التزام ولا رسوم.')}</div>
+        <div class="oi-toggle" id="oi-toggle" onclick="toggleOptIn()">
+          <div class="oi-pip"></div>
+          <div class="oi-lbl">${t('Add my profile to the investor network','أضف ملفي إلى شبكة المستثمرين')}</div>
+        </div>
+      </div>
+
+      <button class="btn-wa" onclick="shareScore()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        ${t('Get Full Scorecard — QAR 99','احصل على بطاقة النتيجة الكاملة — 99 ريال')}
+      </button>
+      <button class="btn-sec" onclick="currentQ=-1;answers={};renderIdentity();">${t('Start over','ابدأ من جديد')}</button>
+    </div>
+
+  </div>`;
+
+  setTimeout(()=>drawRadar(pcts),250);
+}
+
+function drawRadar(pcts){
+  const canvas=document.getElementById('rc');
+  if(!canvas||typeof Chart==='undefined')return;
+  if(Chart.getChart(canvas))Chart.getChart(canvas).destroy();
+  canvas.style.display='block';
+  canvas.style.margin='0 auto';
+  new Chart(canvas,{
+    type:'radar',
+    data:{
+      labels:PILLARS.map(p=>t(p.en,p.ar)),
+      datasets:[
+        {label:t('Investment Ready (80)','حد الجاهزية (80)'),
+         data:[80,80,80,80,80,80],
+         borderColor:'rgba(20,83,45,.45)',backgroundColor:'rgba(20,83,45,.05)',
+         borderWidth:1.5,borderDash:[6,4],pointRadius:0,pointHoverRadius:0},
+        {label:t('Your score','نتيجتك'),
+         data:PILLARS.map(p=>pcts[p.key]),
+         borderColor:'#7c1522',backgroundColor:'rgba(124,21,34,.14)',
+         borderWidth:2.5,pointBackgroundColor:'#7c1522',
+         pointRadius:5,pointHoverRadius:7,pointBorderColor:'white',pointBorderWidth:2},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:true,
+      layout:{padding:{top:10,bottom:10,left:10,right:10}},
+      scales:{r:{min:0,max:100,
+        ticks:{stepSize:25,font:{size:9,family:'Syne'},color:'#9a8e87',backdropColor:'rgba(255,255,255,.7)'},
+        grid:{color:'rgba(0,0,0,.07)',circular:false},
+        angleLines:{color:'rgba(0,0,0,.08)'},
+        pointLabels:{font:{size:11,family:'Syne',weight:'600'},color:'#6b6058',padding:10}}},
+      plugins:{legend:{display:true,position:'bottom',align:'center',
+        labels:{font:{size:11,family:'Syne'},color:'#6b6058',boxWidth:14,padding:16,
+          usePointStyle:true,pointStyle:'circle'}}},
+      animation:{duration:1100,easing:'easeInOutQuart'}
+    }
+  });
+}
+
+function shareScore(){
+  const{pcts,total}=calcScore();
+  const band=getBand(total);
+  const a=lang==='ar';
+  // Simple confirmation message — full data already saved in admin localStorage
+  const msg=a
+    ?`مرحباً Guardian Consulting،\nأنا ${identity.nm} من ${identity.co}.\nنتيجة الجاهزية للاستثمار: ${total}/100 — ${t(band.en,band.ar)}${optIn?'\n✅ أوافق على إضافة ملفي لشبكة المستثمرين.':''}\nأطلب بطاقة النتيجة الكاملة — 99 ريال.`
+    :`Hi Guardian Consulting, I'm ${identity.nm} from ${identity.co}. My Investment Readiness Score is ${total}/100 — ${band.en}.${optIn?' I consent to adding my profile to the Mizaan investor network.':''} Requesting full scorecard — QAR 99.`;
+
+  try{
+    const leads=JSON.parse(localStorage.getItem('mz_leads')||'[]');
+    const last=[...leads].reverse().find(l=>l.type==='invest');
+    if(last){last.optIn=optIn;last.paidRequested=true;localStorage.setItem('mz_leads',JSON.stringify(leads));}
+  }catch(e){}
+
+  window.open(`https://wa.me/${WA}?text=${encodeURIComponent(msg)}`,'_blank');
+}
+
+function toggleOptIn(){
+  optIn=!optIn;
+  document.getElementById('oi-toggle')?.classList.toggle('on',optIn);
+}
+function toast(msg){
+  document.querySelectorAll('.toast').forEach(t=>t.remove());
+  const el=document.createElement('div');el.className='toast';el.textContent=msg;
+  document.body.appendChild(el);setTimeout(()=>el.remove(),3200);
+}
+document.addEventListener('DOMContentLoaded',()=>{currentQ=-1;renderIdentity();});
+</script>
+</body>
+</html>

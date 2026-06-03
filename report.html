@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Mizaan - Full Compliance Report</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ══ RESET & BASE ══════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0}
+html{font-size:10pt}
+body{font-family:'Syne',sans-serif;color:#1a1410;background:#fff;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+
+/* ══ TOKENS ════════════════════════════════════════ */
+:root{
+  --m:#7c1522;--m2:#9c2232;--m3:#c04050;
+  --gold:#b8892a;--gold2:#d4a843;
+  --cream:#f8f4ef;--cream2:#f0ebe3;--cream3:#e4dcd2;
+  --ink:#1a1410;--ink2:#2d2926;--ink3:#6b6058;--ink4:#9a8e87;
+  --green:#14532d;--gbg:#f0fdf4;--gbd:#bbf7d0;
+  --amber:#78350f;--abg:#fffbeb;--abd:#fde68a;
+  --red:#7f1d1d;--rbg:#fef2f2;--rbd:#fecaca;
+  --blue:#1e3a5f;--bbg:#eff6ff;--bbd:#bfdbfe;
+  --r:6px;--rl:10px;
+}
+
+/* ══ PAGE SETUP (print) ════════════════════════════ */
+@page{size:A4;margin:18mm 16mm 20mm 16mm}
+@media print{
+  .no-print{display:none!important}
+  .page-break{page-break-before:always}
+  .avoid-break{page-break-inside:avoid}
+  body{background:#fff}
+}
+
+/* ══ SCREEN TOOLBAR ════════════════════════════════ */
+.toolbar{position:fixed;top:0;left:0;right:0;z-index:100;height:52px;
+  display:flex;align-items:center;justify-content:space-between;padding:0 2rem;
+  background:var(--m);box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.tb-left{display:flex;align-items:center;gap:10px}
+.tb-mark{width:30px;height:30px;background:var(--gold2);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:600;color:var(--ink)}
+.tb-name{font-size:14px;font-weight:700;color:white}
+.tb-sub{font-size:11px;color:rgba(255,255,255,.45);margin-left:4px}
+.tb-right{display:flex;gap:8px}
+.tb-btn{height:32px;padding:0 16px;border-radius:100px;font-size:12px;font-weight:600;
+  cursor:pointer;font-family:'Syne',sans-serif;transition:all .15s;border:none}
+.tb-ghost{background:rgba(255,255,255,.1);color:white;border:1px solid rgba(255,255,255,.2)}
+.tb-ghost:hover{background:rgba(255,255,255,.2)}
+.tb-print{background:var(--gold2);color:var(--ink)}
+.tb-print:hover{background:white;color:var(--m)}
+
+/* ══ MAIN WRAPPER ══════════════════════════════════ */
+.wrap{max-width:820px;margin:0 auto;padding:72px 20px 60px}
+@media print{.wrap{max-width:none;padding:0}}
+
+/* ══ COVER PAGE ════════════════════════════════════ */
+.cover{min-height:260mm;display:flex;flex-direction:column;position:relative;overflow:hidden}
+.cover-bg{background:var(--m);padding:44px 44px 36px;position:relative;overflow:hidden;flex:1;display:flex;flex-direction:column;justify-content:space-between}
+.cover-mesh{position:absolute;inset:0;background:radial-gradient(ellipse 70% 50% at 50% 110%,rgba(212,168,67,.12),transparent),radial-gradient(ellipse 40% 60% at 85% 10%,rgba(255,255,255,.04),transparent);pointer-events:none}
+.cover-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:40px 40px;pointer-events:none}
+.cover-top{position:relative;z-index:1}
+.cover-brand{display:flex;align-items:center;gap:12px;margin-bottom:52px}
+.cov-mark{width:44px;height:44px;background:var(--gold2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--ink);flex-shrink:0}
+.cov-name{font-size:20px;font-weight:700;color:white}
+.cov-ar{font-family:'Noto Naskh Arabic',serif;font-size:12px;color:rgba(255,255,255,.35);display:block;margin-top:1px}
+.cover-doc-type{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--gold2);margin-bottom:14px}
+.cover-h1{font-family:'Cormorant Garamond',serif;font-size:38pt;font-weight:400;color:white;line-height:1.05;letter-spacing:-.02em;margin-bottom:8px}
+.cover-h1 em{color:var(--gold2);font-style:italic}
+.cover-h2{font-size:13px;color:rgba(255,255,255,.52);margin-bottom:32px}
+.cover-co-row{display:flex;gap:32px;flex-wrap:wrap}
+.cov-field{display:flex;flex-direction:column;gap:4px}
+.cf-lbl{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.38)}
+.cf-val{font-size:13px;font-weight:600;color:white}
+.cover-bottom{position:relative;z-index:1;padding-top:28px;border-top:1px solid rgba(255,255,255,.1);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.cov-pow{font-size:10px;color:rgba(255,255,255,.3)}
+.cov-pow strong{color:rgba(255,255,255,.5)}
+.cov-firm{text-align:right}
+.cf-firm-name{font-size:12px;font-weight:600;color:rgba(255,255,255,.7)}
+.cf-firm-sub{font-size:10px;color:rgba(255,255,255,.3);margin-top:2px}
+/* Score strip on cover */
+.cover-score-strip{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:16px 22px;display:flex;align-items:center;gap:24px;flex-wrap:wrap;margin-bottom:24px}
+.css-item{display:flex;flex-direction:column;gap:3px}
+.css-lbl{font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.38)}
+.css-val{font-size:16px;font-weight:600;color:white;font-family:'Cormorant Garamond',serif}
+.css-val.danger{color:#fca5a5}
+.css-val.warn{color:#fcd34d}
+.css-val.ok{color:#86efac}
+.css-div{width:1px;height:32px;background:rgba(255,255,255,.12)}
+
+/* ══ SECTION STRUCTURE ═════════════════════════════ */
+.section{margin-bottom:28px}
+.sec-head{display:flex;align-items:center;gap:12px;margin-bottom:16px;padding-bottom:10px;border-bottom:2px solid var(--cream3)}
+.sec-num{width:26px;height:26px;background:var(--m);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:white;flex-shrink:0}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:17pt;font-weight:500;color:var(--m);letter-spacing:-.01em}
+.sub-head{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--ink3);margin:14px 0 8px;display:flex;align-items:center;gap:8px}
+.sub-head::after{content:'';flex:1;height:1px;background:var(--cream3)}
+
+/* ══ DATA GRID ═════════════════════════════════════ */
+.dg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.dg-2{grid-template-columns:repeat(2,1fr)}
+.dg-4{grid-template-columns:repeat(4,1fr)}
+.dc{background:var(--cream);border:1px solid var(--cream3);border-radius:var(--r);padding:10px 12px}
+.dc-lbl{font-size:8.5px;font-weight:600;text-transform:uppercase;letter-spacing:.09em;color:var(--ink3);margin-bottom:4px}
+.dc-val{font-size:12px;font-weight:600;color:var(--ink);line-height:1.3}
+.dc-sub{font-size:9.5px;color:var(--ink3);margin-top:3px}
+.dc.red{background:var(--rbg);border-color:var(--rbd)}
+.dc.red .dc-val{color:var(--red)}
+.dc.amber{background:var(--abg);border-color:var(--abd)}
+.dc.amber .dc-val{color:var(--amber)}
+.dc.green{background:var(--gbg);border-color:var(--gbd)}
+.dc.green .dc-val{color:var(--green)}
+.dc.blue{background:var(--bbg);border-color:var(--bbd)}
+.dc.blue .dc-val{color:var(--blue)}
+.dc.maroon{background:rgba(124,21,34,.05);border-color:rgba(124,21,34,.18)}
+.dc.maroon .dc-val{color:var(--m)}
+
+/* ══ TABLE ═════════════════════════════════════════ */
+.tbl{width:100%;border-collapse:collapse;font-size:10px;margin-bottom:10px}
+.tbl th{background:var(--cream);border:1px solid var(--cream3);padding:7px 10px;text-align:left;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3)}
+.tbl td{border:1px solid var(--cream3);padding:7px 10px;color:var(--ink2);vertical-align:top;line-height:1.4}
+.tbl tr:nth-child(even) td{background:var(--cream)}
+.tbl .total td{background:rgba(124,21,34,.05);font-weight:700;color:var(--m)}
+.tbl .green td{background:var(--gbg)}
+
+/* ══ BADGES & PILLS ════════════════════════════════ */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.07em}
+.b-red{background:var(--rbg);border:1px solid var(--rbd);color:var(--red)}
+.b-amber{background:var(--abg);border:1px solid var(--abd);color:var(--amber)}
+.b-green{background:var(--gbg);border:1px solid var(--gbd);color:var(--green)}
+.b-blue{background:var(--bbg);border:1px solid var(--bbd);color:var(--blue)}
+.b-maroon{background:rgba(124,21,34,.07);border:1px solid rgba(124,21,34,.2);color:var(--m)}
+.b-gray{background:var(--cream2);border:1px solid var(--cream3);color:var(--ink3)}
+
+/* ══ ALERTS ════════════════════════════════════════ */
+.alert{display:flex;gap:10px;padding:10px 13px;border-radius:var(--r);border:1px solid transparent;margin-bottom:7px;align-items:flex-start}
+.alert-r{background:var(--rbg);border-color:var(--rbd)}
+.alert-a{background:var(--abg);border-color:var(--abd)}
+.alert-g{background:var(--gbg);border-color:var(--gbd)}
+.alert-b{background:var(--bbg);border-color:var(--bbd)}
+.al-ic{font-size:12px;flex-shrink:0;margin-top:1px}
+.al-txt{font-size:10px;line-height:1.6;color:var(--ink2)}
+.al-txt strong{display:block;font-size:10.5px;margin-bottom:2px;color:var(--ink)}
+
+/* ══ DIMENSION CARD ════════════════════════════════ */
+.dim-card{border:1px solid var(--cream3);border-radius:var(--rl);overflow:hidden;margin-bottom:10px}
+.dim-head{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--cream);border-bottom:1px solid var(--cream3)}
+.dim-title{font-size:11px;font-weight:600;color:var(--ink);display:flex;align-items:center;gap:7px}
+.dim-ic{font-size:13px}
+.dim-body{padding:10px 14px;display:flex;flex-direction:column;gap:6px}
+.dim-row{display:flex;justify-content:space-between;align-items:flex-start;font-size:10px;padding:4px 0;border-bottom:1px solid var(--cream2)}
+.dim-row:last-child{border-bottom:none}
+.dim-k{color:var(--ink3);flex:1}
+.dim-v{font-weight:600;color:var(--ink);text-align:right;flex-shrink:0;margin-left:8px}
+.dim-v.ok{color:var(--green)}
+.dim-v.warn{color:var(--amber)}
+.dim-v.danger{color:var(--red)}
+
+/* ══ CHECKLIST ═════════════════════════════════════ */
+.checklist{display:flex;flex-direction:column;gap:5px;margin-bottom:10px}
+.ck-item{display:flex;align-items:flex-start;gap:10px;padding:8px 12px;background:var(--cream);border:1px solid var(--cream3);border-radius:var(--r)}
+.ck-box{width:14px;height:14px;border:1.5px solid var(--cream3);border-radius:3px;flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center}
+.ck-box.check{background:var(--green);border-color:var(--green);color:white;font-size:8px}
+.ck-box.cross{background:var(--rbg);border-color:var(--rbd);color:var(--red);font-size:8px}
+.ck-lbl{font-size:10px;color:var(--ink2);flex:1;line-height:1.4}
+.ck-lbl strong{color:var(--ink);font-weight:600;display:block;margin-bottom:1px}
+.ck-pri{font-size:8.5px;padding:1px 7px;border-radius:3px;flex-shrink:0;margin-top:1px}
+.pri-crit{background:var(--rbg);color:var(--red);border:1px solid var(--rbd)}
+.pri-high{background:var(--abg);color:var(--amber);border:1px solid var(--abd)}
+.pri-rec{background:var(--bbg);color:var(--blue);border:1px solid var(--bbd)}
+
+/* ══ CALENDAR ══════════════════════════════════════ */
+.cal-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:10px}
+.cal-m{border:1px solid var(--cream3);border-radius:var(--r);overflow:hidden}
+.cal-mh{background:var(--cream);padding:6px 9px;font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--ink3);border-bottom:1px solid var(--cream3)}
+.cal-items{padding:7px 9px;display:flex;flex-direction:column;gap:4px}
+.cal-item{font-size:9px;color:var(--ink2);display:flex;align-items:flex-start;gap:4px;line-height:1.4}
+.cal-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.cd-red{background:var(--red)}.cd-amber{background:var(--amber)}.cd-blue{background:var(--blue)}.cd-green{background:var(--green)}
+
+/* ══ SCORE BAR ═════════════════════════════════════ */
+.score-wrap{margin-bottom:16px}
+.score-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.score-lbl{font-size:10px;color:var(--ink2);width:140px;flex-shrink:0}
+.score-bar-bg{flex:1;height:6px;background:var(--cream3);border-radius:3px;overflow:hidden}
+.score-bar-fill{height:100%;border-radius:3px}
+.score-pct{font-size:10px;font-weight:600;color:var(--ink);width:30px;text-align:right;flex-shrink:0}
+
+/* ══ PROPOSAL / SIGNATURE ══════════════════════════ */
+.proposal-box{background:var(--cream);border:1px solid var(--cream3);border-radius:var(--rl);padding:18px 20px;margin-bottom:12px}
+.pb-title{font-family:'Cormorant Garamond',serif;font-size:14pt;color:var(--m);margin-bottom:8px}
+.service-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--cream3);font-size:10px}
+.service-row:last-child{border-bottom:none}
+.sr-name{color:var(--ink2);flex:1}
+.sr-price{font-weight:600;color:var(--ink);flex-shrink:0}
+.sig-area{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:20px}
+.sig-box{border-top:1px solid var(--ink3);padding-top:8px}
+.sig-lbl{font-size:9px;color:var(--ink3);text-transform:uppercase;letter-spacing:.08em}
+.sig-name{font-size:10px;color:var(--ink2);margin-top:4px}
+
+/* ══ DISCLAIMER ════════════════════════════════════ */
+.disclaimer{font-size:8.5px;color:var(--ink4);line-height:1.6;padding:12px 14px;background:var(--cream);border:1px solid var(--cream3);border-radius:var(--r);margin-top:20px}
+
+/* ══ PAGE HEADER / FOOTER ══════════════════════════ */
+.page-head{display:flex;align-items:center;justify-content:space-between;padding-bottom:10px;border-bottom:2px solid var(--m);margin-bottom:18px}
+.ph-co{font-size:10px;font-weight:600;color:var(--ink3)}
+.ph-mark{font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:500;color:var(--m)}
+.page-foot{margin-top:16px;padding-top:8px;border-top:1px solid var(--cream3);display:flex;justify-content:space-between;align-items:center}
+.pf-txt{font-size:8.5px;color:var(--ink4)}
+.pf-pg{font-size:8.5px;color:var(--ink3)}
+
+/* ══ INPUT FORM (screen only) ══════════════════════ */
+.input-form{background:#fff;border:1px solid var(--cream3);border-radius:14px;padding:32px;box-shadow:0 4px 24px rgba(0,0,0,.07);margin-bottom:32px}
+.if-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.if-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;color:var(--m)}
+.if-badge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--m);background:rgba(124,21,34,.06);border:1px solid rgba(124,21,34,.18);padding:3px 9px;border-radius:5px}
+.fg{margin-bottom:14px}
+.fl{display:block;font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3);margin-bottom:5px}
+.fl em{color:var(--m);font-style:normal}
+.fi{width:100%;background:var(--cream);border:1.5px solid var(--cream3);color:var(--ink);padding:9px 11px;border-radius:var(--r);font-size:12px;font-family:'Syne',sans-serif;transition:all .15s;outline:none;-webkit-appearance:none}
+.fi:focus{border-color:var(--m);background:#fff;box-shadow:0 0 0 3px rgba(124,21,34,.08)}
+.fi::placeholder{color:var(--ink4)}
+.fi option{background:#fff}
+.fi-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fi-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.flags{display:flex;flex-direction:column;gap:6px}
+.flag{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border-radius:var(--r);border:1.5px solid var(--cream3);background:var(--cream);cursor:pointer;transition:all .15s;user-select:none}
+.flag:hover{border-color:rgba(124,21,34,.22)}
+.flag.on{border-color:var(--m);background:rgba(124,21,34,.05)}
+.flag-l{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--ink3)}
+.flag.on .flag-l{color:var(--ink2)}
+.pip{width:32px;height:17px;border-radius:9px;background:var(--cream3);border:1.5px solid var(--cream3);position:relative;transition:all .2s;flex-shrink:0}
+.pip::after{content:'';position:absolute;top:2px;left:2px;width:10px;height:10px;background:var(--ink4);border-radius:50%;transition:all .2s}
+.flag.on .pip{background:var(--m);border-color:var(--m)}
+.flag.on .pip::after{left:16px;background:#fff}
+.btn-gen{width:100%;height:44px;background:var(--m);color:#fff;border:none;border-radius:var(--r);font-size:13px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;transition:all .18s;margin-top:20px;display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-gen:hover{background:var(--m2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(124,21,34,.3)}
+.sec-lbl{font-size:9.5px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--ink3);margin:14px 0 8px;display:flex;align-items:center;gap:8px}
+.sec-lbl::after{content:'';flex:1;height:1px;background:var(--cream3)}
+.divider{border:none;border-top:1px solid var(--cream3);margin:16px 0}
+
+/* ══ REPORT WRAPPER ════════════════════════════════ */
+.report{display:block;max-width:820px;margin:0 auto}
+@media print{.toolbar{display:none!important}.report{max-width:none}}
+</style>
+</head>
+<body>
+
+<!-- TOOLBAR (screen only) -->
+<div class="toolbar no-print">
+  <div class="tb-left">
+    <div class="tb-mark">م</div>
+    <span class="tb-name">Mizaan</span>
+    <span class="tb-sub" id="tb-co">Loading report...</span>
+  </div>
+  <div class="tb-right">
+    <button class="tb-btn tb-ghost" onclick="window.location='admin.html'">← Admin</button>
+    <button class="tb-btn tb-print" onclick="window.print()">Print / Save PDF</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- REPORT (generated) -->
+  <div class="report" id="report"></div>
+
+</div><!-- /wrap -->
+
+<script>
+const CFG={WA:'97455171999',FIRM:'Guardian Consulting',ADDR:'Doha - Qatar',PHONE:'+974 5171 5999',EMAIL:'info@guardianconsultingcompany.com'};
+const today=new Date();today.setHours(0,0,0,0);
+
+function fFlip(id){document.getElementById(id).classList.toggle('on');}
+function qar(n){return 'QAR '+Math.round(n||0).toLocaleString();}
+function fd(d){if(!d)return'-';return new Date(d).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}
+function fp(s,e){return fd(s)+' – '+fd(e);}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function daysFrom(d){const dt=new Date(d);dt.setHours(0,0,0,0);return Math.ceil((dt-today)/86400000);}
+function expStatus(d){if(!d)return{lbl:'Not provided',cls:'b-gray'};const dd=daysFrom(d);if(dd<0)return{lbl:'Expired',cls:'b-red'};if(dd<=30)return{lbl:'Expires in '+dd+' days',cls:'b-red'};if(dd<=90)return{lbl:'Expires in '+dd+' days',cls:'b-amber'};return{lbl:'Valid - '+fd(d),cls:'b-green'};}
+function penCalc(unfiled){
+  const rows=[];let total=0;
+  const ty=today.getFullYear();
+  if(unfiled>=1){rows.push({l:'Registration failure',a:20000});total+=20000;}
+  for(let i=0;i<unfiled;i++){
+    const fy=ty-1-i,ddl=new Date(fy+1,3,30);
+    if(today<=ddl)continue;
+    const days=Math.ceil((today-ddl)/86400000),pen=Math.min(days*500,180000);
+    rows.push({l:'Late filing FY '+fy,a:pen});total+=pen;
+  }
+  return{rows,total};
+}
+function engine(p){
+  const cr=new Date(p.crDate);
+  const y=cr.getFullYear(),m=cr.getMonth()+1,late=m>=7,qfc=p.jur==='qfc';
+  let rps,rpe,rdl;
+  if(!late){rps=new Date(y,0,1);rpe=new Date(y,11,31);rdl=qfc?new Date(y+1,5,30):new Date(y+1,3,30);}
+  else{rps=new Date(cr);rpe=new Date(y+1,11,31);rdl=qfc?new Date(y+2,5,30):new Date(y+2,3,30);}
+  if(today>rdl){
+    const ty2=today.getFullYear(),lFY=today.getMonth()>=4?ty2-1:ty2-2;
+    rps=new Date(lFY,0,1);rpe=new Date(lFY,11,31);rdl=qfc?new Date(lFY+1,5,30):new Date(lFY+1,3,30);
+  }
+  const ms=86400000,overdue=today>rdl,dL=Math.ceil((rdl-today)/ms),dO=overdue?Math.abs(dL):0,urgent=!overdue&&dL<=30;
+  const fPct=qfc?100:(100-p.qPct),petro=p.act==='petroleum',rate=petro?.35:.10,rLbl=petro?'35%':'10%';
+  const txP=p.profit*(fPct/100),txA=fPct>0&&p.profit>0?txP*rate:0,taxable=fPct>0&&p.profit>0;
+  const needsAudit=(p.rev||0)>500000||(p.capital||0)>200000;
+  const pen=penCalc(p.unfiled);
+  if(overdue){const ty2=today.getFullYear(),lFY=today.getMonth()>=4?ty2-1:ty2-2;pen.rows.unshift({l:'Late filing FY '+lFY,a:Math.min(dO*500,180000)});pen.total+=Math.min(dO*500,180000);}
+  const finElig=!overdue&&p.unfiled===0?'green':!overdue&&p.unfiled<=1?'amber':'red';
+  let sc=100;
+  if(overdue)sc-=35;else if(urgent)sc-=18;else if(dL<=60)sc-=8;
+  if(taxable&&txA>0)sc-=12;if(p.wht)sc-=7;if(p.cgt)sc-=8;if(p.exc)sc-=5;
+  if(p.unfiled>0)sc-=Math.min(p.unfiled*8,28);
+  if(p.acct==='owner'||p.acct==='nobody')sc-=5;
+  sc=Math.max(0,Math.min(100,sc));
+  // QDB financial maturity score (0-5 based on audit, statements, tax planning)
+  let qdbFM=0;
+  if(p.acct==='firm'||p.acct==='inhouse')qdbFM++;
+  if(needsAudit&&p.acct!=='owner'&&p.acct!=='nobody')qdbFM++;
+  if(!overdue&&p.unfiled===0)qdbFM++;
+  if(p.rev>500000)qdbFM++;
+  if(p.yrs!=='u3')qdbFM++;
+  return{rps,rpe,rdl,overdue,urgent,dL,dO,fPct,rate,rLbl,txP,txA,taxable,needsAudit,pen,sc,finElig,qdbFM};
+}
+
+// QDB product recommendation
+function qdbProduct(p,R){
+  const prods=[];
+  if(R.finElig==='green'&&p.finNeed!=='equity'&&p.yrs!=='u3'){
+    if(p.finNeed==='working')prods.push({n:'Working Capital Finance',d:'Short-term revolving credit line for operational needs.'});
+    if(p.finNeed==='assets')prods.push({n:'Asset Finance',d:'Equipment and machinery acquisition with extended repayment.'});
+    if(p.finNeed==='supply')prods.push({n:'Supply Chain Finance',d:'Invoice discounting and supplier payment solutions.'});
+    if(p.finNeed==='export')prods.push({n:'Export Finance',d:'Pre and post-shipment finance for export businesses.'});
+    prods.push({n:'Credit Guarantee Programme',d:'Partial guarantee on bank financing - reduces collateral requirement.'});
+  }
+  if(p.yrs==='u3')prods.push({n:'Startup Qatar',d:'Pre-seed and seed financing for businesses under 3 years.'});
+  if(p.acct==='owner'||p.acct==='nobody')prods.push({n:'Minha Advisory Programme',d:'Free accounting and audit advisory - QDB pays for your accountant through registered providers.'});
+  if(!prods.length)prods.push({n:'Not Currently Eligible',d:'Resolve GTA compliance issues before applying. Guardian Consulting can prepare you within one fiscal year.'});
+  return prods;
+}
+
+// Checklist items
+function buildChecklist(p,R){
+  const items=[];
+  const ok=(l,s,p)=>({ok:true,l,s,p:p||'rec'});
+  const no=(l,s,p)=>({ok:false,l,s,p:p||'high'});
+  if(!R.overdue&&p.unfiled===0)items.push(ok('Tax returns - up to date','All prior year returns filed via Dhareeba'));
+  else items.push(no('File outstanding tax returns immediately','GTA Dhareeba - dhareeba.gov.qa','crit'));
+  if(R.needsAudit)items.push(no('Engage GTA-registered auditor for FY audit','Required: revenue >QAR 500k or capital >QAR 200k','crit'));
+  else items.push(ok('Audited financial statements - below mandatory threshold'));
+  items.push(p.wps==='yes'?ok('WPS - registered and compliant'):no('Register for Wages Protection System (WPS)','Ministry of Labour - mandatory for all private sector','crit'));
+  items.push(p.hins?ok('Health insurance - all employees covered'):no('Ensure health insurance for all employees','Compulsory under Qatar Labour Law','high'));
+  items.push(p.arFin==='yes'?ok('Arabic financial statements - in place'):no('Prepare Arabic financial statements','Required by Income Tax Law for submission','high'));
+  items.push(p.tenYr==='yes'?ok('10-year records in Qatar - compliant'):no('Ensure financial records maintained 10 years in Qatar','GTA audit requirement - Art. 27','high'));
+  const crExp=expStatus(p.crExp);items.push(crExp.cls==='b-green'?ok('Commercial Registration - valid','CR expiry: '+fd(p.crExp)):no('Renew Commercial Registration','Expired or expiring within 90 days','crit'));
+  const tlExp=expStatus(p.tlExp);items.push(tlExp.cls==='b-green'?ok('Trade License - valid'):no('Renew Trade License','Required for CR renewal and operations','crit'));
+  if(p.wht)items.push(no('Reconcile WHT remittances - check all months','Due before 16th monthly to GTA','high'));
+  items.push(ok('File GTA penalty exemption application if applicable','GTA 100% waiver initiative - apply via Dhareeba','rec'));
+  return items;
+}
+
+// Calendar content
+function buildCalendar(p,R){
+  const year=today.getFullYear();
+  const cal=[
+    {m:'January',items:[{c:'cd-blue',t:'WPS - salaries via WPS system'},{c:'cd-amber',t:'GRSIA contributions due 5th'},{c:'cd-blue',t:'WHT return if applicable'}]},
+    {m:'February',items:[{c:'cd-blue',t:'WPS - monthly compliance'},{c:'cd-amber',t:'GRSIA contributions due 5th'},{c:'cd-red',t:'Start engaging auditor for FY report'}]},
+    {m:'March',items:[{c:'cd-red',t:'DEADLINE MONTH - file via Dhareeba'},{c:'cd-amber',t:'GRSIA contributions due 5th'},{c:'cd-blue',t:'WHT reconciliation'}]},
+    {m:'April 30',items:[{c:'cd-red',t:'⚑ INCOME TAX FILING DEADLINE'+(R.overdue?' - OVERDUE':'')},{c:'cd-amber',t:'Last day to avoid late filing penalties'},{c:'cd-blue',t:'QFC deadline: 30 June'}]},
+    {m:'May',items:[{c:'cd-green',t:'CR renewal if due'},{c:'cd-amber',t:'GRSIA contributions due 5th'},{c:'cd-blue',t:'CGT return if disposal occurred'}]},
+    {m:'June',items:[{c:'cd-blue',t:'QFC companies - filing deadline 30 June'},{c:'cd-amber',t:'GRSIA contributions due 5th'},{c:'cd-green',t:'Mid-year compliance review'}]},
+    {m:'July',items:[{c:'cd-blue',t:'WHT return if applicable'},{c:'cd-amber',t:'GRSIA contributions due 5th'},{c:'cd-green',t:'Trade license renewal if due'}]},
+    {m:'August',items:[{c:'cd-blue',t:'WPS - monthly compliance'},{c:'cd-amber',t:'GRSIA contributions due 5th'},{c:'cd-green',t:'Review lease expiry dates'}]},
+    {m:'September',items:[{c:'cd-blue',t:'WPS - monthly compliance'},{c:'cd-amber',t:'GRSIA contributions due 5th'},{c:'cd-green',t:'Q3 financial review recommended'}]},
+    {m:'October',items:[{c:'cd-blue',t:'WPS - monthly compliance'},{c:'cd-amber',t:'GRSIA contributions due 5th'},{c:'cd-red',t:'Begin FY closing preparation'}]},
+    {m:'November',items:[{c:'cd-blue',t:'WPS - monthly compliance'},{c:'cd-amber',t:'GRSIA contributions due 5th'},{c:'cd-red',t:'Engage auditor for FY '+year}]},
+    {m:'December',items:[{c:'cd-red',t:'FY year-end - close financial records'},{c:'cd-amber',t:'GRSIA contributions due 5th'},{c:'cd-blue',t:'Prepare Dhareeba portal access'}]}
+  ];
+  return cal;
+}
+
+// ── GENERATE ──────────────────────────────────────
+function generate(p){
+  // p is passed directly from DOMContentLoaded — no DOM form reading needed
+  if(!p||!p.crDate){showError('Missing CR registration date. Please check the lead data in Admin.');return;}
+
+  const R=engine(p);
+  const pen=R.pen;
+  const ck=buildChecklist(p,R);
+  const cal=buildCalendar(p,R);
+  const prods=qdbProduct(p,R);
+  const gradeLabel=R.sc>=70?'Acceptable':R.sc>=40?'Needs Attention':'High Risk';
+  const gradeCol=R.sc>=70?'#14532d':R.sc>=40?'#78350f':'#7f1d1d';
+  const scoreCol=R.sc>=70?'ok':R.sc>=40?'warn':'danger';
+  const actLabels={general:'Trading / Services',construction:'Construction / Contracting',fmcg:'F&B / Retail / FMCG',hospitality:'Hospitality / Tourism',manufacturing:'Manufacturing',petroleum:'Petroleum / Petrochemicals',other:'Other'};
+  const jurLabels={moci:'Ministry of Commerce and Industry (MOCI)',qfc:'Qatar Financial Centre (QFC)',qfza:'Qatar Free Zones Authority (QFZA)',other:'Other Jurisdiction'};
+  const crSt=expStatus(p.crExp),tlSt=expStatus(p.tlExp),lsSt=expStatus(p.leaseExp);
+  const yrMos=Math.round((R.rpe-R.rps)/(1000*60*60*24*30.4));
+
+  // Financial maturity labels
+  const fmLbls=['0 - Pre-financial','1 - Early stage','2 - Basic tracking','3 - Developing','4 - Structured','5 - Investment-grade'];
+  const fmCol=R.qdbFM>=4?'green':R.qdbFM>=2?'amber':'red';
+
+  // QDB product names map
+  const finNeedLabels={working:'Working Capital',assets:'Asset Financing',supply:'Supply Chain Finance',export:'Export Finance',equity:'Equity Financing',none:'No current need'};
+  const collLabels={none:'No collateral available',real:'Physical assets (Real estate / Equipment)',fin:'Financial assets (AR, Deposits)',guar:'Guarantees (Personal / Corporate)'};
+
+  // Pillar scores for Financial Maturity section
+  const pillars=[
+    {l:'Financial record-keeping',pct:p.acct==='firm'?90:p.acct==='inhouse'?75:p.acct==='owner'?40:15,col:'#14532d'},
+    {l:'External audit / review',pct:R.needsAudit&&(p.acct==='firm'||p.acct==='inhouse')?80:R.needsAudit?30:60,col:'#1e3a5f'},
+    {l:'Tax compliance & planning',pct:!R.overdue&&p.unfiled===0?85:R.overdue?20:50,col:'#78350f'},
+    {l:'Financial forecasting',pct:p.acct==='firm'?70:p.acct==='inhouse'?55:30,col:'#92400e'},
+    {l:'QDB eligibility (overall)',pct:R.finElig==='green'?85:R.finElig==='amber'?55:25,col:R.finElig==='green'?'#14532d':R.finElig==='amber'?'#78350f':'#7f1d1d'},
+  ];
+
+  const html=`
+<div style="font-size:8pt;color:var(--ink3);margin-bottom:8px;text-align:right">Prepared by ${CFG.FIRM} via Mizaan ميزان · Confidential · ${fd(today)}</div>
+
+<!-- ══ COVER ══════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-bg">
+    <div class="cover-mesh"></div><div class="cover-grid"></div>
+    <div class="cover-top">
+      <div class="cover-brand">
+        <div class="cov-mark">م</div>
+        <div><div class="cov-name">Mizaan ميزان</div><div class="cov-ar">Powered by Mizaan - Prepared by ${esc(CFG.FIRM)}</div></div>
+      </div>
+      <div class="cover-doc-type">Qatar Tax Compliance Assessment Report</div>
+      <div class="cover-h1">Full Compliance<br><em>& Tax Report</em></div>
+      <div class="cover-h2">Based on Qatar Income Tax Law No. 24 of 2018 · GTA Standards · ${today.getFullYear()} Filing Season</div>
+      <div class="cover-score-strip">
+        <div class="css-item"><div class="css-lbl">Compliance Score</div><div class="css-val ${scoreCol}">${R.sc}/100</div></div>
+        <div class="css-div"></div>
+        <div class="css-item"><div class="css-lbl">Filing Deadline</div><div class="css-val ${R.overdue?'danger':''}">${fd(R.rdl)}</div></div>
+        <div class="css-div"></div>
+        <div class="css-item"><div class="css-lbl">Estimated Tax</div><div class="css-val">${qar(R.txA)}</div></div>
+        <div class="css-div"></div>
+        <div class="css-item"><div class="css-lbl">Penalty Exposure</div><div class="css-val ${pen.total>0?'danger':''}">${pen.total>0?qar(pen.total):'None'}</div></div>
+        <div class="css-div"></div>
+        <div class="css-item"><div class="css-lbl">QDB Eligibility</div><div class="css-val ${R.finElig==='green'?'ok':R.finElig==='amber'?'warn':'danger'}">${R.finElig==='green'?'Eligible':R.finElig==='amber'?'Borderline':'Not eligible'}</div></div>
+      </div>
+      <div class="cover-co-row">
+        <div class="cov-field"><div class="cf-lbl">Company</div><div class="cf-val">${esc(p.co)}</div></div>
+        <div class="cov-field"><div class="cf-lbl">CR Number</div><div class="cf-val">${esc(p.crNo)}</div></div>
+        <div class="cov-field"><div class="cf-lbl">Jurisdiction</div><div class="cf-val">${p.jur==='qfc'?'QFC':p.jur==='qfza'?'QFZA':p.jur==='moci'?'MOCI':'Other'}</div></div>
+        <div class="cov-field"><div class="cf-lbl">Prepared For</div><div class="cf-val">${esc(p.attn)}</div></div>
+        <div class="cov-field"><div class="cf-lbl">Report Date</div><div class="cf-val">${fd(today)}</div></div>
+        <div class="cov-field"><div class="cf-lbl">Grade</div><div class="cf-val" style="color:${gradeCol}">${gradeLabel}</div></div>
+      </div>
+    </div>
+    <div class="cover-bottom">
+      <div class="cov-pow">Powered by <strong>Mizaan ميزان</strong> - Qatar Compliance Intelligence Platform</div>
+      <div class="cov-firm">
+        <div class="cf-firm-name">${esc(CFG.FIRM)}</div>
+        <div class="cf-firm-sub">${esc(CFG.ADDR)} · ${esc(CFG.PHONE)}</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SECTION 1: COMPANY IDENTIFICATION ══════════ -->
+<div class="page-break"></div>
+<div class="section avoid-break">
+  <div class="page-head"><div class="ph-co">${esc(p.co)}</div><div class="ph-mark">Mizaan ميزان</div></div>
+  <div class="sec-head"><div class="sec-num">1</div><div class="sec-title">Company Identification</div></div>
+  <div class="dg dg-4">
+    <div class="dc"><div class="dc-lbl">Company Name</div><div class="dc-val">${esc(p.co)}</div></div>
+    <div class="dc"><div class="dc-lbl">CR Number</div><div class="dc-val">${esc(p.crNo)}</div></div>
+    <div class="dc"><div class="dc-lbl">Jurisdiction</div><div class="dc-val">${jurLabels[p.jur]||p.jur}</div></div>
+    <div class="dc"><div class="dc-lbl">Business Activity</div><div class="dc-val">${actLabels[p.act]||p.act}</div></div>
+  </div>
+  <div class="dg dg-4">
+    <div class="dc ${crSt.cls==='b-red'?'red':crSt.cls==='b-amber'?'amber':'green'}"><div class="dc-lbl">CR Registration Date</div><div class="dc-val">${fd(p.crDate)}</div><div class="dc-sub">Registered ${today.getFullYear()-new Date(p.crDate).getFullYear()} years ago</div></div>
+    <div class="dc ${crSt.cls==='b-red'?'red':crSt.cls==='b-amber'?'amber':'green'}"><div class="dc-lbl">CR Expiry</div><div class="dc-val">${fd(p.crExp)||'Not provided'}</div><div class="dc-sub">${crSt.lbl}</div></div>
+    <div class="dc ${tlSt.cls==='b-red'?'red':tlSt.cls==='b-amber'?'amber':'green'}"><div class="dc-lbl">Trade License Expiry</div><div class="dc-val">${fd(p.tlExp)||'Not provided'}</div><div class="dc-sub">${tlSt.lbl}</div></div>
+    <div class="dc ${lsSt.cls==='b-red'?'red':lsSt.cls==='b-amber'?'amber':'green'}"><div class="dc-lbl">Lease Expiry</div><div class="dc-val">${fd(p.leaseExp)||'Not provided'}</div><div class="dc-sub">${lsSt.lbl}</div></div>
+  </div>
+  <div class="dg">
+    <div class="dc"><div class="dc-lbl">Employees (Total)</div><div class="dc-val">${p.emp||'-'}</div></div>
+    <div class="dc"><div class="dc-lbl">Qatari Employees</div><div class="dc-val">${p.qemp||'-'}</div><div class="dc-sub">Qatarisation rate: ${p.emp>0?Math.round((p.qemp/p.emp)*100)+'%':'-'}</div></div>
+    <div class="dc"><div class="dc-lbl">Ownership Structure</div><div class="dc-val">${100-R.fPct}% Qatari/GCC · ${R.fPct}% Foreign</div></div>
+  </div>
+</div>
+
+<!-- ══ SECTION 2: FILING OBLIGATION ══════════════ -->
+<div class="section avoid-break">
+  <div class="sec-head"><div class="sec-num">2</div><div class="sec-title">Filing Obligation & Audit Period</div></div>
+  <div class="alert alert-b">
+    <div class="al-ic">ℹ️</div>
+    <div class="al-txt"><strong>All Entities Must File - GTA Notification December 2025</strong>Per GTA directive effective December 2025: ALL entities registered in Qatar - including fully Qatari or GCC-owned companies and tax-exempt entities - must submit an annual income tax return via the Dhareeba portal (dhareeba.gov.qa) by the statutory deadline.</div>
+  </div>
+  <div class="dg dg-4">
+    <div class="dc ${R.overdue?'red':'green'}"><div class="dc-lbl">Audit Period Start</div><div class="dc-val">${fd(R.rps)}</div></div>
+    <div class="dc ${R.overdue?'red':'green'}"><div class="dc-lbl">Audit Period End</div><div class="dc-val">${fd(R.rpe)}</div></div>
+    <div class="dc ${R.overdue?'red':R.urgent?'amber':'green'}"><div class="dc-lbl">Filing Deadline</div><div class="dc-val">${fd(R.rdl)}</div><div class="dc-sub">${R.overdue?'OVERDUE - '+R.dO+' days':R.urgent?R.dL+' days remaining':R.dL+' days remaining'}</div></div>
+    <div class="dc blue"><div class="dc-lbl">Audit Period</div><div class="dc-val">${yrMos} months</div><div class="dc-sub">${p.jur==='qfc'?'QFC: 6-month deadline':'MOCI: April 30 deadline'}</div></div>
+  </div>
+  <div class="sub-head">Registration date analysis</div>
+  <table class="tbl">
+    <tr><th>CR Registered</th><th>Before July 1?</th><th>First Audit Period</th><th>First Deadline</th><th>Deadline Rule</th></tr>
+    <tr><td>${fd(p.crDate)}</td><td>${new Date(p.crDate).getMonth()+1<7?'Yes':'No'}</td><td>${fp(R.rps,R.rpe)}</td><td>${fd(R.rdl)}</td><td>${p.jur==='qfc'?'6 months after FY end (QFC)':'30 April following audit year-end'}</td></tr>
+  </table>
+  ${p.jur==='qfc'?`<div class="alert alert-b"><div class="al-ic">ℹ️</div><div class="al-txt"><strong>QFC Jurisdiction - Special Rules</strong>QFC-registered companies have a 6-month filing window (deadline 30 June). Income tax applies at 10% on net profit regardless of ownership structure. QFC companies are exempt from the Qatarisation Law No. 12 of 2024.</div></div>`:''}
+</div>
+
+<!-- ══ SECTION 3: INCOME TAX ══════════════════════ -->
+<div class="section avoid-break">
+  <div class="sec-head"><div class="sec-num">3</div><div class="sec-title">Income Tax Computation</div></div>
+  <div class="alert ${R.taxable?'alert-a':'alert-g'}">
+    <div class="al-ic">${R.taxable?'⚡':'✅'}</div>
+    <div class="al-txt"><strong>${R.taxable?'Tax Payable - Law No. 24 of 2018, Article 2 & 10':'Tax Exempt - Filing Still Required'}</strong>${R.taxable?`Income tax of ${R.rLbl} applies to the foreign-owned share of net profit. Tax is due upon filing by ${fd(R.rdl)}.`:'This entity qualifies for tax exemption. However, a nil return must still be filed via Dhareeba by '+fd(R.rdl)+' - failure to file incurs penalties regardless of tax-exempt status.'}</div>
+  </div>
+  <table class="tbl">
+    <tr><th>Item</th><th>Amount / Rate</th><th>Notes</th></tr>
+    <tr><td>Net profit (declared)</td><td>${qar(p.profit)}</td><td>As reported in financial statements</td></tr>
+    <tr><td>Foreign-owned share</td><td>${R.fPct}%</td><td>${100-R.fPct}% Qatari/GCC owned, ${R.fPct}% foreign</td></tr>
+    <tr><td>Taxable profit</td><td>${qar(R.txP)}</td><td>Net profit × foreign ownership %</td></tr>
+    <tr><td>Applicable tax rate</td><td>${R.rLbl}</td><td>${R.petro?'Petroleum/petrochemical activity - Art. 10(2)':'Standard rate - Law No. 24/2018, Art. 2'}</td></tr>
+    <tr class="total"><td>Estimated income tax due</td><td>${qar(R.txA)}</td><td>Payable upon filing - ${fd(R.rdl)}</td></tr>
+  </table>
+  ${R.needsAudit?`<div class="alert alert-a"><div class="al-ic">⚡</div><div class="al-txt"><strong>Audited Financial Statements Required</strong>Revenue exceeds QAR 500,000 or registered capital exceeds QAR 200,000 - audited financial statements prepared by a GTA-registered auditor must accompany the tax return (Law No. 24/2018, Art. 12). XBRL-format financial statements are required for FY 2025 onwards.</div></div>`:''}
+  ${p.wht?`<div class="alert alert-a"><div class="al-ic">⚡</div><div class="al-txt"><strong>Withholding Tax - 5% on Non-Resident Payments</strong>Applies to royalties, interest, commissions, and service fees paid to non-residents. The payer must withhold 5% and remit to GTA before the 16th of the following month (Law No. 24/2018, Art. 14). Check applicable Double Tax Agreements - reduced or zero rates may apply.</div></div>`:''} 
+  ${p.cgt?`<div class="alert alert-r"><div class="al-ic">⚠️</div><div class="al-txt"><strong>Capital Gains Tax - Separate Return Required Within 30 Days</strong>The disposal of real estate, shares, or business assets triggers CGT at ${R.rLbl}. A separate return must be filed within 30 days of the disposal date (Art. 7) - this is independent of the annual income tax return. Missing this window incurs the same QAR 500/day penalty.</div></div>`:''} 
+  ${p.exc?`<div class="alert alert-a"><div class="al-ic">⚡</div><div class="al-txt"><strong>Excise Tax Applies</strong>Tobacco and energy drinks: 100%. Carbonated soft drinks: 50%. Registration with GTA is required before import. Digital Tax Stamps are mandatory for tobacco products since October 2022 - unregistered imports may be seized.</div></div>`:''}
+</div>
+
+<!-- ══ SECTION 4: PENALTY EXPOSURE ════════════════ -->
+<div class="section avoid-break">
+  <div class="sec-head"><div class="sec-num">4</div><div class="sec-title">Penalty Exposure & Waiver Guide</div></div>
+  ${pen.total>0?`
+  <div class="dg dg-2">
+    <div class="dc red"><div class="dc-lbl">Total Penalty Exposure</div><div class="dc-val">${qar(pen.total)}</div><div class="dc-sub">Across ${pen.rows.length} violation${pen.rows.length!==1?'s':''}</div></div>
+    <div class="dc amber"><div class="dc-lbl">Waiver Potential</div><div class="dc-val">Up to 100%</div><div class="dc-sub">GTA Penalty Exemption Initiative</div></div>
+  </div>
+  <table class="tbl">
+    <tr><th>Penalty Type</th><th>Amount</th><th>Basis</th><th>Waivable?</th></tr>
+    ${pen.rows.map(r=>`<tr><td>${esc(r.l)}</td><td>${qar(r.a)}</td><td>${r.l.includes('Registration')?'Art. 35 - failure to register':'QAR 500/day × late days, capped QAR 180,000 per return (Art. 36)'}</td><td><span class="badge b-green">Yes</span></td></tr>`).join('')}
+    <tr class="total"><td>Total exposure</td><td>${qar(pen.total)}</td><td colspan="2">Subject to GTA penalty exemption application</td></tr>
+  </table>
+  <div class="sub-head">GTA Financial Penalty Exemption Initiative</div>
+  <div class="alert alert-g">
+    <div class="al-ic">✅</div>
+    <div class="al-txt"><strong>How to Apply - 100% Waiver Available</strong>The GTA has waived penalties for 7,000+ taxpayers and over QAR 1.6 billion in fines. This client should apply immediately via the Dhareeba portal under "Penalty Exemption Request". Required steps: (1) File all outstanding returns via Dhareeba. (2) Pay the underlying tax due. (3) Submit exemption application with supporting documents. (4) GTA typically processes within 30–90 days.</div>
+  </div>`:
+  `<div class="alert alert-g"><div class="al-ic">✅</div><div class="al-txt"><strong>No Penalties Accumulated</strong>This entity has no accumulated late filing or registration penalties. Maintain timely filing to preserve this status.</div></div>`}
+</div>
+
+<!-- ══ SECTION 5: COMPLIANCE DIMENSIONS ══════════ -->
+<div class="section">
+  <div class="sec-head"><div class="sec-num">5</div><div class="sec-title">Compliance Dimensions - All 8 Areas</div></div>
+  <div class="dg dg-4">
+    <div class="dc ${R.overdue?'red':R.urgent?'amber':'green'}"><div class="dc-lbl">GTA Filing</div><div class="dc-val">${R.overdue?'Overdue':R.urgent?'Due Soon':'On Track'}</div><div class="dc-sub">${fd(R.rdl)}</div></div>
+    <div class="dc ${crSt.cls==='b-red'?'red':crSt.cls==='b-amber'?'amber':'green'}"><div class="dc-lbl">Commercial Registration</div><div class="dc-val">${crSt.lbl}</div></div>
+    <div class="dc ${tlSt.cls==='b-red'?'red':tlSt.cls==='b-amber'?'amber':'green'}"><div class="dc-lbl">Trade License</div><div class="dc-val">${tlSt.lbl}</div></div>
+    <div class="dc ${p.wps==='yes'?'green':p.wps==='na'?'blue':'red'}"><div class="dc-lbl">WPS (Wages Protection)</div><div class="dc-val">${p.wps==='yes'?'Compliant':p.wps==='na'?'Not Applicable':'Not Registered'}</div></div>
+    <div class="dc ${p.hins?'green':'amber'}"><div class="dc-lbl">Health Insurance</div><div class="dc-val">${p.hins?'All employees covered':'Not confirmed'}</div></div>
+    <div class="dc ${p.wht?'amber':'green'}"><div class="dc-lbl">Withholding Tax (WHT)</div><div class="dc-val">${p.wht?'Flag raised':'Not applicable'}</div></div>
+    <div class="dc ${p.cgt?'red':'green'}"><div class="dc-lbl">Capital Gains Tax (CGT)</div><div class="dc-val">${p.cgt?'Return required':'Not triggered'}</div></div>
+    <div class="dc ${p.exc?'amber':'green'}"><div class="dc-lbl">Excise Tax</div><div class="dc-val">${p.exc?'Applicable':'Not applicable'}</div></div>
+  </div>
+  <div class="sub-head">GRSIA & Qatarisation</div>
+  <div class="dg dg-2">
+    <div class="dc ${p.qemp>0?'green':'blue'}"><div class="dc-lbl">GRSIA Contributions</div><div class="dc-val">${p.qemp>0?'Required - '+p.qemp+' Qatari employee'+( p.qemp!==1?'s':''):'Not applicable - no Qatari staff declared'}</div><div class="dc-sub">${p.qemp>0?'14% employer + 7% employee - due 5th monthly':''}</div></div>
+    <div class="dc ${p.jur==='qfc'?'blue':p.emp>0&&p.qemp/p.emp<0.02?'amber':'green'}"><div class="dc-lbl">Qatarisation (Law 12/2024)</div><div class="dc-val">${p.jur==='qfc'?'Exempt (QFC entity)':p.emp>0?Math.round((p.qemp/p.emp)*100)+'% Qatarisation rate':'No staff declared'}</div><div class="dc-sub">${p.jur!=='qfc'?'Effective April 2025 - sector-specific ratios apply':''}</div></div>
+  </div>
+  ${p.rp?`<div class="alert alert-a"><div class="al-ic">⚡</div><div class="al-txt"><strong>Related-Party Transactions</strong>Transfer pricing documentation required for transactions with related parties (Art. 20, Law No. 24/2018). GTA may request the master file and local file. Ensure transactions are at arm's length and documented prior to filing.</div></div>`:''}
+</div>
+
+<!-- ══ SECTION 6: AUDIT READINESS ════════════════ -->
+<div class="section avoid-break">
+  <div class="sec-head"><div class="sec-num">6</div><div class="sec-title">Audit Readiness Checklist</div></div>
+  <div class="checklist">
+    ${ck.map(c=>`<div class="ck-item"><div class="ck-box ${c.ok?'check':'cross'}">${c.ok?'✓':'✗'}</div><div class="ck-lbl"><strong>${esc(c.l)}</strong>${c.s?esc(c.s):''}</div><span class="ck-pri ${c.p==='crit'?'pri-crit':c.p==='high'?'pri-high':'pri-rec'}">${c.p==='crit'?'Critical':c.p==='high'?'High':'Recommended'}</span></div>`).join('')}
+  </div>
+  ${R.needsAudit?`<div class="alert alert-b"><div class="al-ic">ℹ️</div><div class="al-txt"><strong>XBRL Financial Statements - FY 2025 Onwards</strong>GTA has announced XBRL-format financial statements are required for tax returns from FY 2025. All audited accounts must be tagged in iXBRL format. Ensure your audit firm is equipped to produce XBRL-compliant reports before the April 2026 deadline.</div></div>`:''}
+</div>
+
+<!-- ══ SECTION 7: 12-MONTH CALENDAR ══════════════ -->
+<div class="page-break"></div>
+<div class="section">
+  <div class="page-head"><div class="ph-co">${esc(p.co)}</div><div class="ph-mark">Mizaan ميزان</div></div>
+  <div class="sec-head"><div class="sec-num">7</div><div class="sec-title">12-Month Compliance Calendar - ${today.getFullYear()}</div></div>
+  <div class="cal-grid">
+    ${cal.map(c=>`<div class="cal-m"><div class="cal-mh">${c.m}</div><div class="cal-items">${c.items.map(i=>`<div class="cal-item"><div class="cal-dot ${i.c}"></div>${i.t}</div>`).join('')}</div></div>`).join('')}
+  </div>
+</div>
+
+<!-- ══ SECTION 8: GOVERNMENT TENDER ══════════════ -->
+<div class="section avoid-break">
+  <div class="sec-head"><div class="sec-num">8</div><div class="sec-title">Government Tender Eligibility</div></div>
+  <div class="dg dg-2">
+    <div class="dc ${!R.overdue&&p.unfiled===0?'green':'red'}"><div class="dc-lbl">GTA Compliance Certificate</div><div class="dc-val">${!R.overdue&&p.unfiled===0?'Obtainable':'Blocked'}</div><div class="dc-sub">${!R.overdue&&p.unfiled===0?'Can request via Dhareeba':'Requires filing of all outstanding returns'}</div></div>
+    <div class="dc ${crSt.cls==='b-red'?'red':'green'}"><div class="dc-lbl">CR Status for Tenders</div><div class="dc-val">${crSt.cls!=='b-red'?'Valid':'CR Expired - blocks bids'}</div></div>
+  </div>
+  <table class="tbl">
+    <tr><th>Tender Requirement</th><th>Status</th><th>Action Required</th></tr>
+    <tr><td>Valid Commercial Registration</td><td>${crSt.cls!=='b-red'?`<span class="badge b-green">✓ Valid</span>`:`<span class="badge b-red">✗ Expired</span>`}</td><td>${crSt.cls!=='b-red'?'None':'Renew CR immediately'}</td></tr>
+    <tr><td>GTA Compliance Certificate</td><td>${!R.overdue&&p.unfiled===0?`<span class="badge b-green">✓ Obtainable</span>`:`<span class="badge b-red">✗ Blocked</span>`}</td><td>${!R.overdue&&p.unfiled===0?'Request via Dhareeba portal':'File all outstanding returns first'}</td></tr>
+    <tr><td>Valid Trade License</td><td>${tlSt.cls!=='b-red'?`<span class="badge b-green">✓ Valid</span>`:`<span class="badge b-red">✗ Expired</span>`}</td><td>${tlSt.cls!=='b-red'?'None':'Renew Trade License urgently'}</td></tr>
+    <tr><td>No outstanding GTA penalties</td><td>${pen.total===0?`<span class="badge b-green">✓ Clear</span>`:`<span class="badge b-amber">⚡ Exposure</span>`}</td><td>${pen.total===0?'None':'Apply for penalty exemption and settle'}</td></tr>
+    <tr><td>WPS compliance (if applicable)</td><td>${p.wps==='yes'?`<span class="badge b-green">✓ Compliant</span>`:p.wps==='na'?`<span class="badge b-blue">N/A</span>`:`<span class="badge b-red">✗ Not registered</span>`}</td><td>${p.wps==='yes'||p.wps==='na'?'None':'Register with Ministry of Labour'}</td></tr>
+  </table>
+</div>
+
+<!-- ══ SECTION 9: ACTION CHECKLIST ═══════════════ -->
+<div class="section avoid-break">
+  <div class="sec-head"><div class="sec-num">9</div><div class="sec-title">Prioritised Action Checklist</div></div>
+  ${[['Critical - Action Required Immediately','crit','⚠️'],['High - Action Required Within 30 Days','high','⚡'],['Recommended - Best Practice','rec','ℹ️']].map(([h,lvl,ic])=>{
+    const items=ck.filter(c=>!c.ok&&c.p===lvl);
+    if(!items.length)return '';
+    return `<div class="sub-head">${ic} ${h}</div><div class="checklist">${items.map(c=>`<div class="ck-item"><div class="ck-box cross">✗</div><div class="ck-lbl"><strong>${esc(c.l)}</strong>${c.s?esc(c.s):''}</div><span class="ck-pri ${c.p==='crit'?'pri-crit':c.p==='high'?'pri-high':'pri-rec'}">${c.p==='crit'?'Critical':c.p==='high'?'High':'Recommended'}</span></div>`).join('')}</div>`;
+  }).join('')}
+  ${ck.filter(c=>c.ok).length>0?`<div class="sub-head">✅ Already Compliant</div><div class="checklist">${ck.filter(c=>c.ok).map(c=>`<div class="ck-item" style="opacity:.7"><div class="ck-box check">✓</div><div class="ck-lbl"><strong>${esc(c.l)}</strong>${c.s?esc(c.s):''}</div><span class="ck-pri pri-rec">Done</span></div>`).join('')}</div>`:''}
+</div>
+
+<!-- ══ SECTION 10: QDB & FINANCING ═══════════════ -->
+<div class="page-break"></div>
+<div class="section">
+  <div class="page-head"><div class="ph-co">${esc(p.co)}</div><div class="ph-mark">Mizaan ميزان</div></div>
+  <div class="sec-head"><div class="sec-num">10</div><div class="sec-title">QDB & Financing Readiness</div></div>
+  <div class="dg dg-2">
+    <div class="dc ${R.finElig==='green'?'green':R.finElig==='amber'?'amber':'red'}"><div class="dc-lbl">QDB Eligibility Status</div><div class="dc-val">${R.finElig==='green'?'Eligible':R.finElig==='amber'?'Borderline':'Not Currently Eligible'}</div><div class="dc-sub">${R.finElig==='green'?'Compliance status supports TAMKEEN application':R.finElig==='amber'?'1 more year clean filing achieves eligibility':'Resolve GTA compliance issues first'}</div></div>
+    <div class="dc ${fmCol}"><div class="dc-lbl">Financial Maturity Score</div><div class="dc-val">${R.qdbFM}/5 - ${fmLbls[R.qdbFM]}</div><div class="dc-sub">QDB internal assessment dimension</div></div>
+  </div>
+  <div class="dg dg-2">
+    <div class="dc blue"><div class="dc-lbl">Primary Financing Need</div><div class="dc-val">${finNeedLabels[p.finNeed]||p.finNeed}</div></div>
+    <div class="dc ${p.coll==='none'?'amber':'green'}"><div class="dc-lbl">Collateral Available</div><div class="dc-val">${collLabels[p.coll]||p.coll}</div></div>
+  </div>
+  <div class="sub-head">Financial Maturity Pillar Scores</div>
+  <div class="score-wrap">
+    ${pillars.map(pp=>`<div class="score-row"><div class="score-lbl">${pp.l}</div><div class="score-bar-bg"><div class="score-bar-fill" style="width:${pp.pct}%;background:${pp.col}"></div></div><div class="score-pct">${pp.pct}%</div></div>`).join('')}
+  </div>
+  <div class="sub-head">Recommended QDB Products</div>
+  <table class="tbl">
+    <tr><th>Product</th><th>Description</th><th>Eligibility</th></tr>
+    ${prods.map(pd=>`<tr><td>${esc(pd.n)}</td><td>${esc(pd.d)}</td><td>${pd.n==='Not Currently Eligible'?`<span class="badge b-red">Ineligible</span>`:`<span class="badge b-green">Review</span>`}</td></tr>`).join('')}
+  </table>
+  <div class="sub-head">QDB Requirements Checklist</div>
+  <table class="tbl">
+    <tr><th>QDB Requirement</th><th>Status</th></tr>
+    <tr><td>Audited accounts - last 3 years</td><td>${p.yrs!=='u3'?`<span class="badge b-${R.needsAudit&&(p.acct==='firm'||p.acct==='inhouse')?'green':'amber'}">${R.needsAudit&&(p.acct==='firm'||p.acct==='inhouse')?'✓ Likely available':'⚡ Confirm with client'}</span>`:`<span class="badge b-red">✗ Under 3 years - limited history</span>`}</td></tr>
+    <tr><td>Full GTA compliance (no outstanding returns)</td><td>${!R.overdue&&p.unfiled===0?`<span class="badge b-green">✓ Compliant</span>`:`<span class="badge b-red">✗ Outstanding returns - blocks application</span>`}</td></tr>
+    <tr><td>Valid CR and trade license</td><td>${crSt.cls!=='b-red'&&tlSt.cls!=='b-red'?`<span class="badge b-green">✓ Valid</span>`:`<span class="badge b-red">✗ Renewal required</span>`}</td></tr>
+    <tr><td>Company HQ in Qatar</td><td><span class="badge b-green">✓ Qatar-registered entity</span></td></tr>
+    <tr><td>Majority Qatari/GCC ownership (most programmes)</td><td>${100-R.fPct>=51?`<span class="badge b-green">✓ ${100-R.fPct}% Qatari/GCC</span>`:`<span class="badge b-amber">⚡ ${100-R.fPct}% - check specific programme requirements</span>`}</td></tr>
+  </table>
+  ${p.acct==='owner'||p.acct==='nobody'?`<div class="alert alert-b"><div class="al-ic">🏦</div><div class="al-txt"><strong>Minha Programme - QDB Pays for Your Accountant</strong>QDB's Minha programme provides free accounting and financial management advisory for qualifying SMEs. The programme covers costs of an approved accounting firm - at no cost to the client. Guardian Consulting can help you with Minha service. This client should be referred to the Minha portal at qdb.com.qa/minha as an immediate priority.</div></div>`:''}
+</div>
+
+<!-- ══ SECTION 11: SERVICE PROPOSAL ══════════════ -->
+<div class="section avoid-break">
+  <div class="sec-head"><div class="sec-num">11</div><div class="sec-title">Guardian Consulting - Service Proposal</div></div>
+  <div class="proposal-box">
+    <div class="pb-title">${esc(CFG.FIRM)} - Recommended Services</div>
+    <p style="font-size:10px;color:var(--ink3);margin-bottom:12px;line-height:1.6">Based on the compliance assessment above, we recommend the following services to bring ${esc(p.co)} to full GTA compliance and QDB eligibility.</p>
+    ${[
+      ['Tax Return Preparation & Filing','Preparation and submission of all outstanding and current-year tax returns via Dhareeba. Includes full audit liaison and GTA correspondence.'],
+      ['GTA Penalty Waiver Application','Preparation and submission of penalty exemption application. Success rate over 90% for clients with a clean audit trail.'],
+      R.needsAudit?['Statutory Audit - FY Financial Statements','Preparation of audited financial statements by a GTA-registered audit firm. Includes iXBRL tagging for FY 2025 compliance.']:null,
+      p.wht?['WHT Compliance Review','Full review of non-resident payments and WHT obligations. Includes DTA analysis and monthly remittance schedule.']:null,
+      p.acct==='owner'||p.acct==='nobody'?['Outsourced Accounting Services','Monthly bookkeeping, payroll, WPS processing, and GRSIA contributions. Eligible for QDB Minha programme (no cost to client).']:null,
+      (R.finElig!=='red'&&p.finNeed!=='none')?['QDB Financing Application Support','Full preparation of QDB application package including financial projections, business plan, and compliance certificates.']:null,
+    ].filter(Boolean).map(([n,d])=>`<div class="service-row"><div class="sr-name"><strong style="font-size:10.5px">${esc(n)}</strong><br><span style="font-size:9.5px;color:var(--ink3)">${esc(d)}</span></div></div>`).join('')}
+  </div>
+  <div class="sig-area">
+    <div class="sig-box">
+      <div class="sig-lbl">Prepared by - ${esc(CFG.FIRM)}</div>
+      <div class="sig-name" style="margin-top:40px">${esc(CFG.FIRM)}<br>${esc(CFG.PHONE)} · ${esc(CFG.EMAIL)}</div>
+    </div>
+    <div class="sig-box">
+      <div class="sig-lbl">Client Acknowledgement - ${esc(p.co)}</div>
+      <div class="sig-name" style="margin-top:40px">${esc(p.attn)}</div>
+    </div>
+  </div>
+  <div class="disclaimer">
+    <strong>Disclaimer:</strong> This report is prepared by ${esc(CFG.FIRM)} for informational purposes only and does not constitute legal or tax advice. Figures are estimates based on information provided and the Qatar Income Tax Law No. 24 of 2018 as amended. Actual tax liability, penalties, and deadlines should be confirmed with a qualified GTA-registered tax consultant. Guardian Consulting accepts no liability for decisions made on the basis of this report without independent professional verification by Auditors. Powered by Mizaan ميزان - Qatar Compliance Intelligence Platform.
+  </div>
+</div>
+
+<div class="page-foot">
+  <div class="pf-txt">Confidential - Prepared by ${esc(CFG.FIRM)} for ${esc(p.co)} · ${fd(today)}</div>
+  <div class="pf-pg">Powered by Mizaan ميزان</div>
+</div>
+`;
+
+  document.getElementById('report').innerHTML=html;
+}
+
+// Init
+const DEMO_REPORT = {
+  company:'Al Rashid Trading W.L.L.', crNo:'1-234-567',
+  crDate: new Date(new Date().setFullYear(new Date().getFullYear()-3)).toISOString().split('T')[0],
+  jur:'moci', act:'general', profit:500000, rev:2000000, capital:1000000,
+  qPct:100, yrs:'3t10', emp:15, qemp:2, unfiled:1, acct:'firm',
+  coll:'real', finNeed:'working', attn:'Ahmed Al-Rashid, Managing Director',
+  wps:'yes', arFin:'no', tenYr:'yes', wht:false, cgt:false, exc:false, rp:false,
+  hins:false, qdb:true, name:'Ahmed Al-Rashid',
+};
+document.addEventListener('DOMContentLoaded',()=>{
+  // Auto-load from localStorage — set by admin.html when "Generate Report" is clicked
+  try{
+    const raw=localStorage.getItem('mz_report_lead');
+    const lead = raw ? JSON.parse(raw) : DEMO_REPORT;
+    const isDemo = !raw;
+    if(!raw){
+      const sub=document.getElementById('tb-co');
+      if(sub) sub.textContent='Preview — sample data';
+    } else {
+      document.getElementById('tb-co').textContent=lead.company||'Compliance Report';
+    }
+    // Map localStorage lead fields to generate() params
+    const p={
+      co:       lead.company||'',
+      crNo:     lead.crNo||'—',
+      crDate:   lead.crDate||lead.date||new Date().toISOString().split('T')[0],
+      crExp:    lead.crExp||'',
+      jur:      lead.jur||lead.jurisdiction||'moci',
+      tlExp:    lead.tlExp||'',
+      leaseExp: lead.leaseExp||'',
+      act:      lead.activity||'general',
+      profit:   parseFloat(lead.profit||0),
+      rev:      parseFloat(lead.revenue||lead.rev||0),
+      capital:  parseFloat(lead.capital||0),
+      qPct:     parseFloat(lead.qatariPct!=null?lead.qatariPct:100),
+      yrs:      lead.yrs||lead.unfiled>=3?'o10':'3t10',
+      emp:      parseInt(lead.emp||0),
+      qemp:     parseInt(lead.qemp||0),
+      unfiled:  parseInt(lead.unfiled||lead.unfiledYears||0),
+      acct:     lead.acct||lead.accountant||'firm',
+      coll:     lead.collateral||'none',
+      finNeed:  lead.finNeed||'working',
+      attn:     lead.name||'Client',
+      wps:      lead.wps||'yes',
+      arFin:    'no',
+      tenYr:    'yes',
+      wht:      !!lead.wht,
+      cgt:      !!lead.cgt,
+      exc:      !!lead.exc,
+      rp:       false,
+      hins:     false,
+      qdb:      !!lead.qdb,
+    };
+    generate(p);
+  }catch(e){
+    showError('Error loading report data: '+e.message);
+  }
+});
+
+function showError(msg){
+  document.getElementById('report').innerHTML=`<div style="padding:60px 40px;text-align:center;color:#6b6058"><div style="font-size:40px;margin-bottom:16px">⚠️</div><div style="font-size:16px;font-weight:600;margin-bottom:8px">Report could not load</div><div style="font-size:13px;line-height:1.6">${msg}</div><div style="margin-top:20px"><a href="admin.html" style="color:#7c1522;font-weight:600">← Return to Admin</a></div></div>`;
+}
+</script>
+</body>
+</html>

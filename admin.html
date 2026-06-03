@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mizaan Admin ميزان - Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0f0d0b;--ink2:#3d3530;--ink3:#7a6e68;
+  --bg:#0e0c0b;--bg2:#161310;--bg3:#201c18;
+  --card:#1a1612;--card2:#221e1a;
+  --border:#2e2820;--border2:#3a3028;
+  --maroon:#9c2232;--maroon2:#c04050;--maroon3:#e06070;
+  --gold:#c9a840;--gold2:#e8c860;--gold-bg:rgba(201,168,64,.1);
+  --green:#1db954;--green-bg:rgba(29,185,84,.1);
+  --amber:#f0a030;--amber-bg:rgba(240,160,48,.08);
+  --blue:#4080e0;--blue-bg:rgba(64,128,224,.1);
+  --red:#e04040;--red-bg:rgba(224,64,64,.1);
+  --wa:#25D366;--wa2:#1aab55;
+  --r:10px;--rl:16px;
+  --sh:0 1px 3px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'Syne',sans-serif;background:var(--bg);color:#e8e0d8;font-size:13px;line-height:1.6;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.serif{font-family:'Cormorant Garamond',serif}
+
+/* ── LOGIN ── */
+.login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:1000;padding:1rem}
+.login-box{background:var(--card);border:1px solid var(--border2);border-radius:var(--rl);padding:2.5rem 2rem;width:100%;max-width:380px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.login-box .logo{display:flex;align-items:center;gap:10px;margin-bottom:2rem}
+.login-box .logo-mark{width:38px;height:38px;border-radius:8px;background:var(--maroon);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:16px;color:white;flex-shrink:0}
+.login-box .logo-name{font-size:14px;font-weight:600;color:white}
+.login-box .logo-name span{display:block;font-size:11px;color:var(--ink3);font-weight:400}
+.login-box h2{font-size:1.5rem;font-weight:400;color:white;margin-bottom:.4rem}
+.login-box p{font-size:12px;color:var(--ink3);margin-bottom:1.5rem}
+.login-field{margin-bottom:14px}
+.login-field label{display:block;font-size:10px;font-weight:600;color:var(--ink3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.login-field input{width:100%;padding:11px 14px;background:var(--bg3);border:1.5px solid var(--border2);border-radius:var(--r);font-size:13px;font-family:'Syne',sans-serif;color:white;transition:border-color .15s}
+.login-field input:focus{outline:none;border-color:var(--gold)}
+.login-btn{width:100%;padding:12px;background:var(--maroon);color:white;border:none;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;font-family:'Syne',sans-serif;margin-top:8px;transition:background .15s}
+.login-btn:hover{background:var(--maroon2)}
+.login-err{font-size:12px;color:var(--red);text-align:center;margin-top:8px;min-height:18px}
+
+/* ── LAYOUT ── */
+.app{display:none;height:100%;flex-direction:column}
+.app.visible{display:flex}
+
+/* ── TOPBAR ── */
+.topbar{background:var(--card);border-bottom:1px solid var(--border);padding:0 1.5rem;height:52px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar-logo{display:flex;align-items:center;gap:10px}
+.topbar-logo-mark{width:28px;height:28px;border-radius:6px;background:var(--maroon);display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:13px;color:white}
+.topbar-logo-name{font-size:13px;font-weight:600;color:white}
+.topbar-logo-name .g{color:var(--gold)}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.topbar-badge{font-size:10px;background:var(--gold-bg);color:var(--gold);border:1px solid rgba(201,168,64,.3);padding:3px 10px;border-radius:100px;font-weight:600}
+.topbar-logout{font-size:11px;color:var(--ink3);cursor:pointer;background:none;border:none;font-family:'Syne',sans-serif;padding:4px 10px;border-radius:6px;transition:all .15s}
+.topbar-logout:hover{background:var(--border);color:white}
+
+/* ── SIDEBAR ── */
+.layout{display:flex;flex:1;overflow:hidden}
+.sidebar{width:200px;background:var(--card);border-right:1px solid var(--border);padding:1rem 0;flex-shrink:0;overflow-y:auto}
+.nav-section{font-size:9px;font-weight:700;color:var(--ink3);letter-spacing:.1em;text-transform:uppercase;padding:12px 16px 6px}
+.nav-item{display:flex;align-items:center;gap:9px;padding:8px 16px;cursor:pointer;font-size:12px;font-weight:500;color:var(--ink3);border-left:2px solid transparent;transition:all .15s}
+.nav-item:hover{background:var(--bg3);color:white}
+.nav-item.active{border-left-color:var(--gold);background:var(--gold-bg);color:var(--gold)}
+.nav-icon{width:16px;text-align:center;font-size:13px;flex-shrink:0}
+.nav-count{margin-left:auto;background:var(--maroon);color:white;padding:1px 7px;border-radius:100px;font-size:9px;font-weight:700}
+
+/* ── CONTENT ── */
+.content{flex:1;overflow-y:auto;padding:1.5rem}
+.page{display:none}
+.page.active{display:block}
+
+/* ── PAGE HEADER ── */
+.page-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:10px}
+.page-hdr-left h1{font-size:1.6rem;font-weight:400;color:white;line-height:1.1}
+.page-hdr-left p{font-size:12px;color:var(--ink3);margin-top:3px}
+.page-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ── STAT CARDS ── */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.5rem}
+.stat-card{background:var(--card);border:1px solid var(--border2);border-radius:var(--r);padding:14px 16px}
+.stat-label{font-size:10px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.stat-val{font-size:26px;font-weight:400;font-family:'Cormorant Garamond',serif;line-height:1;color:white}
+.stat-val.g{color:var(--green)}.stat-val.r{color:var(--red)}.stat-val.a{color:var(--amber)}.stat-val.b{color:var(--blue)}
+.stat-sub{font-size:10px;color:var(--ink3);margin-top:6px}
+
+/* ── SEARCH / FILTER TOOLBAR ── */
+.tbl-toolbar{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+.search-box{display:flex;align-items:center;gap:8px;background:var(--card2);border:1px solid var(--border2);border-radius:var(--r);padding:7px 12px;flex:1;min-width:200px}
+.search-box input{background:none;border:none;font-size:12px;font-family:'Syne',sans-serif;color:white;flex:1;outline:none}
+.search-box input::placeholder{color:var(--ink3)}
+.filter-select{background:var(--card2);border:1px solid var(--border2);border-radius:var(--r);padding:7px 12px;font-size:12px;font-family:'Syne',sans-serif;color:white;cursor:pointer;outline:none}
+.filter-select option{background:var(--bg2)}
+.count-label{font-size:11px;color:var(--ink3);margin-left:auto;white-space:nowrap}
+
+/* ── BUTTONS ── */
+.btn{padding:7px 14px;border-radius:var(--r);font-size:12px;cursor:pointer;font-family:'Syne',sans-serif;font-weight:600;transition:all .15s;display:inline-flex;align-items:center;gap:6px;border:none}
+.btn-primary{background:var(--maroon);color:white}
+.btn-primary:hover{background:var(--maroon2)}
+.btn-ghost{background:transparent;color:var(--ink3);border:1px solid var(--border2)}
+.btn-ghost:hover{color:white;background:var(--card2)}
+.btn-wa{background:var(--wa);color:white}
+.btn-wa:hover{background:var(--wa2)}
+.btn-gold{background:var(--gold-bg);color:var(--gold);border:1px solid rgba(201,168,64,.3)}
+.btn-gold:hover{background:var(--gold);color:var(--ink)}
+.btn-red{background:var(--red-bg);color:var(--red);border:1px solid rgba(224,64,64,.3)}
+.btn-red:hover{background:var(--red);color:white}
+
+/* ── TABLE ── */
+.tbl-wrap{overflow-x:auto}
+.tbl{width:100%;border-collapse:collapse;min-width:900px}
+.tbl thead th{padding:9px 12px;text-align:left;font-size:10px;font-weight:600;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border);background:var(--card2);white-space:nowrap;cursor:pointer;user-select:none}
+.tbl thead th:hover{color:white}
+.tbl thead th.sort-asc::after{content:' ↑'}
+.tbl thead th.sort-desc::after{content:' ↓'}
+.tbl tbody tr{border-bottom:1px solid var(--border);transition:background .1s}
+.tbl tbody tr:hover td{background:var(--bg3)}
+.tbl td{padding:10px 12px;font-size:12px;vertical-align:middle;color:#d0c8c0}
+.tbl td strong{color:white}
+.tbl-empty{text-align:center;padding:3rem;color:var(--ink3);font-size:13px}
+
+/* ── BADGES ── */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:100px;font-size:10px;font-weight:600}
+.badge.ok{background:var(--green-bg);color:var(--green)}
+.badge.warn{background:var(--amber-bg);color:var(--amber)}
+.badge.danger{background:var(--red-bg);color:var(--red)}
+.badge.info{background:var(--blue-bg);color:var(--blue)}
+.badge.gold{background:var(--gold-bg);color:var(--gold)}
+
+/* ── SCORE RING (small) ── */
+.score-mini{display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;font-size:11px;font-weight:700;font-family:'Cormorant Garamond',serif}
+.score-mini.hi{background:rgba(29,185,84,.12);color:var(--green);border:1px solid rgba(29,185,84,.3)}
+.score-mini.md{background:rgba(240,160,48,.1);color:var(--amber);border:1px solid rgba(240,160,48,.3)}
+.score-mini.lo{background:rgba(224,64,64,.1);color:var(--red);border:1px solid rgba(224,64,64,.3)}
+
+/* ── PIPELINE ── */
+.pipeline{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:1.5rem}
+.pipe-col{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden}
+.pipe-col-hdr{padding:10px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.pipe-col-title{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+.pipe-col-count{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
+.pipe-cards{padding:8px;min-height:180px;display:flex;flex-direction:column;gap:6px}
+.pipe-card{background:var(--card2);border:1px solid var(--border2);border-radius:8px;padding:10px 12px;cursor:pointer;transition:all .15s}
+.pipe-card:hover{border-color:var(--gold);background:var(--bg3)}
+.pipe-card-name{font-size:12px;font-weight:600;color:white;margin-bottom:2px}
+.pipe-card-co{font-size:11px;color:var(--ink3)}
+.pipe-card-meta{margin-top:6px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.pipe-card-date{font-size:10px;color:var(--ink3);margin-top:4px}
+
+/* ── CHARTS ── */
+.analytics-grid{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:1.5rem}
+.chart-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem}
+.chart-title{font-size:12px;font-weight:600;color:white;margin-bottom:1.25rem}
+.bar-chart{display:flex;align-items:flex-end;gap:4px;height:120px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bar{border-radius:4px 4px 0 0;background:var(--maroon);transition:height .5s;width:100%;min-height:2px}
+.bar:hover{background:var(--maroon2)}
+.bar-lbl{font-size:9px;color:var(--ink3);text-align:center}
+.bar-val{font-size:9px;color:var(--ink3)}
+
+/* ── DETAIL DRAWER ── */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;opacity:0;pointer-events:none;transition:opacity .2s}
+.drawer-overlay.open{opacity:1;pointer-events:all}
+.drawer{position:fixed;right:0;top:0;bottom:0;width:400px;background:var(--card);border-left:1px solid var(--border2);z-index:201;transform:translateX(100%);transition:transform .25s cubic-bezier(.4,0,.2,1);overflow-y:auto;padding:1.5rem}
+.drawer.open{transform:translateX(0)}
+.drawer-close{float:right;background:var(--bg3);border:1px solid var(--border2);color:var(--ink3);padding:4px 10px;border-radius:6px;cursor:pointer;font-family:'Syne',sans-serif;font-size:11px}
+.drawer-name{font-size:1.5rem;font-weight:400;color:white;margin:2rem 0 4px;font-family:'Cormorant Garamond',serif}
+.drawer-co{font-size:12px;color:var(--ink3);margin-bottom:1rem}
+.drawer-section{font-size:9px;font-weight:700;color:var(--ink3);letter-spacing:.1em;text-transform:uppercase;padding:12px 0 6px;border-bottom:1px solid var(--border)}
+.drawer-field{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px}
+.drawer-field span:first-child{color:var(--ink3)}
+.drawer-field span:last-child{font-weight:500;color:white;text-align:right;max-width:60%}
+.drawer-note{margin-top:1rem}
+.drawer-note label{font-size:10px;font-weight:600;color:var(--ink3);letter-spacing:.05em;text-transform:uppercase;display:block;margin-bottom:6px}
+.drawer-note textarea{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:10px;font-size:12px;font-family:'Syne',sans-serif;color:white;resize:vertical;min-height:80px}
+.drawer-note textarea:focus{outline:none;border-color:var(--gold)}
+
+/* ── SETTINGS ── */
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.settings-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:1.25rem}
+.settings-card h3{font-size:13px;font-weight:600;color:white;margin-bottom:1rem}
+.settings-field{margin-bottom:12px}
+.settings-field label{display:block;font-size:10px;font-weight:600;color:var(--ink3);letter-spacing:.05em;text-transform:uppercase;margin-bottom:5px}
+.settings-field input,.settings-field select{width:100%;padding:9px 12px;background:var(--bg3);border:1.5px solid var(--border2);border-radius:var(--r);font-size:12px;font-family:'Syne',sans-serif;color:white;transition:border-color .15s}
+.settings-field input:focus{outline:none;border-color:var(--gold)}
+.settings-save{background:var(--maroon);color:white;border:none;padding:9px 20px;border-radius:var(--r);font-size:12px;font-weight:600;cursor:pointer;font-family:'Syne',sans-serif;margin-top:4px;transition:background .15s}
+.settings-save:hover{background:var(--maroon2)}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--card);border:1px solid var(--border2);color:white;padding:10px 20px;border-radius:100px;font-size:12px;z-index:600;white-space:nowrap;box-shadow:var(--sh);animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translate(-50%,8px)}to{opacity:1;transform:translate(-50%,0)}}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){.stat-grid{grid-template-columns:1fr 1fr}.pipeline{grid-template-columns:1fr 1fr}.analytics-grid{grid-template-columns:1fr}.settings-grid{grid-template-columns:1fr}}
+@media(max-width:640px){.sidebar{display:none}.stat-grid{grid-template-columns:1fr 1fr}.pipeline{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div class="login-screen" id="login-screen">
+  <div class="login-box">
+    <div class="logo">
+      <div class="logo-mark">م</div>
+      <div class="logo-name">Mizaan <span style="font-size:10px;font-weight:400;opacity:.6">ميزان</span><span>Admin Dashboard</span></div>
+    </div>
+    <h2>Sign in to continue</h2>
+    <p>Enter your admin password to access the lead dashboard and analytics.</p>
+    <div class="login-field">
+      <label>Password</label>
+      <input type="password" id="pw-input" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="login-btn" onclick="doLogin()">Sign in →</button>
+    <div class="login-err" id="login-err"></div>
+    <p style="font-size:11px;color:var(--ink3);text-align:center;margin-top:14px">← <a href="index.html" style="color:var(--gold);text-decoration:none">Back to main tool</a></p>
+  </div>
+</div>
+
+<!-- ══ APP ══ -->
+<div class="app" id="app">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="topbar-logo">
+      <div class="topbar-logo-mark">م</div>
+      <span class="topbar-logo-name">Mi<span class="g">zaan</span> <span style="font-size:10px;font-weight:400;opacity:.5;letter-spacing:0">ميزان</span></span>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-badge" id="tb-badge">0 leads today</span>
+      <button class="topbar-logout" onclick="doLogout()">Sign out</button>
+    </div>
+  </div>
+
+  <div class="layout">
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <div class="nav-section">Overview</div>
+      <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="nav-icon">📊</span>Dashboard</div>
+      <div class="nav-item" onclick="showPage('pipeline',this)"><span class="nav-icon">🎯</span>Pipeline<span class="nav-count" id="nav-count">0</span></div>
+      <div class="nav-item" onclick="window.open('dashboard.html','_blank')" style="border:1px solid rgba(212,168,67,.25);margin-top:4px"><span class="nav-icon">🏛</span>Company Dashboard</div>
+      <div class="nav-section">Leads</div>
+      <div class="nav-item" onclick="showPage('leads',this)"><span class="nav-icon">👥</span>All Leads</div>
+      <div class="nav-item" onclick="showPage('reports',this)"><span class="nav-icon">📋</span>Report Requests<span class="nav-count" id="nav-reports-count" style="background:rgba(201,168,64,.2);color:var(--gold)">0</span></div>
+      <div class="nav-item" onclick="showPage('invest',this)"><span class="nav-icon">📊</span>Investment Scores<span class="nav-count" id="nav-invest-count" style="background:rgba(64,128,224,.2);color:var(--blue)">0</span></div>
+      <div class="nav-item" onclick="showPage('hot',this)"><span class="nav-icon">🔥</span>High Risk</div>
+      <div class="nav-section">Tools</div>
+      <div class="nav-item" onclick="showPage('analytics',this)"><span class="nav-icon">📈</span>Analytics</div>
+      <div class="nav-item" onclick="showPage('settings',this)"><span class="nav-icon">⚙️</span>Settings</div>
+      <div class="nav-section">Links</div>
+      <div class="nav-item" onclick="window.open('index.html','_blank')"><span class="nav-icon">🌐</span>Live tool ↗</div>
+    </nav>
+
+    <!-- CONTENT -->
+    <main class="content">
+
+      <!-- ── DASHBOARD ── -->
+      <div class="page active" id="page-dashboard">
+        <div class="page-hdr">
+          <div class="page-hdr-left">
+            <h1>Dashboard</h1>
+            <p id="dash-date"></p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-ghost" onclick="exportCSV()">📥 Export CSV</button>
+            <button class="btn btn-wa" onclick="waBlast()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+              WhatsApp All
+            </button>
+          </div>
+        </div>
+        <div class="stat-grid" id="stat-grid"></div>
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:1.5rem">
+          <div class="chart-card">
+            <div class="chart-title">Leads - last 14 days</div>
+            <div class="bar-chart" id="bar-chart"></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Compliance risk distribution</div>
+            <div style="margin-top:8px" id="risk-chart"></div>
+          </div>
+        </div>
+        <div class="chart-card" style="margin-bottom:0">
+          <div class="chart-title">Recent leads</div>
+          <div class="tbl-wrap" id="recent-tbl"></div>
+        </div>
+      </div>
+
+      <!-- ── ALL LEADS ── -->
+      <div class="page" id="page-leads">
+        <div class="page-hdr">
+          <div class="page-hdr-left">
+            <h1>All Leads</h1>
+            <p id="leads-count-label"></p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-ghost" onclick="exportCSV()">📥 Export CSV</button>
+            <button class="btn btn-ghost" onclick="exportJSON()">📋 JSON</button>
+          </div>
+        </div>
+        <div class="tbl-toolbar">
+          <div class="search-box">
+            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <input id="search-input" placeholder="Search name, company, phone…" oninput="renderLeadsTable()">
+          </div>
+          <select class="filter-select" id="filter-stage" onchange="renderLeadsTable()">
+            <option value="">All stages</option>
+            <option value="new">New</option>
+            <option value="contacted">Contacted</option>
+            <option value="qualified">Qualified</option>
+            <option value="closed">Closed / Won</option>
+          </select>
+          <select class="filter-select" id="filter-risk" onchange="renderLeadsTable()">
+            <option value="">All risk levels</option>
+            <option value="high">High risk (score &lt;50)</option>
+            <option value="med">Medium (50–70)</option>
+            <option value="low">Low risk (70+)</option>
+          </select>
+          <select class="filter-select" id="filter-type" onchange="renderLeadsTable()">
+            <option value="">All types</option>
+            <option value="compliance">Compliance only</option>
+            <option value="invest">Investment score</option>
+            <option value="report">Report requested</option>
+          </select>
+          <select class="filter-select" id="filter-jur" onchange="renderLeadsTable()">
+            <option value="">All jurisdictions</option>
+            <option value="moci">MOCI</option>
+            <option value="qfc">QFC</option>
+            <option value="qfza">QFZA</option>
+          </select>
+          <span class="count-label" id="leads-count-badge"></span>
+        </div>
+        <div class="tbl-wrap" id="leads-tbl-wrap"></div>
+      </div>
+
+      <!-- ── HIGH RISK / HOT LEADS ── -->
+      <div class="page" id="page-hot">
+        <div class="page-hdr">
+          <div class="page-hdr-left">
+            <h1>High risk leads</h1>
+            <p>Companies with score below 50 - overdue, high tax, or multiple risk flags</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-wa" onclick="waBlastHot()">WhatsApp High Risk</button>
+          </div>
+        </div>
+        <div class="tbl-wrap" id="hot-tbl-wrap"></div>
+      </div>
+
+      <!-- ── REPORT REQUESTS ── -->
+      <div class="page" id="page-reports">
+        <div class="page-hdr">
+          <div class="page-hdr-left">
+            <h1>Report Requests</h1>
+            <p>Clients who paid QAR 149 and submitted their details — ready to generate</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-ghost" onclick="exportCSV()">📥 Export CSV</button>
+          </div>
+        </div>
+        <div class="tbl-wrap" id="reports-tbl-wrap"></div>
+      </div>
+
+      <!-- ── INVESTMENT SCORES ── -->
+      <div class="page" id="page-invest">
+        <div class="page-hdr">
+          <div class="page-hdr-left">
+            <h1>Investment Readiness Scores</h1>
+            <p>Businesses that completed the investment questionnaire</p>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-ghost" onclick="exportCSV()">📥 Export CSV</button>
+          </div>
+        </div>
+        <div class="tbl-wrap" id="invest-tbl-wrap"></div>
+      </div>
+
+      <!-- ── PIPELINE ── -->
+      <div class="page" id="page-pipeline">
+        <div class="page-hdr">
+          <div class="page-hdr-left">
+            <h1>Pipeline</h1>
+            <p>Drag and manage leads through your sales stages</p>
+          </div>
+        </div>
+        <div class="pipeline" id="pipeline-board"></div>
+      </div>
+
+      <!-- ── ANALYTICS ── -->
+      <div class="page" id="page-analytics">
+        <div class="page-hdr">
+          <div class="page-hdr-left"><h1>Analytics</h1><p>Performance overview and compliance insights</p></div>
+        </div>
+        <div class="stat-grid" id="analytics-stats"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.5rem">
+          <div class="chart-card">
+            <div class="chart-title">Stage distribution</div>
+            <div id="stage-chart" style="margin-top:1rem"></div>
+          </div>
+          <div class="chart-card">
+            <div class="chart-title">Risk breakdown</div>
+            <div id="risk-chart-2" style="margin-top:1rem"></div>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Total tax exposure by stage</div>
+          <div id="tax-chart" style="margin-top:1rem"></div>
+        </div>
+      </div>
+
+      <!-- ── SETTINGS ── -->
+      <div class="page" id="page-settings">
+        <div class="page-hdr">
+          <div class="page-hdr-left"><h1>Settings</h1><p>Configure your platform</p></div>
+        </div>
+        <div class="settings-grid">
+          <div class="settings-card">
+            <h3>WhatsApp & contact</h3>
+            <div class="settings-field"><label>WhatsApp number (digits only)</label><input id="set-wa" type="text" placeholder="97451715999"></div>
+            <div class="settings-field"><label>Firm name</label><input id="set-name" type="text" placeholder="Guardian Consulting"></div>
+            <div class="settings-field"><label>Report price (QAR)</label><input id="set-price" type="number" placeholder="149" value="149"></div>
+            <button class="settings-save" onclick="saveSettings()">Save settings</button>
+          </div>
+          <div class="settings-card">
+            <h3>Admin access</h3>
+            <div class="settings-field"><label>New admin password</label><input id="set-pw" type="password" placeholder="Leave blank to keep current"></div>
+            <div class="settings-field"><label>Confirm password</label><input id="set-pw2" type="password" placeholder="Repeat new password"></div>
+            <button class="settings-save" onclick="changePassword()">Update password</button>
+            <div style="margin-top:1.5rem;padding-top:1.25rem;border-top:1px solid var(--border)">
+              <h3 style="margin-bottom:.75rem;color:var(--red)">Danger zone</h3>
+              <button class="btn btn-red" onclick="clearLeads()">🗑 Delete all leads</button>
+            </div>
+          </div>
+          <div class="settings-card">
+            <h3>Pipeline stages</h3>
+            <div style="display:flex;flex-direction:column;gap:6px;margin-top:.5rem">
+              <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg3);border-radius:8px;font-size:12px"><span style="color:var(--blue)">●</span> New enquiry</div>
+              <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg3);border-radius:8px;font-size:12px"><span style="color:var(--amber)">●</span> Contacted</div>
+              <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg3);border-radius:8px;font-size:12px"><span style="color:var(--maroon2)">●</span> Qualified</div>
+              <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--bg3);border-radius:8px;font-size:12px"><span style="color:var(--green)">●</span> Closed / won</div>
+            </div>
+          </div>
+          <div class="settings-card">
+            <h3>Data & export</h3>
+            <p style="font-size:11px;color:var(--ink3);margin-bottom:1rem">Lead data is stored in browser localStorage. Export regularly to avoid loss.</p>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <button class="btn btn-gold" onclick="exportCSV()" style="justify-content:center">📥 Export all leads (CSV)</button>
+              <button class="btn btn-ghost" onclick="exportJSON()" style="justify-content:center">📋 Export as JSON</button>
+              <div id="set-stats" style="font-size:11px;color:var(--ink3);margin-top:4px;text-align:center"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ── LEAD DRAWER ── -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+<div class="drawer" id="lead-drawer">
+  <button class="drawer-close" onclick="closeDrawer()">✕ Close</button>
+  <div id="drawer-content"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// CONFIG - update these before going live
+// ══════════════════════════════════════════
+let ADMIN_PASS = localStorage.getItem('mz_admin_pw') || 'mizaan2026';
+// Reset password: open browser console and run: localStorage.removeItem('mz_admin_pw')
+let WA         = localStorage.getItem('mz_wa')       || '97451715999';
+let FIRM       = localStorage.getItem('mz_firm')     || 'Guardian Consulting';
+
+// ══════════════════════════════════════════
+// DATA
+// Reads from the same localStorage key used by index.html
+// ══════════════════════════════════════════
+let leads = [];
+let sortField = 'date', sortDir = 'desc';
+
+function loadLeads() {
+  // Primary key used by index.html (mizaan_v3)
+  leads = JSON.parse(localStorage.getItem('mz_leads') || '[]');
+  // Also check legacy keys and merge
+  const legacy = JSON.parse(localStorage.getItem('mz_leads_v3') || localStorage.getItem('qa_leads_v2') || '[]');
+  if (legacy.length && !leads.length) {
+    leads = legacy;
+    localStorage.setItem('mz_leads', JSON.stringify(leads));
+  }
+  // Ensure all leads have an id
+  leads = leads.map((l, i) => ({
+    id: l.id || 'ld_' + i,
+    stage: l.stage || 'new',
+    notes: l.notes || '',
+    ts: l.ts || Date.now() - i * 3600000,
+    ...l
+  }));
+  document.getElementById('nav-count').textContent = leads.length;
+}
+
+function saveLeads() {
+  localStorage.setItem('mz_leads', JSON.stringify(leads));
+}
+
+// ══════════════════════════════════════════
+// AUTH
+// ══════════════════════════════════════════
+function doLogin() {
+  const v = document.getElementById('pw-input').value.trim();
+  if (v === ADMIN_PASS) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').classList.add('visible');
+    loadLeads();
+    renderAll();
+  } else {
+    document.getElementById('login-err').textContent = 'Incorrect password. Try again.';
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-input').focus();
+  }
+}
+
+function doLogout() {
+  document.getElementById('login-screen').style.display = '';
+  document.getElementById('app').classList.remove('visible');
+  document.getElementById('pw-input').value = '';
+}
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+function showPage(id, navEl) {
+  if(id==='reports') renderReportRequests();
+  if(id==='invest') renderInvestLeads();
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (navEl) navEl.classList.add('active');
+  if (id === 'leads')     renderLeadsTable();
+  if (id === 'hot')       renderHotLeads();
+  if (id === 'analytics') renderAnalytics();
+  if (id === 'pipeline')  renderPipeline();
+  if (id === 'settings')  renderSettings();
+}
+
+// ══════════════════════════════════════════
+// RENDER ALL
+// ══════════════════════════════════════════
+function renderAll() {
+  const today = new Date().toLocaleDateString('en-GB', { weekday:'long', day:'2-digit', month:'long', year:'numeric' });
+  document.getElementById('dash-date').textContent = today;
+  const todayStr = new Date().toLocaleDateString('en-GB');
+  const todayCount = leads.filter(l => l.date === todayStr || (l.date && l.date.startsWith(new Date().toISOString().slice(0,10)))).length;
+  document.getElementById('tb-badge').textContent = `${todayCount} lead${todayCount !== 1 ? 's' : ''} today`;
+  renderStats();
+  renderBarChart();
+  renderRiskChart('risk-chart');
+  renderRecentTable();
+  renderPipeline();
+  document.getElementById('nav-count').textContent = leads.length;
+}
+
+function renderStats() {
+  const total    = leads.length;
+  const todayStr = new Date().toLocaleDateString('en-GB');
+  const todayN   = leads.filter(l => l.date === todayStr || (l.date && l.date.startsWith(new Date().toISOString().slice(0,10)))).length;
+  const highRisk = leads.filter(l => (parseInt(l.score) || 100) < 50).length;
+  const waN      = leads.filter(l => l.phone).length;
+  const weekAgo  = Date.now() - 7 * 86400000;
+  const weekN    = leads.filter(l => (l.ts || 0) > weekAgo).length;
+  const overdue  = leads.filter(l => l.overdue).length;
+  document.getElementById('stat-grid').innerHTML = `
+    <div class="stat-card"><div class="stat-label">Total leads</div><div class="stat-val">${total}</div><div class="stat-sub">${weekN} this week</div></div>
+    <div class="stat-card"><div class="stat-label">Today</div><div class="stat-val b">${todayN}</div><div class="stat-sub">New submissions</div></div>
+    <div class="stat-card"><div class="stat-label">High risk</div><div class="stat-val r">${highRisk}</div><div class="stat-sub">Score below 50 or overdue</div></div>
+    <div class="stat-card"><div class="stat-label">Overdue filings</div><div class="stat-val a">${overdue}</div><div class="stat-sub">${waN} contactable via WA</div></div>
+    <div class="stat-card"><div class="stat-label">Penalty exposure</div><div class="stat-val a">QAR ${penK}k</div><div class="stat-sub">Across all leads</div></div>
+    <div class="stat-card"><div class="stat-label">Report requests</div><div class="stat-val" style="color:var(--gold)">${reportReqs}</div><div class="stat-sub">Paid — awaiting delivery</div></div>
+    <div class="stat-card"><div class="stat-label">Investment scores</div><div class="stat-val" style="color:var(--blue)">${investN}</div><div class="stat-sub">${investPaid} paid scorecard</div></div>`;
+}
+
+function renderBarChart() {
+  const days = 14;
+  const counts = {};
+  for (let i = 0; i < days; i++) {
+    const d = new Date(Date.now() - i * 86400000);
+    counts[d.toLocaleDateString('en-GB')] = 0;
+  }
+  leads.forEach(l => { if (l.date && counts.hasOwnProperty(l.date)) counts[l.date]++; });
+  const entries = Object.entries(counts).reverse();
+  const max = Math.max(...entries.map(e => e[1]), 1);
+  document.getElementById('bar-chart').innerHTML = entries.map(([date, count]) => {
+    const h = Math.max((count / max) * 100, 2);
+    const d = date.split('/');
+    return `<div class="bar-col">
+      <div class="bar-val">${count || ''}</div>
+      <div class="bar" style="height:${h}%" title="${date}: ${count}"></div>
+      <div class="bar-lbl">${d[0]}/${d[1]}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderRiskChart(targetId) {
+  const total = leads.length || 1;
+  const hi  = leads.filter(l => (parseInt(l.score)||100) < 50).length;
+  const md  = leads.filter(l => { const s = parseInt(l.score)||100; return s >= 50 && s < 70; }).length;
+  const lo  = leads.filter(l => (parseInt(l.score)||100) >= 70).length;
+  const bars = [
+    { label: 'High risk (< 50)', val: hi, color: 'var(--red)' },
+    { label: 'Medium (50–70)',   val: md, color: 'var(--amber)' },
+    { label: 'Low risk (70+)',   val: lo, color: 'var(--green)' },
+  ];
+  document.getElementById(targetId).innerHTML = bars.map(b => `
+    <div style="margin-bottom:10px">
+      <div style="font-size:11px;display:flex;justify-content:space-between;margin-bottom:4px"><span style="color:var(--ink3)">${b.label}</span><span style="color:white;font-weight:600">${b.val}</span></div>
+      <div style="height:7px;background:var(--border);border-radius:4px"><div style="height:100%;width:${(b.val/total*100).toFixed(0)}%;background:${b.color};border-radius:4px;transition:width .6s"></div></div>
+    </div>`).join('');
+}
+
+function renderRecentTable() {
+  const recent = [...leads].sort((a, b) => (b.ts || 0) - (a.ts || 0)).slice(0, 8);
+  document.getElementById('recent-tbl').innerHTML = buildLeadsHTML(recent);
+}
+
+// ══════════════════════════════════════════
+// LEADS TABLE
+// ══════════════════════════════════════════
+function renderLeadsTable() {
+  const q    = (document.getElementById('search-input')?.value || '').toLowerCase();
+  const stg  = document.getElementById('filter-stage')?.value || '';
+  const typ  = document.getElementById('filter-type')?.value || '';
+  const jur  = document.getElementById('filter-jur')?.value || '';
+  const risk = document.getElementById('filter-risk')?.value || '';
+
+  let filtered = leads.filter(l => {
+    if (q && !((l.name||'').toLowerCase().includes(q) || (l.company||'').toLowerCase().includes(q) || (l.phone||'').includes(q) || (l.email||'').toLowerCase().includes(q))) return false;
+    if (stg && (l.stage || 'new') !== stg) return false;
+    if (typ === 'compliance' && l.type === 'invest') return false;
+    if (typ === 'invest' && l.type !== 'invest') return false;
+    if (typ === 'report' && !l.reportRequested) return false;
+    if (jur && (l.jur||l.jurisdiction||'') !== jur) return false;
+    if (risk) {
+      const s = parseInt(l.score) || 100;
+      if (risk === 'high' && s >= 50) return false;
+      if (risk === 'med'  && (s < 50 || s >= 70)) return false;
+      if (risk === 'low'  && s < 70) return false;
+    }
+    return true;
+  });
+
+  filtered.sort((a, b) => {
+    const va = a[sortField] || '', vb = b[sortField] || '';
+    const cmp = typeof va === 'number' ? va - vb : String(va).localeCompare(String(vb));
+    return sortDir === 'asc' ? cmp : -cmp;
+  });
+
+  const badge = document.getElementById('leads-count-badge');
+  if (badge) badge.textContent = `${filtered.length} of ${leads.length} leads`;
+  const label = document.getElementById('leads-count-label');
+  if (label) label.textContent = `${leads.length} total submissions`;
+
+  document.getElementById('leads-tbl-wrap').innerHTML = buildLeadsHTML(filtered);
+}
+
+function sortBy(field) {
+  if (sortField === field) sortDir = sortDir === 'asc' ? 'desc' : 'asc';
+  else { sortField = field; sortDir = 'asc'; }
+  document.querySelectorAll('.tbl thead th').forEach(th => { th.classList.remove('sort-asc','sort-desc'); });
+  renderLeadsTable();
+}
+
+function buildLeadsHTML(arr) {
+  if (!arr.length) return `<div class="tbl-empty">No leads found.</div>`;
+  const JL={moci:'MOCI',qfc:'QFC',qfza:'QFZA',other:'Other'};
+  const AL={firm:'Ext. firm',inhouse:'In-house',owner:'Owner',nobody:'None'};
+  return `<table class="tbl"><thead><tr>
+    <th onclick="sortBy('name')">Name / Company</th>
+    <th onclick="sortBy('phone')">WhatsApp</th>
+    <th>Type</th>
+    <th onclick="sortBy('score')">Score</th>
+    <th onclick="sortBy('penalty')">Penalty</th>
+    <th onclick="sortBy('deadline')">Deadline</th>
+    <th>Jurisdiction</th>
+    <th>Unfiled</th>
+    <th>Accountant</th>
+    <th>Flags</th>
+    <th onclick="sortBy('stage')">Stage</th>
+    <th onclick="sortBy('date')">Date</th>
+    <th>Actions</th>
+  </tr></thead><tbody>${arr.map(l => {
+    const isInv = l.type==='invest';
+    const sc = isInv?(l.investScore||0):(parseInt(l.score)||100);
+    const scCls = isInv?(sc>=70?'hi':sc>=40?'md':'lo'):(sc<50?'lo':sc<70?'md':'hi');
+    const pen = parseFloat(l.penalty)||0;
+    const unf = parseInt(l.unfiled||l.unfiledYears)||0;
+    const jur = JL[l.jur||l.jurisdiction||'']||(l.jur||l.jurisdiction||'-');
+    const acct = AL[l.acct||l.accountant||'']||(l.acct||'-');
+    const flags=[];
+    if(!isInv){
+      if(l.overdue)         flags.push(`<span class="badge danger">Overdue</span>`);
+      if(unf>0)             flags.push(`<span class="badge warn">${unf}yr unfiled</span>`);
+      if(l.reportRequested) flags.push(`<span class="badge" style="background:rgba(201,168,64,.15);color:var(--gold);border:1px solid rgba(201,168,64,.3)">Report ✓</span>`);
+      if(l.wht)             flags.push(`<span class="badge warn">WHT</span>`);
+      if(l.cgt)             flags.push(`<span class="badge warn">CGT</span>`);
+      if(l.exc)             flags.push(`<span class="badge gold">Excise</span>`);
+    } else {
+      if(l.optIn)           flags.push(`<span class="badge" style="background:rgba(64,128,224,.12);color:var(--blue);border:1px solid rgba(64,128,224,.2)">Investor</span>`);
+      if(l.paidRequested)   flags.push(`<span class="badge" style="background:rgba(201,168,64,.15);color:var(--gold);border:1px solid rgba(201,168,64,.3)">Paid ✓</span>`);
+    }
+    return `<tr>
+      <td>
+        <strong style="cursor:pointer" onclick="openDrawer('${esc(l.id)}')">${esc(l.name||'-')}</strong>
+        ${l.company?`<br><span style="font-size:10px;color:var(--ink3)">${esc(l.company)}</span>`:''}
+      </td>
+      <td><a href="tel:${esc(l.phone||'')}" style="color:var(--green);text-decoration:none">${esc(l.phone||'-')}</a></td>
+      <td><span class="badge" style="font-size:9px;${isInv?'background:rgba(64,128,224,.12);color:var(--blue);border:1px solid rgba(64,128,224,.2)':'background:rgba(156,34,50,.1);color:var(--maroon2);border:1px solid rgba(156,34,50,.2)'}">${isInv?'Invest':'Compliance'}</span></td>
+      <td><div class="score-mini ${scCls}" style="${isInv?'width:auto;min-width:32px;padding:0 5px;border-radius:6px;font-size:10px;':''}">${isInv?sc+'/100':(l.score||'-')}</div></td>
+      <td style="font-size:11px;color:${pen>0?'var(--red)':'var(--ink3)'};">${pen>0?'QAR '+Math.round(pen).toLocaleString():'-'}</td>
+      <td style="font-size:11px;color:${l.overdue?'var(--red)':'var(--ink3)'};">${esc(l.deadline||'-')}${l.overdue?' ⚠':''}</td>
+      <td style="font-size:11px;color:var(--ink3)">${jur}</td>
+      <td style="font-size:11px;text-align:center;color:${unf>0?'var(--amber)':'var(--ink3)'};">${unf>0?unf+'yr':'-'}</td>
+      <td style="font-size:11px;color:var(--ink3)">${acct}</td>
+      <td style="display:flex;gap:3px;flex-wrap:wrap;padding-top:12px;min-width:80px">${flags.join('')||'<span style="color:var(--ink3);font-size:10px">—</span>'}</td>
+      <td>
+        <select class="filter-select" style="padding:3px 8px;font-size:10px" onchange="updateStage('${esc(l.id)}',this.value)">
+          <option value="new"       ${(l.stage||'new')==='new'?'selected':''}>New</option>
+          <option value="contacted" ${l.stage==='contacted'?'selected':''}>Contacted</option>
+          <option value="qualified" ${l.stage==='qualified'?'selected':''}>Qualified</option>
+          <option value="closed"    ${l.stage==='closed'?'selected':''}>Closed</option>
+        </select>
+      </td>
+      <td style="white-space:nowrap;font-size:11px;color:var(--ink3)">${esc(l.date||'-')}</td>
+      <td>
+        <div style="display:flex;gap:4px;flex-wrap:wrap">
+          ${l.phone?`<button class="btn btn-wa" style="padding:4px 8px;font-size:10px" onclick="waLead('${esc(l.phone)}','${esc(l.name||'')}')">WA</button>`:''}
+          ${isInv
+            ?`<button class="btn btn-ghost" style="padding:4px 8px;font-size:10px;background:rgba(64,128,224,.1);color:var(--blue);border-color:rgba(64,128,224,.2)" onclick="openScorecard('${esc(l.id)}')">📊</button>`
+            :`<button class="btn btn-ghost" style="padding:4px 8px;font-size:10px;background:rgba(29,185,84,.08);color:var(--green);border-color:rgba(29,185,84,.2)" onclick="openReport('${esc(l.id)}')">📋</button>`}
+          <button class="btn btn-ghost" style="padding:4px 8px;font-size:10px" onclick="openDrawer('${esc(l.id)}')">View</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('')}</tbody></table>`;
+}
+
+function renderHotLeads() {
+  const hot = leads.filter(l => {
+    if(l.type==='invest') return false;
+    const sc=parseInt(l.score)||100;
+    return sc<50 || l.overdue || (parseInt(l.unfiled||l.unfiledYears)||0)>1;
+  });
+  document.getElementById('hot-tbl-wrap').innerHTML = buildLeadsHTML(hot);
+}
+
+function renderReportRequests() {
+  const rr = leads.filter(l => l.reportRequested && l.type!=='invest');
+  document.getElementById('reports-tbl-wrap').innerHTML = buildLeadsHTML(rr);
+}
+
+function renderInvestLeads() {
+  const inv = leads.filter(l => l.type==='invest');
+  if(!inv.length){document.getElementById('invest-tbl-wrap').innerHTML='<div class="tbl-empty">No investment assessments yet.</div>';return;}
+  const PILLARS=['financial','compliance','business','operations','leadership','growth'];
+  const pillarLabels={financial:'Financial',compliance:'Compliance',business:'Business',operations:'Operations',leadership:'Leadership',growth:'Growth'};
+  document.getElementById('invest-tbl-wrap').innerHTML=`<table class="tbl"><thead><tr>
+    <th>Name / Company</th><th>WhatsApp</th><th>Score</th>
+    ${PILLARS.map(p=>`<th>${pillarLabels[p]}</th>`).join('')}
+    <th>Investor opt-in</th><th>Paid</th><th>Date</th><th>Actions</th>
+  </tr></thead><tbody>${inv.map(l=>{
+    const sc=l.investScore||0;
+    const scCls=sc>=70?'hi':sc>=40?'md':'lo';
+    const pp=l.pillarPcts||{};
+    return `<tr>
+      <td><strong style="cursor:pointer" onclick="openDrawer('${esc(l.id)}')">${esc(l.name||'-')}</strong>${l.company?`<br><span style="font-size:10px;color:var(--ink3)">${esc(l.company)}</span>`:''}</td>
+      <td><a href="tel:${esc(l.phone||'')}" style="color:var(--green);text-decoration:none">${esc(l.phone||'-')}</a></td>
+      <td><div class="score-mini ${scCls}" style="width:auto;min-width:36px;padding:0 6px;border-radius:6px;font-size:10px">${sc}/100</div></td>
+      ${PILLARS.map(p=>{const v=pp[p]||0;const col=v>=70?'var(--green)':v>=40?'var(--amber)':'var(--red)';return `<td style="font-size:11px;font-weight:600;color:${col};text-align:center">${v}%</td>`;}).join('')}
+      <td style="text-align:center">${l.optIn?'<span class="badge" style="background:rgba(64,128,224,.12);color:var(--blue);border:1px solid rgba(64,128,224,.2)">Yes</span>':'<span style="color:var(--ink3);font-size:11px">—</span>'}</td>
+      <td style="text-align:center">${l.paidRequested?'<span class="badge" style="background:rgba(201,168,64,.15);color:var(--gold);border:1px solid rgba(201,168,64,.3)">Paid ✓</span>':'<span style="color:var(--ink3);font-size:11px">—</span>'}</td>
+      <td style="font-size:11px;color:var(--ink3)">${esc(l.date||'-')}</td>
+      <td>
+        <div style="display:flex;gap:4px">
+          ${l.phone?`<button class="btn btn-wa" style="padding:4px 8px;font-size:10px" onclick="waLead('${esc(l.phone)}','${esc(l.name||'')}')">WA</button>`:''}
+          <button class="btn btn-ghost" style="padding:4px 8px;font-size:10px;background:rgba(64,128,224,.1);color:var(--blue);border-color:rgba(64,128,224,.2)" onclick="openScorecard('${esc(l.id)}')">📊 Scorecard</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('')}</tbody></table>`;
+}
+
+// ══════════════════════════════════════════
+// PIPELINE
+// ══════════════════════════════════════════
+function renderPipeline() {
+  const stages = [
+    { id:'new',       label:'New enquiry',  color:'#4080e0' },
+    { id:'contacted', label:'Contacted',    color:'#f0a030' },
+    { id:'qualified', label:'Qualified',    color:'#c04050' },
+    { id:'closed',    label:'Closed / Won', color:'#1db954' },
+  ];
+  document.getElementById('pipeline-board').innerHTML = stages.map(s => {
+    const cards = leads.filter(l => (l.stage || 'new') === s.id);
+    return `<div class="pipe-col">
+      <div class="pipe-col-hdr">
+        <span class="pipe-col-title" style="color:${s.color}">${s.label}</span>
+        <span class="pipe-col-count" style="background:${s.color}20;color:${s.color}">${cards.length}</span>
+      </div>
+      <div class="pipe-cards">${cards.map(l => {
+        const sc = parseInt(l.score) || 100;
+        const scCls = sc < 50 ? 'lo' : sc < 70 ? 'md' : 'hi';
+        return `<div class="pipe-card" onclick="openDrawer('${esc(l.id)}')">
+          <div class="pipe-card-name">${esc(l.name||'Unknown')}</div>
+          <div class="pipe-card-co">${esc(l.company||'-')}</div>
+          <div class="pipe-card-meta">
+            <div class="score-mini ${scCls}" style="width:28px;height:28px;font-size:11px">${l.score||'-'}</div>
+            ${l.overdue ? `<span class="badge danger" style="font-size:9px">Overdue</span>` : ''}
+            ${l.tax ? `<span style="font-size:10px;color:var(--amber)">QAR ${Math.round(l.tax/1000)}k</span>` : ''}
+          </div>
+          <div class="pipe-card-date">${esc(l.date||'')}</div>
+        </div>`;
+      }).join('')}</div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+// ANALYTICS
+// ══════════════════════════════════════════
+function renderAnalytics() {
+  const total   = leads.length || 1;
+  const highRsk = leads.filter(l => (parseInt(l.score)||100) < 50).length;
+  const closed  = leads.filter(l => l.stage === 'closed').length;
+  const overdue = leads.filter(l => l.overdue).length;
+  const taxTotal= leads.reduce((s, l) => s + (parseFloat(l.tax) || 0), 0);
+  document.getElementById('analytics-stats').innerHTML = `
+    <div class="stat-card"><div class="stat-label">Total leads</div><div class="stat-val">${leads.length}</div></div>
+    <div class="stat-card"><div class="stat-label">High risk</div><div class="stat-val r">${highRsk}</div><div class="stat-sub">${(highRsk/total*100).toFixed(0)}% of total</div></div>
+    <div class="stat-card"><div class="stat-label">Closed / Won</div><div class="stat-val g">${closed}</div><div class="stat-sub">${(closed/total*100).toFixed(0)}% close rate</div></div>
+    <div class="stat-card"><div class="stat-label">Total tax exposure</div><div class="stat-val a">QAR ${(taxTotal/1000).toFixed(0)}k</div><div class="stat-sub">${overdue} overdue filings</div></div>`;
+
+  // Stage distribution
+  const stages = ['new','contacted','qualified','closed'];
+  const stageColors = ['#4080e0','#f0a030','#c04050','#1db954'];
+  document.getElementById('stage-chart').innerHTML = stages.map((s, i) => {
+    const cnt = leads.filter(l => (l.stage||'new') === s).length;
+    return `<div style="margin-bottom:10px">
+      <div style="font-size:12px;display:flex;justify-content:space-between;margin-bottom:4px;text-transform:capitalize"><span style="color:var(--ink3)">${s}</span><span style="color:white;font-weight:600">${cnt}</span></div>
+      <div style="height:7px;background:var(--border);border-radius:4px"><div style="height:100%;width:${(cnt/total*100).toFixed(0)}%;background:${stageColors[i]};border-radius:4px"></div></div>
+    </div>`;
+  }).join('');
+
+  renderRiskChart('risk-chart-2');
+
+  // Tax by stage
+  document.getElementById('tax-chart').innerHTML = stages.map((s, i) => {
+    const stageTax = leads.filter(l => (l.stage||'new') === s).reduce((sum, l) => sum + (parseFloat(l.tax)||0), 0);
+    return `<div style="margin-bottom:10px">
+      <div style="font-size:12px;display:flex;justify-content:space-between;margin-bottom:4px;text-transform:capitalize"><span style="color:var(--ink3)">${s}</span><span style="color:white;font-weight:600">QAR ${Math.round(stageTax).toLocaleString()}</span></div>
+      <div style="height:7px;background:var(--border);border-radius:4px"><div style="height:100%;width:${taxTotal>0?(stageTax/taxTotal*100).toFixed(0):0}%;background:${stageColors[i]};border-radius:4px"></div></div>
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+// DRAWER
+// ══════════════════════════════════════════
+function openDrawer(id) {
+  const l = leads.find(l => l.id === id);
+  if (!l) return;
+  const sc = parseInt(l.score) || 100;
+  const scCls = sc < 50 ? 'lo' : sc < 70 ? 'md' : 'hi';
+  document.getElementById('drawer-content').innerHTML = `
+    <div class="drawer-name">${esc(l.name || 'Unknown')}</div>
+    <div class="drawer-co">${esc(l.company || 'No company provided')}</div>
+
+    <div style="display:flex;gap:8px;margin-bottom:1rem">
+      ${l.type==='invest'
+        ?`<button class="btn" style="flex:1;justify-content:center;background:#eff6ff;color:#1e3a5f;border:1px solid rgba(30,58,95,.2);font-size:12px;padding:8px" onclick="openScorecard('${esc(l.id)}')">
+            📊 Generate & Download Scorecard
+          </button>`
+        :`<button class="btn" style="flex:1;justify-content:center;background:#f0fdf4;color:#14532d;border:1px solid rgba(20,83,45,.2);font-size:12px;padding:8px" onclick="openReport('${esc(l.id)}')">
+            📋 Generate & Download Report
+          </button>`}
+    </div>
+    ${l.phone ? `<div style="margin-bottom:1rem">
+      <button class="btn btn-wa" style="width:100%;justify-content:center" onclick="waLead('${esc(l.phone)}','${esc(l.name||'')}')">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Open WhatsApp chat
+      </button>
+    </div>` : ''}
+
+    <div class="drawer-section">Contact</div>
+    <div class="drawer-field"><span>Phone</span><span>${esc(l.phone||'-')}</span></div>
+    <div class="drawer-field"><span>Email</span><span>${esc(l.email||'-')}</span></div>
+    <div class="drawer-field"><span>Date submitted</span><span>${esc(l.date||'-')}</span></div>
+
+    ${l.type==='invest' ? `
+    <div class="drawer-section" style="margin-top:1rem">Investment Readiness</div>
+    <div class="drawer-field"><span>Overall score</span><span style="color:${(l.investScore||0)>=70?'var(--green)':(l.investScore||0)>=40?'var(--amber)':'var(--red)';font-weight:700">${l.investScore||'-'}/100 — ${l.investBand||'-'}</span></div>
+    <div class="drawer-field"><span>Sector</span><span>${esc(l.sector||'-')}</span></div>
+    <div class="drawer-field"><span>Investor opt-in</span><span>${l.optIn?'<span class="badge" style="background:rgba(64,128,224,.12);color:var(--blue);border:1px solid rgba(64,128,224,.2)">Yes — add to network</span>':'No'}</span></div>
+    <div class="drawer-field"><span>Paid scorecard</span><span>${l.paidRequested?'<span class="badge" style="background:rgba(201,168,64,.15);color:var(--gold);border:1px solid rgba(201,168,64,.3)">Paid ✓</span>':'Not yet'}</span></div>
+    ${l.pillarPcts?Object.entries(l.pillarPcts).map(([k,v])=>`<div class="drawer-field"><span style="text-transform:capitalize">${k}</span><span style="color:${v>=70?'var(--green)':v>=40?'var(--amber)':'var(--red)'};font-weight:600">${v}%</span></div>`).join(''):''}
+    ` : `
+    <div class="drawer-section" style="margin-top:1rem">Compliance results</div>
+    <div class="drawer-field"><span>Compliance score</span><span><div class="score-mini ${scCls}" style="display:inline-flex">${l.score||'-'}</div></span></div>
+    <div class="drawer-field"><span>Filing deadline</span><span style="color:${l.overdue?'var(--red)':'inherit'}">${esc(l.deadline||'-')}${l.overdue?' ⚠ OVERDUE':''}</span></div>
+    <div class="drawer-field"><span>Estimated tax</span><span style="color:var(--amber)">${l.tax?'QAR '+Math.round(l.tax).toLocaleString():'-'}</span></div>
+    <div class="drawer-field"><span>Penalty exposure</span><span style="color:${parseFloat(l.penalty)>0?'var(--red)':'inherit'}">${parseFloat(l.penalty)>0?'QAR '+Math.round(l.penalty).toLocaleString():'None'}</span></div>
+    <div class="drawer-field"><span>Jurisdiction</span><span>${{moci:'MOCI',qfc:'QFC',qfza:'QFZA',other:'Other'}[l.jur||l.jurisdiction||'']||(l.jur||l.jurisdiction||'-')}</span></div>
+    <div class="drawer-field"><span>Years unfiled</span><span style="color:${(parseInt(l.unfiled||l.unfiledYears)||0)>0?'var(--amber)':'inherit'}">${parseInt(l.unfiled||l.unfiledYears)||0} year(s)</span></div>
+    <div class="drawer-field"><span>Accountant type</span><span>${{firm:'External firm',inhouse:'In-house accountant',owner:'Owner handles it',nobody:'Nobody'}[l.acct||l.accountant||'']||(l.acct||'-')}</span></div>
+    <div class="drawer-field"><span>Report requested</span><span>${l.reportRequested?'<span class="badge" style="background:rgba(201,168,64,.15);color:var(--gold);border:1px solid rgba(201,168,64,.3)">Yes — awaiting delivery</span>':'Not yet'}</span></div>
+    <div class="drawer-field"><span>Activity type</span><span>${esc(l.activity||'-')}</span></div>
+    <div class="drawer-field"><span>Qatari ownership</span><span>${l.qatariPct!==undefined?l.qatariPct+'%':'-'}</span></div>
+    <div class="drawer-field"><span>WHT obligation</span><span>${l.wht?'<span class="badge warn">Yes</span>':'No'}</span></div>
+    <div class="drawer-field"><span>Capital gains</span><span>${l.cgt?'<span class="badge warn">Yes</span>':'No'}</span></div>
+    <div class="drawer-field"><span>Excise tax</span><span>${l.exc?'<span class="badge gold">Yes</span>':'No'}</span></div>
+    `}
+
+    <div class="drawer-section" style="margin-top:1rem">Pipeline</div>
+    <div style="margin-top:8px">
+      <label style="font-size:10px;font-weight:600;color:var(--ink3);letter-spacing:.05em;text-transform:uppercase;display:block;margin-bottom:6px">Stage</label>
+      <select class="filter-select" style="width:100%" onchange="updateStage('${esc(l.id)}',this.value)">
+        <option value="new"       ${(l.stage||'new')==='new'?'selected':''}>New enquiry</option>
+        <option value="contacted" ${l.stage==='contacted'?'selected':''}>Contacted</option>
+        <option value="qualified" ${l.stage==='qualified'?'selected':''}>Qualified</option>
+        <option value="closed"    ${l.stage==='closed'?'selected':''}>Closed / Won</option>
+      </select>
+    </div>
+
+    <div class="drawer-note" style="margin-top:1rem">
+      <label>Notes</label>
+      <textarea id="drawer-note-${esc(l.id)}" placeholder="Add notes about this lead...">${esc(l.notes||'')}</textarea>
+      <button class="btn btn-ghost" style="margin-top:6px;font-size:11px" onclick="saveNote('${esc(l.id)}')">Save note</button>
+    </div>
+    <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)">
+      <button class="btn btn-red" style="width:100%;justify-content:center;font-size:11px" onclick="deleteLead('${esc(l.id)}')">🗑 Delete this lead</button>
+    </div>`;
+
+  document.getElementById('drawer-overlay').classList.add('open');
+  document.getElementById('lead-drawer').classList.add('open');
+}
+
+function closeDrawer() {
+  document.getElementById('drawer-overlay').classList.remove('open');
+  document.getElementById('lead-drawer').classList.remove('open');
+}
+
+function saveNote(id) {
+  const l = leads.find(l => l.id === id);
+  if (!l) return;
+  l.notes = document.getElementById('drawer-note-' + id)?.value || '';
+  saveLeads();
+  toast('Note saved');
+}
+
+function updateStage(id, stage) {
+  const l = leads.find(l => l.id === id);
+  if (!l) return;
+  l.stage = stage;
+  saveLeads();
+  renderAll();
+  renderLeadsTable();
+  toast(`Moved to "${stage}"`);
+}
+
+function deleteLead(id) {
+  if (!confirm('Delete this lead? Cannot be undone.')) return;
+  leads = leads.filter(l => l.id !== id);
+  saveLeads();
+  closeDrawer();
+  renderAll();
+  renderLeadsTable();
+  toast('Lead deleted');
+}
+
+// ══════════════════════════════════════════
+// WHATSAPP
+// ══════════════════════════════════════════
+const waUrl = (num, msg) => `https://wa.me/${num}?text=${encodeURIComponent(msg)}`;
+
+function openReport(id) {
+  const leads = getLeads();
+  const lead = leads.find(l => l.id === id);
+  if (!lead) { toast('Lead not found.'); return; }
+  localStorage.setItem('mz_report_lead', JSON.stringify(lead));
+  window.open('report.html', '_blank');
+}
+
+function openScorecard(id) {
+  const leads = getLeads();
+  const lead = leads.find(l => l.id === id);
+  if (!lead) { toast('Lead not found.'); return; }
+  if (!lead.pillarPcts) { toast('No scorecard data for this lead - they may not have completed the questionnaire.'); return; }
+  localStorage.setItem('mz_scorecard_lead', JSON.stringify(lead));
+  window.open('scorecard.html', '_blank');
+}
+
+function waLead(phone, name) {
+  const msg = `Hi ${name}, this is ${FIRM}. Thank you for using Mizaan - I'd like to discuss your compliance check results and how we can help. Is now a good time?`;
+  window.open(waUrl(phone.replace(/\D/g, ''), msg), '_blank');
+}
+
+function waBlast() {
+  const withPhone = leads.filter(l => l.phone);
+  if (!withPhone.length) { toast('No leads with phone numbers.'); return; }
+  toast(`Opening WhatsApp for ${withPhone.length} leads…`);
+  withPhone.forEach((l, i) => setTimeout(() => waLead(l.phone, l.name || 'there'), i * 1200));
+}
+
+function waBlastHot() {
+  const hot = leads.filter(l => ((parseInt(l.score)||100) < 50 || l.overdue) && l.phone);
+  if (!hot.length) { toast('No high-risk leads with phone numbers.'); return; }
+  toast(`Opening WhatsApp for ${hot.length} high-risk leads…`);
+  hot.forEach((l, i) => setTimeout(() => waLead(l.phone, l.name || 'there'), i * 1200));
+}
+
+// ══════════════════════════════════════════
+// EXPORT
+// ══════════════════════════════════════════
+function exportCSV() {
+  const headers = ['ID','Name','Company','Phone','Email','Score','Tax Est.','Deadline','Overdue','Activity','Qatari%','WHT','CGT','Excise','Stage','Date','Notes'];
+  const rows = leads.map(l => [
+    l.id, l.name, l.company, l.phone, l.email,
+    l.score, l.tax ? Math.round(l.tax) : '', l.deadline, l.overdue ? 'Yes' : 'No',
+    l.activity, l.qatariPct, l.wht ? 'Yes':'No', l.cgt ? 'Yes':'No', l.exc ? 'Yes':'No',
+    l.stage||'new', l.date, (l.notes||'').replace(/\n/g,' ')
+  ]);
+  const csv = [headers, ...rows].map(r => r.map(v => `"${(v||'').toString().replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,\uFEFF' + encodeURIComponent(csv);
+  a.download = `mizaan_leads_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  toast('CSV exported');
+}
+
+function exportJSON() {
+  const a = document.createElement('a');
+  a.href = 'data:application/json,' + encodeURIComponent(JSON.stringify(leads, null, 2));
+  a.download = `mizaan_leads_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  toast('JSON exported');
+}
+
+// ══════════════════════════════════════════
+// SETTINGS
+// ══════════════════════════════════════════
+function renderSettings() {
+  document.getElementById('set-wa').value    = WA;
+  document.getElementById('set-name').value  = FIRM;
+  document.getElementById('set-stats').textContent = `${leads.length} leads stored · localStorage key: mz_leads`;
+}
+
+function saveSettings() {
+  const wa    = document.getElementById('set-wa').value.trim().replace(/\D/g,'');
+  const name  = document.getElementById('set-name').value.trim();
+  if (wa)   { WA = wa;     localStorage.setItem('mz_wa', wa); }
+  if (name) { FIRM = name; localStorage.setItem('mz_firm', name); }
+  toast('Settings saved');
+}
+
+function changePassword() {
+  const pw  = document.getElementById('set-pw').value;
+  const pw2 = document.getElementById('set-pw2').value;
+  if (!pw)        { toast('Enter a new password'); return; }
+  if (pw !== pw2) { toast('Passwords do not match'); return; }
+  ADMIN_PASS = pw;
+  localStorage.setItem('mz_admin_pw', pw);
+  document.getElementById('set-pw').value  = '';
+  document.getElementById('set-pw2').value = '';
+  toast('Password updated');
+}
+
+function clearLeads() {
+  if (!confirm('Delete ALL leads? This cannot be undone.')) return;
+  leads = [];
+  saveLeads();
+  renderAll();
+  renderLeadsTable();
+  toast('All leads deleted');
+}
+
+// ══════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════
+function esc(s) {
+  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function toast(msg) {
+  document.querySelectorAll('.toast').forEach(t => t.remove());
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+document.getElementById('pw-input').focus();
+</script>
+</body>
+</html>
