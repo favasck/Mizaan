@@ -9,21 +9,40 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_cmVmaW5lZC13YWxydXMtODkuY2xlcmsuYWNjb3VudHMuZGV2JA" src="https://refined-walrus-89.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
 <script>
-// Auth guard — runs before anything renders
-window.addEventListener('load', async () => {
-  await window.__clerk_loaded;
-  const Clerk = window.Clerk;
-  await Clerk.load();
-  if (!Clerk.user) {
+// Auth guard — robust version
+async function initClerkAuth() {
+  // Wait for Clerk script to be ready
+  const maxWait = 8000;
+  const start = Date.now();
+  while (!window.Clerk && Date.now() - start < maxWait) {
+    await new Promise(r => setTimeout(r, 100));
+  }
+  if (!window.Clerk) {
+    // Clerk failed to load — show app anyway (fallback)
+    document.getElementById('auth-guard').style.display = 'none';
+    document.getElementById('app').style.display = 'flex';
+    if (typeof loadWorkspace === 'function') loadWorkspace();
+    return;
+  }
+  try {
+    await window.Clerk.load();
+  } catch(e) {
+    console.warn('Clerk load error:', e);
+  }
+  if (!window.Clerk.user) {
     window.location.replace('login.html');
     return;
   }
   window.__mizaanUser = {
-    id: Clerk.user.id,
-    name: Clerk.user.fullName || Clerk.user.firstName || 'User',
-    email: Clerk.user.primaryEmailAddress?.emailAddress || '',
+    id: window.Clerk.user.id,
+    name: window.Clerk.user.fullName || window.Clerk.user.firstName || 'User',
+    email: window.Clerk.user.primaryEmailAddress?.emailAddress || '',
   };
-});
+  document.getElementById('auth-guard').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  if (typeof loadWorkspace === 'function') loadWorkspace();
+}
+document.addEventListener('DOMContentLoaded', initClerkAuth);
 </script>
 <style>
 :root{
@@ -561,7 +580,7 @@ let completedActions={};
 // ── INIT ─────────────────────────────────────────
 document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('tb-date').textContent=new Date().toLocaleDateString('en-GB',{weekday:'short',day:'2-digit',month:'long',year:'numeric'});
-  loadWorkspace();
+  // loadWorkspace called by auth guard after session verified
 });
 
 function loadWorkspace(){

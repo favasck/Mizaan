@@ -117,14 +117,21 @@ body{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}
 </div>
 
 <script>
-window.addEventListener('load', async () => {
-  await window.__clerk_loaded;
-  const Clerk = window.Clerk;
+async function initLogin() {
+  // Wait for Clerk to be available
+  const maxWait = 8000;
+  const start = Date.now();
+  while (!window.Clerk && Date.now() - start < maxWait) {
+    await new Promise(r => setTimeout(r, 100));
+  }
+  if (!window.Clerk) {
+    document.getElementById('auth-loading').innerHTML = '<div class="loading-text">Login unavailable. Please refresh.</div>';
+    return;
+  }
+  try { await window.Clerk.load(); } catch(e) { console.warn(e); }
 
-  await Clerk.load();
-
-  // If already signed in, redirect to dashboard
-  if (Clerk.user) {
+  // Already signed in — go straight to dashboard
+  if (window.Clerk.user) {
     window.location.href = 'dashboard.html';
     return;
   }
@@ -132,14 +139,16 @@ window.addEventListener('load', async () => {
   document.getElementById('auth-loading').style.display = 'none';
   document.getElementById('clerk-auth').style.display = 'block';
 
-  // Mount sign-in component
-  // Shows sign-in by default; has built-in "sign up" link
-  Clerk.mountSignIn(document.getElementById('clerk-auth'), {
-    afterSignInUrl: 'dashboard.html',
-    afterSignUpUrl: 'dashboard.html',
-    signUpUrl: 'login.html',
+  const base = window.location.origin + window.location.pathname.replace('login.html','');
+  
+  window.Clerk.mountSignIn(document.getElementById('clerk-auth'), {
+    afterSignInUrl: base + 'dashboard.html',
+    afterSignUpUrl: base + 'dashboard.html',
+    signUpUrl: base + 'login.html',
+    signUpForceRedirectUrl: base + 'dashboard.html',
   });
-});
+}
+document.addEventListener('DOMContentLoaded', initLogin);
 </script>
 </body>
 </html>
