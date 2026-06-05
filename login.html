@@ -6,8 +6,7 @@
 <title>Mizaan ميزان – Sign In</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script>window.__clerk_publishable_key = 'pk_live_Y2xlcmsubWl6YWFuLnFhJA';</script>
-<script src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js" onload="initLogin()" onerror="showLoginError()"></script>
+
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -151,6 +150,65 @@ async function initLogin() {
 function showLoginError() {
   document.getElementById('auth-loading').innerHTML = '<div class="loading-text">Login unavailable. <a href="https://wa.me/97451715999" style="color:var(--maroon);font-weight:600">Contact us on WhatsApp</a> or refresh.</div>';
 }
+</script>
+<script>
+window.__clerk_publishable_key = 'pk_live_Y2xlcmsubWl6YWFuLnFhJA';
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+<script>
+(function() {
+  function showError() {
+    var el = document.getElementById('auth-loading');
+    if (el) el.innerHTML = '<div class="loading-text">Login unavailable. <a href="https://wa.me/97451715999" style="color:#7c1522;font-weight:600">Contact us on WhatsApp</a> or refresh.</div>';
+  }
+
+  async function mountClerk() {
+    try {
+      await window.Clerk.load();
+    } catch(e) {
+      console.warn('Clerk.load error:', e);
+      showError();
+      return;
+    }
+    if (window.Clerk.user) {
+      window.location.href = 'dashboard.html';
+      return;
+    }
+    var loading = document.getElementById('auth-loading');
+    var container = document.getElementById('clerk-auth');
+    if (loading) loading.style.display = 'none';
+    if (container) container.style.display = 'block';
+    try {
+      window.Clerk.mountSignIn(container, {
+        afterSignInUrl: '/dashboard.html',
+        afterSignUpUrl: '/dashboard.html',
+        appearance: {
+          variables: {
+            colorPrimary: '#7c1522',
+            fontFamily: 'Syne, sans-serif',
+            borderRadius: '10px'
+          }
+        }
+      });
+    } catch(e) {
+      console.error('mountSignIn error:', e);
+      showError();
+    }
+  }
+
+  // Poll until window.Clerk is available (handles both sync and async script loading)
+  var attempts = 0;
+  var poll = setInterval(function() {
+    attempts++;
+    if (window.Clerk) {
+      clearInterval(poll);
+      mountClerk();
+    } else if (attempts > 80) { // 8 seconds
+      clearInterval(poll);
+      showError();
+    }
+  }, 100);
+})();
 </script>
 </body>
 </html>
