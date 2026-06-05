@@ -6,7 +6,8 @@
 <title>Mizaan ميزان – Sign In</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_cmVmaW5lZC13YWxydXMtODkuY2xlcmsuYWNjb3VudHMuZGV2JA" src="https://refined-walrus-89.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+<script>window.__clerk_publishable_key = 'pk_live_Y2xlcmsubWl6YWFuLnFhJA';</script>
+<script src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js" onload="initLogin()" onerror="showLoginError()"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -118,37 +119,38 @@ body{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}
 
 <script>
 async function initLogin() {
-  // Wait for Clerk to be available
-  const maxWait = 8000;
-  const start = Date.now();
-  while (!window.Clerk && Date.now() - start < maxWait) {
-    await new Promise(r => setTimeout(r, 100));
+  try {
+    const clerk = window.Clerk;
+    if (!clerk) { showLoginError(); return; }
+    await clerk.load({
+      afterSignInUrl: '/dashboard.html',
+      afterSignUpUrl: '/dashboard.html',
+    });
+    if (clerk.user) {
+      window.location.href = 'dashboard.html';
+      return;
+    }
+    document.getElementById('auth-loading').style.display = 'none';
+    document.getElementById('clerk-auth').style.display = 'block';
+    clerk.mountSignIn(document.getElementById('clerk-auth'), {
+      afterSignInUrl: '/dashboard.html',
+      afterSignUpUrl: '/dashboard.html',
+      appearance: {
+        variables: {
+          colorPrimary: '#7c1522',
+          fontFamily: 'Syne, sans-serif',
+          borderRadius: '10px'
+        }
+      }
+    });
+  } catch(e) {
+    console.error('Clerk init error:', e);
+    showLoginError();
   }
-  if (!window.Clerk) {
-    document.getElementById('auth-loading').innerHTML = '<div class="loading-text">Login unavailable. Please refresh.</div>';
-    return;
-  }
-  try { await window.Clerk.load(); } catch(e) { console.warn(e); }
-
-  // Already signed in — go straight to dashboard
-  if (window.Clerk.user) {
-    window.location.href = 'dashboard.html';
-    return;
-  }
-
-  document.getElementById('auth-loading').style.display = 'none';
-  document.getElementById('clerk-auth').style.display = 'block';
-
-  const base = window.location.origin + window.location.pathname.replace('login.html','');
-  
-  window.Clerk.mountSignIn(document.getElementById('clerk-auth'), {
-    afterSignInUrl: base + 'dashboard.html',
-    afterSignUpUrl: base + 'dashboard.html',
-    signUpUrl: base + 'login.html',
-    signUpForceRedirectUrl: base + 'dashboard.html',
-  });
 }
-document.addEventListener('DOMContentLoaded', initLogin);
+function showLoginError() {
+  document.getElementById('auth-loading').innerHTML = '<div class="loading-text">Login unavailable. <a href="https://wa.me/97451715999" style="color:var(--maroon);font-weight:600">Contact us on WhatsApp</a> or refresh.</div>';
+}
 </script>
 </body>
 </html>
