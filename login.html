@@ -6,10 +6,7 @@
 <title>Mizaan ميزان – Sign In</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script>
-  window.__clerk_publishable_key = 'pk_live_Y2xlcmsubWl6YWFuLnFhJA';
-</script>
-<script src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js" crossorigin="anonymous" data-clerk-publishable-key="pk_live_Y2xlcmsubWl6YWFuLnFhJA"></script>
+<script async crossorigin="anonymous" data-clerk-publishable-key="pk_test_cmVmaW5lZC13YWxydXMtODkuY2xlcmsuYWNjb3VudHMuZGV2JA" src="https://refined-walrus-89.clerk.accounts.dev/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -121,14 +118,17 @@ body{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}
 
 <script>
 async function initLogin() {
-  try {
-    await window.Clerk.load({
-      appearance: {}
-    });
-  } catch(e) {
-    document.getElementById('auth-loading').innerHTML = '<div class="loading-mark">م</div><div class="loading-text">Could not load login. <a href="" style="color:#7c1522">Refresh</a></div>';
+  // Wait for Clerk to be available
+  const maxWait = 8000;
+  const start = Date.now();
+  while (!window.Clerk && Date.now() - start < maxWait) {
+    await new Promise(r => setTimeout(r, 100));
+  }
+  if (!window.Clerk) {
+    document.getElementById('auth-loading').innerHTML = '<div class="loading-text">Login unavailable. Please refresh.</div>';
     return;
   }
+  try { await window.Clerk.load(); } catch(e) { console.warn(e); }
 
   // Already signed in — go straight to dashboard
   if (window.Clerk.user) {
@@ -139,31 +139,16 @@ async function initLogin() {
   document.getElementById('auth-loading').style.display = 'none';
   document.getElementById('clerk-auth').style.display = 'block';
 
-  const base = 'https://www.mizaan.qa/';
+  const base = window.location.origin + window.location.pathname.replace('login.html','');
   
-  // Check URL param to decide sign-in vs sign-up
-  const isSignUp = new URLSearchParams(window.location.search).get('mode') === 'signup';
-  const target = document.getElementById('clerk-auth');
-
-  if (isSignUp) {
-    window.Clerk.mountSignUp(target, {
-      afterSignUpUrl: base + 'dashboard.html',
-      signInUrl: base + 'login.html',
-    });
-  } else {
-    window.Clerk.mountSignIn(target, {
-      afterSignInUrl: base + 'dashboard.html',
-      afterSignUpUrl: base + 'dashboard.html',
-      signUpUrl: base + 'login.html?mode=signup',
-      signUpForceRedirectUrl: base + 'dashboard.html',
-    });
-  }
+  window.Clerk.mountSignIn(document.getElementById('clerk-auth'), {
+    afterSignInUrl: base + 'dashboard.html',
+    afterSignUpUrl: base + 'dashboard.html',
+    signUpUrl: base + 'login.html',
+    signUpForceRedirectUrl: base + 'dashboard.html',
+  });
 }
-if (document.readyState === 'complete') {
-  initLogin();
-} else {
-  window.addEventListener('load', initLogin);
-}
+document.addEventListener('DOMContentLoaded', initLogin);
 </script>
 </body>
 </html>
