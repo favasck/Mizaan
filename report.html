@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Mizaan - Full Compliance Report</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%237c1522'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='serif' font-size='20' fill='%23d4a843'>م</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -269,7 +270,7 @@ body{font-family:'Syne',sans-serif;color:#1a1410;background:#fff;-webkit-print-c
 </div><!-- /wrap -->
 
 <script>
-const CFG={WA:'97455171999',FIRM:'Guardian Consulting',ADDR:'Doha - Qatar',PHONE:'+974 5171 5999',EMAIL:'info@guardianconsultingcompany.com'};
+const CFG={WA:'97451715999',FIRM:'Guardian Consulting',ADDR:'Doha - Qatar',PHONE:'+974 5171 5999',EMAIL:'info@guardianconsultingcompany.com'};
 const today=new Date();today.setHours(0,0,0,0);
 
 function fFlip(id){document.getElementById(id).classList.toggle('on');}
@@ -279,12 +280,17 @@ function fp(s,e){return fd(s)+' – '+fd(e);}
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function daysFrom(d){const dt=new Date(d);dt.setHours(0,0,0,0);return Math.ceil((dt-today)/86400000);}
 function expStatus(d){if(!d)return{lbl:'Not provided',cls:'b-gray'};const dd=daysFrom(d);if(dd<0)return{lbl:'Expired',cls:'b-red'};if(dd<=30)return{lbl:'Expires in '+dd+' days',cls:'b-red'};if(dd<=90)return{lbl:'Expires in '+dd+' days',cls:'b-amber'};return{lbl:'Valid - '+fd(d),cls:'b-green'};}
+// FY2025 deadline extended to 30 June 2026
+function gtaDeadline(auditFY, qfc) {
+  if (auditFY === 2025) return new Date(2026, 5, 30);
+  return qfc ? new Date(auditFY + 1, 5, 30) : new Date(auditFY + 1, 3, 30);
+}
 function penCalc(unfiled){
   const rows=[];let total=0;
   const ty=today.getFullYear();
   if(unfiled>=1){rows.push({l:'Registration failure',a:20000});total+=20000;}
   for(let i=0;i<unfiled;i++){
-    const fy=ty-1-i,ddl=new Date(fy+1,3,30);
+    const fy=ty-1-i,ddl=gtaDeadline(fy,false);
     if(today<=ddl)continue;
     const days=Math.ceil((today-ddl)/86400000),pen=Math.min(days*500,180000);
     rows.push({l:'Late filing FY '+fy,a:pen});total+=pen;
@@ -295,18 +301,18 @@ function engine(p){
   const cr=new Date(p.crDate);
   const y=cr.getFullYear(),m=cr.getMonth()+1,late=m>=7,qfc=p.jur==='qfc';
   let rps,rpe,rdl;
-  if(!late){rps=new Date(y,0,1);rpe=new Date(y,11,31);rdl=qfc?new Date(y+1,5,30):new Date(y+1,3,30);}
-  else{rps=new Date(cr);rpe=new Date(y+1,11,31);rdl=qfc?new Date(y+2,5,30):new Date(y+2,3,30);}
+  if(!late){rps=new Date(y,0,1);rpe=new Date(y,11,31);rdl=gtaDeadline(y,qfc);}
+  else{rps=new Date(cr);rpe=new Date(y+1,11,31);rdl=gtaDeadline(y+1,qfc);}
   if(today>rdl){
-    const ty2=today.getFullYear(),lFY=today.getMonth()>=4?ty2-1:ty2-2;
-    rps=new Date(lFY,0,1);rpe=new Date(lFY,11,31);rdl=qfc?new Date(lFY+1,5,30):new Date(lFY+1,3,30);
+    const ty2=today.getFullYear(),lFY=today.getMonth()>=6?ty2-1:ty2-2;
+    rps=new Date(lFY,0,1);rpe=new Date(lFY,11,31);rdl=gtaDeadline(lFY,qfc);
   }
   const ms=86400000,overdue=today>rdl,dL=Math.ceil((rdl-today)/ms),dO=overdue?Math.abs(dL):0,urgent=!overdue&&dL<=30;
   const fPct=qfc?100:(100-p.qPct),petro=p.act==='petroleum',rate=petro?.35:.10,rLbl=petro?'35%':'10%';
   const txP=p.profit*(fPct/100),txA=fPct>0&&p.profit>0?txP*rate:0,taxable=fPct>0&&p.profit>0;
   const needsAudit=(p.rev||0)>500000||(p.capital||0)>200000;
   const pen=penCalc(p.unfiled);
-  if(overdue){const ty2=today.getFullYear(),lFY=today.getMonth()>=4?ty2-1:ty2-2;pen.rows.unshift({l:'Late filing FY '+lFY,a:Math.min(dO*500,180000)});pen.total+=Math.min(dO*500,180000);}
+  if(overdue){const ty2=today.getFullYear(),lFY=today.getMonth()>=6?ty2-1:ty2-2;pen.rows.unshift({l:'Late filing FY '+lFY,a:Math.min(dO*500,180000)});pen.total+=Math.min(dO*500,180000);}
   const finElig=!overdue&&p.unfiled===0?'green':!overdue&&p.unfiled<=1?'amber':'red';
   let sc=100;
   if(overdue)sc-=35;else if(urgent)sc-=18;else if(dL<=60)sc-=8;
@@ -367,7 +373,7 @@ function buildCalendar(p,R){
     {m:'January',items:[{c:'cd-blue',t:'WPS - salaries via WPS system'},{c:'cd-amber',t:'GRSIA contributions due 5th'},{c:'cd-blue',t:'WHT return if applicable'}]},
     {m:'February',items:[{c:'cd-blue',t:'WPS - monthly compliance'},{c:'cd-amber',t:'GRSIA contributions due 5th'},{c:'cd-red',t:'Start engaging auditor for FY report'}]},
     {m:'March',items:[{c:'cd-red',t:'DEADLINE MONTH - file via Dhareeba'},{c:'cd-amber',t:'GRSIA contributions due 5th'},{c:'cd-blue',t:'WHT reconciliation'}]},
-    {m:'April 30',items:[{c:'cd-red',t:'⚑ INCOME TAX FILING DEADLINE'+(R.overdue?' - OVERDUE':'')},{c:'cd-amber',t:'Last day to avoid late filing penalties'},{c:'cd-blue',t:'QFC deadline: 30 June'}]},
+    {m:'30 June 2026',items:[{c:'cd-red',t:'⚑ INCOME TAX FILING DEADLINE – FY2025 EXTENSION'+(R.overdue?' - OVERDUE':'')},{c:'cd-amber',t:'GTA extended deadline from 30 April to 30 June 2026'},{c:'cd-blue',t:'Applies to all entities including QFC'}]},
     {m:'May',items:[{c:'cd-green',t:'CR renewal if due'},{c:'cd-amber',t:'GRSIA contributions due 5th'},{c:'cd-blue',t:'CGT return if disposal occurred'}]},
     {m:'June',items:[{c:'cd-blue',t:'QFC companies - filing deadline 30 June'},{c:'cd-amber',t:'GRSIA contributions due 5th'},{c:'cd-green',t:'Mid-year compliance review'}]},
     {m:'July',items:[{c:'cd-blue',t:'WHT return if applicable'},{c:'cd-amber',t:'GRSIA contributions due 5th'},{c:'cd-green',t:'Trade license renewal if due'}]},
@@ -495,12 +501,12 @@ function generate(p){
     <div class="dc ${R.overdue?'red':'green'}"><div class="dc-lbl">Audit Period Start</div><div class="dc-val">${fd(R.rps)}</div></div>
     <div class="dc ${R.overdue?'red':'green'}"><div class="dc-lbl">Audit Period End</div><div class="dc-val">${fd(R.rpe)}</div></div>
     <div class="dc ${R.overdue?'red':R.urgent?'amber':'green'}"><div class="dc-lbl">Filing Deadline</div><div class="dc-val">${fd(R.rdl)}</div><div class="dc-sub">${R.overdue?'OVERDUE - '+R.dO+' days':R.urgent?R.dL+' days remaining':R.dL+' days remaining'}</div></div>
-    <div class="dc blue"><div class="dc-lbl">Audit Period</div><div class="dc-val">${yrMos} months</div><div class="dc-sub">${p.jur==='qfc'?'QFC: 6-month deadline':'MOCI: April 30 deadline'}</div></div>
+    <div class="dc blue"><div class="dc-lbl">Audit Period</div><div class="dc-val">${yrMos} months</div><div class="dc-sub">${p.jur==='qfc'?'FY2025: 30 Jun 2026 (extended)':'FY2025: 30 Jun 2026 (extended)'}</div></div>
   </div>
   <div class="sub-head">Registration date analysis</div>
   <table class="tbl">
     <tr><th>CR Registered</th><th>Before July 1?</th><th>First Audit Period</th><th>First Deadline</th><th>Deadline Rule</th></tr>
-    <tr><td>${fd(p.crDate)}</td><td>${new Date(p.crDate).getMonth()+1<7?'Yes':'No'}</td><td>${fp(R.rps,R.rpe)}</td><td>${fd(R.rdl)}</td><td>${p.jur==='qfc'?'6 months after FY end (QFC)':'30 April following audit year-end'}</td></tr>
+    <tr><td>${fd(p.crDate)}</td><td>${new Date(p.crDate).getMonth()+1<7?'Yes':'No'}</td><td>${fp(R.rps,R.rpe)}</td><td>${fd(R.rdl)}</td><td>FY2025: 30 June 2026 (GTA extension). Standard: 30 April (MOCI) / 30 June (QFC)</td></tr>
   </table>
   ${p.jur==='qfc'?`<div class="alert alert-b"><div class="al-ic">ℹ️</div><div class="al-txt"><strong>QFC Jurisdiction - Special Rules</strong>QFC-registered companies have a 6-month filing window (deadline 30 June). Income tax applies at 10% on net profit regardless of ownership structure. QFC companies are exempt from the Qatarisation Law No. 12 of 2024.</div></div>`:''}
 </div>
@@ -574,7 +580,7 @@ function generate(p){
   <div class="checklist">
     ${ck.map(c=>`<div class="ck-item"><div class="ck-box ${c.ok?'check':'cross'}">${c.ok?'✓':'✗'}</div><div class="ck-lbl"><strong>${esc(c.l)}</strong>${c.s?esc(c.s):''}</div><span class="ck-pri ${c.p==='crit'?'pri-crit':c.p==='high'?'pri-high':'pri-rec'}">${c.p==='crit'?'Critical':c.p==='high'?'High':'Recommended'}</span></div>`).join('')}
   </div>
-  ${R.needsAudit?`<div class="alert alert-b"><div class="al-ic">ℹ️</div><div class="al-txt"><strong>XBRL Financial Statements - FY 2025 Onwards</strong>GTA has announced XBRL-format financial statements are required for tax returns from FY 2025. All audited accounts must be tagged in iXBRL format. Ensure your audit firm is equipped to produce XBRL-compliant reports before the April 2026 deadline.</div></div>`:''}
+  ${R.needsAudit?`<div class="alert alert-b"><div class="al-ic">ℹ️</div><div class="al-txt"><strong>XBRL Financial Statements - FY 2025 Onwards</strong>GTA has announced XBRL-format financial statements are required for tax returns from FY 2025. All audited accounts must be tagged in iXBRL format. Ensure your audit firm is equipped to produce XBRL-compliant reports before the 30 June 2026 deadline.</div></div>`:''}
 </div>
 
 <!-- ══ SECTION 7: 12-MONTH CALENDAR ══════════════ -->

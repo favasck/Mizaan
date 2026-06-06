@@ -4,6 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Mizaan ميزان – Dashboard</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%237c1522'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='serif' font-size='20' fill='%23d4a843'>م</text></svg>">
+<meta name="description" content="Mizaan – Qatar compliance intelligence dashboard for SMEs.">
+<meta property="og:title" content="Mizaan ميزان – Dashboard">
+<meta property="og:description" content="Manage your Qatar compliance obligations, deadlines, and Trust Score.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mizaan.qa/dashboard">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
@@ -312,7 +318,7 @@ input[type=range].rng::-webkit-slider-thumb{-webkit-appearance:none;width:18px;h
       <button class="nav-item" onclick="window.location.href='index.html'"><span class="ni">📋</span> Compliance Check</button>
       <button class="nav-item" onclick="window.location.href='invest.html'"><span class="ni">📈</span> Investment Readiness</button>
       <button class="nav-item" onclick="showPage('workspace',this)"><span class="ni">⚙️</span> Company Profile</button>
-      <button class="nav-item" onclick="window.location.href='admin.html'"><span class="ni">🔒</span> Admin CRM</button>
+      <button class="nav-item" id="nav-admin-crm" onclick="window.location.href='admin.html'"><span class="ni">🔒</span> Admin CRM</button>
     </div>
     <div class="sb-user">
       <div class="sb-avatar" id="sb-avatar">?</div>
@@ -684,6 +690,12 @@ function renderUserBar() {
       avatarEl.textContent = (u.name || 'U').charAt(0).toUpperCase();
     }
   }
+  // Determine role from users array — owner is always admin
+  const storedUsers = JSON.parse(localStorage.getItem('mz_users') || '[]');
+  const match = storedUsers.find(x => x.email === u.email);
+  const role = match ? match.role : 'admin'; // owner = admin by default
+  const adminCrmBtn = document.getElementById('nav-admin-crm');
+  if (adminCrmBtn) adminCrmBtn.style.display = role === 'admin' ? '' : 'none';
 }
 
 async function signOut() {
@@ -694,7 +706,6 @@ async function signOut() {
 
 // ── DATA LOAD ─────────────────────────────────────
 function loadData() {
-  try { completedActions = JSON.parse(localStorage.getItem(CFG.COMPLETED_KEY) || '{}'); } catch(e) {}
   try { customActions = JSON.parse(localStorage.getItem(CFG.ACTIONS_KEY) || '[]'); } catch(e) {}
   try { companies = JSON.parse(localStorage.getItem(CFG.COMPANIES_KEY) || '[]'); } catch(e) {}
   try { users = JSON.parse(localStorage.getItem(CFG.USERS_KEY) || '[]'); } catch(e) {}
@@ -709,6 +720,8 @@ function loadData() {
       activeCoId = 'co_default';
       saveCompanies();
     }
+    // Load completed actions scoped to active company
+    loadCompletedActions();
     showApp();
   } else {
     showSetup();
@@ -718,6 +731,16 @@ function loadData() {
 function saveCompanies() {
   localStorage.setItem(CFG.COMPANIES_KEY, JSON.stringify(companies));
   if (activeCoId) localStorage.setItem(CFG.ACTIVE_KEY, activeCoId);
+}
+
+function loadCompletedActions() {
+  const key = 'mz_completed_' + (activeCoId || 'default');
+  try { completedActions = JSON.parse(localStorage.getItem(key) || '{}'); } catch(e) { completedActions = {}; }
+}
+
+function saveCompletedActions() {
+  const key = 'mz_completed_' + (activeCoId || 'default');
+  localStorage.setItem(key, JSON.stringify(completedActions));
 }
 
 function getActiveCompany() {
@@ -730,6 +753,11 @@ let setupStep = 0;
 function showSetup() {
   document.getElementById('app').style.display = 'none';
   document.getElementById('setup-screen').classList.add('show');
+  // Pre-populate from free compliance check if available
+  try {
+    const preload = JSON.parse(localStorage.getItem('mz_check_preload') || 'null');
+    if (preload && preload._fromCheck) { WS = { ...preload }; }
+  } catch(e) {}
   setupStep = 0; renderSetupStep();
 }
 function showApp() {
@@ -986,6 +1014,7 @@ function setActiveCompany(id) {
   saveCompanies();
   WS = companies.find(c => c.id === id) || WS;
   localStorage.setItem(CFG.KEY, JSON.stringify(WS));
+  loadCompletedActions();
   renderAll();
   renderCompaniesPage();
   toast('Active company switched.');
@@ -1058,7 +1087,7 @@ function deleteAction(id) {
 
 function markAction(id, done) {
   completedActions[id] = done;
-  localStorage.setItem(CFG.COMPLETED_KEY, JSON.stringify(completedActions));
+  saveCompletedActions();
   renderAll();
 }
 
@@ -1144,6 +1173,13 @@ function confirmDeleteUser(id) {
   openModal('confirm-modal');
 }
 
+// ── GTA DEADLINE HELPER ───────────────────────────
+// FY2025 deadline extended to 30 June 2026 (GTA extension – regional situation)
+function gtaDeadline(auditFY, qfc) {
+  if (auditFY === 2025) return new Date(2026, 5, 30);
+  return qfc ? new Date(auditFY + 1, 5, 30) : new Date(auditFY + 1, 3, 30);
+}
+
 // ── ENGINE ────────────────────────────────────────
 function calcScores(ws) {
   if (!ws) return { tax:50, reg:50, labour:50, docs:50, gov:50, compScore:50, trustScore:50 };
@@ -1196,9 +1232,11 @@ function buildObligations(ws) {
   const yr = today.getFullYear();
   const obls = [];
 
-  const taxDl = new Date(yr,3,30); if (today > taxDl) taxDl.setFullYear(yr+1);
+  const currentFY = today.getMonth() >= 6 ? yr : yr - 1; // after June = filing for current FY
+  const taxDl = gtaDeadline(currentFY, ws.jur === 'qfc');
   const taxDays = dt(taxDl);
-  obls.push({ id:'gta-annual', cat:'GTA', title:'Annual Income Tax Return', detail:'File via Dhareeba by 30 April', deadline:taxDl, days:taxDays, status:taxDays<0?'overdue':taxDays<=30?'soon':taxDays<=90?'upcoming':'ok', priority:ws.gta==='3+'||ws.gta==='1-2'||taxDays<0?'crit':taxDays<=30?'high':'normal', applies:true });
+  const taxDeadlineLabel = currentFY === 2025 ? 'File via Dhareeba by 30 June 2026 (FY2025 extension)' : `File via Dhareeba by 30 ${ws.jur==='qfc'?'June':'April'}`;
+  obls.push({ id:'gta-annual', cat:'GTA', title:'Annual Income Tax Return', detail:taxDeadlineLabel, deadline:taxDl, days:taxDays, status:taxDays<0?'overdue':taxDays<=30?'soon':taxDays<=90?'upcoming':'ok', priority:ws.gta==='3+'||ws.gta==='1-2'||taxDays<0?'crit':taxDays<=30?'high':'normal', applies:true });
   if (ws.unfiled > 0) obls.push({ id:'gta-back', cat:'GTA', title:`${ws.unfiled} Outstanding Tax Return${ws.unfiled>1?'s':''}`, detail:'File immediately — GTA 100% penalty waiver may apply.', deadline:null, days:-1, status:'overdue', priority:'crit', applies:true });
   if (ws.crExp) { const d = dt(ws.crExp); obls.push({ id:'cr', cat:'MOCI', title:'CR Renewal', detail:'Renew via moci.gov.qa', deadline:new Date(ws.crExp), days:d, status:d<0?'overdue':d<=30?'soon':d<=90?'upcoming':'ok', priority:d<0?'crit':d<=30?'high':'normal', applies:true }); }
   if (ws.tlExp) { const d = dt(ws.tlExp); obls.push({ id:'tl', cat:'MOCI', title:'Trade License Renewal', detail:'Renew trade license before expiry', deadline:new Date(ws.tlExp), days:d, status:d<0?'overdue':d<=30?'soon':d<=90?'upcoming':'ok', priority:d<0?'crit':d<=30?'high':'normal', applies:true }); }
@@ -1305,20 +1343,39 @@ function renderObligations(obls) {
 
 function renderCalendar(ws, obls) {
   const today = new Date(); today.setHours(0,0,0,0);
-  const yr = today.getFullYear();
-  const months = Array.from({length:12},(_,i)=>({m:new Date(yr,i,1).toLocaleString('en',{month:'long'}),events:[]}));
-  months[2].events.push({ t:'Start engaging auditor for FY '+yr, c:'dot-red', u:false });
-  months[3].events.push({ t:'⚑ GTA Tax Deadline – 30 April'+(ws.jur==='qfc'?' (QFC: 30 June)':''), c:'dot-red', u:obls.find(o=>o.id==='gta-annual')?.status==='overdue' });
-  months[10].events.push({ t:'Engage auditor for FY '+yr+' accounts', c:'dot-amber', u:false });
-  months[11].events.push({ t:'Year-end document & governance review', c:'dot-blue', u:false });
+  // Build rolling 12 months from current month
+  const months = Array.from({length:12}, (_, i) => {
+    const d = new Date(today.getFullYear(), today.getMonth() + i, 1);
+    return { m: d.toLocaleString('en', {month:'long'}), yr: d.getFullYear(), mi: d.getMonth(), events: [] };
+  });
+
+  // Fixed annual events
+  const aprilIdx = months.findIndex(m => m.mi === 3 && m.yr === 2026);
+  const juneIdx  = months.findIndex(m => m.mi === 5 && m.yr === 2026);
+  // FY2025 deadline is 30 June 2026 — show on June, not April
+  if (juneIdx >= 0) months[juneIdx].events.push({ t:'⚑ GTA Tax Deadline – 30 June 2026 (FY2025 Extension)', c:'dot-red', u: obls.find(o=>o.id==='gta-annual')?.status==='overdue' });
+  else if (aprilIdx >= 0) months[aprilIdx].events.push({ t:'⚑ GTA Tax Deadline – 30 April', c:'dot-red', u: obls.find(o=>o.id==='gta-annual')?.status==='overdue' });
+  const marchIdx = months.findIndex(m => m.mi === 2);
+  if (marchIdx >= 0) months[marchIdx].events.push({ t:'Start engaging auditor for FY '+months[marchIdx].yr, c:'dot-amber', u:false });
+  const novIdx = months.findIndex(m => m.mi === 10);
+  if (novIdx >= 0) months[novIdx].events.push({ t:'Engage auditor for FY '+months[novIdx].yr+' accounts', c:'dot-amber', u:false });
+  const decIdx = months.findIndex(m => m.mi === 11);
+  if (decIdx >= 0) months[decIdx].events.push({ t:'Year-end document & governance review', c:'dot-blue', u:false });
+
+  // Obligation-based events (rolling — show if within 12 months)
+  const cutoff = new Date(today.getFullYear(), today.getMonth() + 12, 1);
   obls.forEach(o => {
     if (!o.deadline) return;
+    if (o.deadline < today || o.deadline >= cutoff) return;
     const mi = o.deadline.getMonth();
-    if (o.deadline.getFullYear() === yr) months[mi].events.push({ t:o.title, c:o.status==='overdue'?'dot-red':o.status==='soon'?'dot-amber':'dot-green', u:o.status==='overdue' });
+    const yr = o.deadline.getFullYear();
+    const slot = months.find(m => m.mi === mi && m.yr === yr);
+    if (slot) slot.events.push({ t:o.title, c:o.status==='overdue'?'dot-red':o.status==='soon'?'dot-amber':'dot-green', u:o.status==='overdue' });
   });
+
   document.getElementById('calendar-timeline').innerHTML = months.map(mn => {
     if (!mn.events.length) return '';
-    return `<div class="tl-month"><div class="tl-month-head">${mn.m} ${yr}</div>${mn.events.map(e=>`<div class="tl-event${e.u?' overdue':''}"><div class="tl-dot ${e.c}"></div><div><div class="tl-title">${e.t}</div></div></div>`).join('')}</div>`;
+    return `<div class="tl-month"><div class="tl-month-head">${mn.m} ${mn.yr}</div>${mn.events.map(e=>`<div class="tl-event${e.u?' overdue':''}"><div class="tl-dot ${e.c}"></div><div><div class="tl-title">${e.t}</div></div></div>`).join('')}</div>`;
   }).join('') || '<div style="color:var(--ink4);font-size:13px">Complete your company profile to see calendar events.</div>';
 }
 

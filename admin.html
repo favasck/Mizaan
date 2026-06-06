@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Mizaan Admin ميزان - Dashboard</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%237c1522'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='serif' font-size='20' fill='%23d4a843'>م</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -678,6 +679,7 @@ function buildLeadsHTML(arr) {
   return `<table class="tbl"><thead><tr>
     <th onclick="sortBy('name')">Name / Company</th>
     <th onclick="sortBy('phone')">WhatsApp</th>
+    <th>Email</th>
     <th>Type</th>
     <th onclick="sortBy('score')">Score</th>
     <th onclick="sortBy('penalty')">Penalty</th>
@@ -715,6 +717,7 @@ function buildLeadsHTML(arr) {
         ${l.company?`<br><span style="font-size:10px;color:var(--ink3)">${esc(l.company)}</span>`:''}
       </td>
       <td><a href="tel:${esc(l.phone||'')}" style="color:var(--green);text-decoration:none">${esc(l.phone||'-')}</a></td>
+      <td style="font-size:10px;color:var(--ink3)">${l.email?`<a href="mailto:${esc(l.email)}" style="color:#4a90e2;text-decoration:none">${esc(l.email)}</a>`:'-'}</td>
       <td><span class="badge" style="font-size:9px;${isInv?'background:rgba(64,128,224,.12);color:var(--blue);border:1px solid rgba(64,128,224,.2)':'background:rgba(156,34,50,.1);color:var(--maroon2);border:1px solid rgba(156,34,50,.2)'}">${isInv?'Invest':'Compliance'}</span></td>
       <td><div class="score-mini ${scCls}" style="${isInv?'width:auto;min-width:32px;padding:0 5px;border-radius:6px;font-size:10px;':''}">${isInv?sc+'/100':(l.score||'-')}</div></td>
       <td style="font-size:11px;color:${pen>0?'var(--red)':'var(--ink3)'};">${pen>0?'QAR '+Math.round(pen).toLocaleString():'-'}</td>
@@ -734,7 +737,7 @@ function buildLeadsHTML(arr) {
       <td style="white-space:nowrap;font-size:11px;color:var(--ink3)">${esc(l.date||'-')}</td>
       <td>
         <div style="display:flex;gap:4px;flex-wrap:wrap">
-          ${l.phone?`<button class="btn btn-wa" style="padding:4px 8px;font-size:10px" onclick="waLead('${esc(l.phone)}','${esc(l.name||'')}')">WA</button>`:''}
+          ${l.phone?`<button class="btn btn-wa" style="padding:4px 8px;font-size:10px" onclick="waReminder('${esc(l.id)}')">📲 Remind</button>`:''}
           ${isInv
             ?`<button class="btn btn-ghost" style="padding:4px 8px;font-size:10px;background:rgba(64,128,224,.1);color:var(--blue);border-color:rgba(64,128,224,.2)" onclick="openScorecard('${esc(l.id)}')">📊</button>`
             :`<button class="btn btn-ghost" style="padding:4px 8px;font-size:10px;background:rgba(29,185,84,.08);color:var(--green);border-color:rgba(29,185,84,.2)" onclick="openReport('${esc(l.id)}')">📋</button>`}
@@ -1002,6 +1005,27 @@ function openScorecard(id) {
 function waLead(phone, name) {
   const msg = `Hi ${name}, this is ${FIRM}. Thank you for using Mizaan - I'd like to discuss your compliance check results and how we can help. Is now a good time?`;
   window.open(waUrl(phone.replace(/\D/g, ''), msg), '_blank');
+}
+
+function waReminder(id) {
+  const l = leads.find(x => x.id === id);
+  if (!l || !l.phone) { toast('No phone number for this lead.'); return; }
+  const nm = l.name || 'there';
+  const co = l.company ? ` (${l.company})` : '';
+  const pen = parseFloat(l.penalty)||0;
+  const unf = parseInt(l.unfiled)||0;
+  let msg = `Hi ${nm}${co}, this is ${FIRM} — Mizaan compliance team.\n\n`;
+  if (l.overdue) {
+    msg += `⚠️ Your GTA tax filing is OVERDUE. The longer you wait, the higher the penalties (QAR 500/day, capped at QAR 180,000 per return).`;
+  } else if (unf > 0) {
+    msg += `📋 You have ${unf} unfiled tax return${unf>1?'s':''}. ${pen>0?`Estimated penalties: QAR ${Math.round(pen).toLocaleString()}.`:''} The GTA 100% penalty waiver initiative may still apply — but it won't last forever.`;
+  } else if (l.deadline) {
+    msg += `📅 Your GTA filing deadline is ${l.deadline}. Filing early avoids last-minute issues.`;
+  } else {
+    msg += `We reviewed your Mizaan compliance check and wanted to follow up personally.`;
+  }
+  msg += `\n\nCan I arrange a quick call to walk you through your options? Reply here or call +974 5171 5999.`;
+  window.open(waUrl(l.phone.replace(/\D/g,''), msg), '_blank');
 }
 
 function waBlast() {

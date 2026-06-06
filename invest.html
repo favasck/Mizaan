@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Mizaan — Investment Readiness Score</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%237c1522'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='serif' font-size='20' fill='%23d4a843'>م</text></svg>">
+<meta name="description" content="Rate your business investment readiness across 6 pillars. Join the Mizaan investor network.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -157,7 +159,7 @@ body.rtl{direction:rtl;font-family:'Noto Naskh Arabic','Syne',sans-serif}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <script>
-const WA='97455171999';
+const WA='97451715999';
 let lang='en',answers={},identity={},currentQ=-1,optIn=false;
 
 const PILLARS=[
@@ -249,6 +251,7 @@ function renderIdentity(){
       <div class="fg" style="margin-bottom:0"><label class="fl">${t('Your Name','اسمك')} <em>*</em></label><input class="fi" id="id-name" type="text" placeholder="${t('Ahmed Al-Rashid','أحمد الراشد')}"></div>
       <div class="fg" style="margin-bottom:0"><label class="fl">${t('WhatsApp','واتساب')} <em>*</em></label><input class="fi" id="id-phone" type="tel" placeholder="+974 5XXX XXXX"></div>
     </div>
+    <div class="fg" style="margin-top:14px"><label class="fl">${t('Email Address','البريد الإلكتروني')} <span style="font-size:10px;color:var(--ink4);text-transform:none;letter-spacing:0">(${t('optional','اختياري')})</span></label><input class="fi" id="id-email" type="email" placeholder="ahmed@company.com"></div>
     <div class="fg" style="margin-top:14px"><label class="fl">${t('Industry / Sector','القطاع')}</label>
       <select class="fi" id="id-sector">
         <option value="trading">${t('Trading / Services','التجارة / الخدمات')}</option>
@@ -272,10 +275,11 @@ function startAssessment(){
   const co=document.getElementById('id-co').value.trim();
   const nm=document.getElementById('id-name').value.trim();
   const ph=document.getElementById('id-phone').value.trim();
+  const em=(document.getElementById('id-email')||{}).value||'';
   if(!co){toast(t('Company name is required.','اسم الشركة مطلوب.'));return;}
   if(!nm){toast(t('Your name is required.','اسمك مطلوب.'));return;}
   if(!ph){toast(t('WhatsApp number is required.','رقم واتساب مطلوب.'));return;}
-  identity={co,nm,ph,sector:document.getElementById('id-sector').value};
+  identity={co,nm,ph,em,sector:document.getElementById('id-sector').value};
   currentQ=0;renderQuestion(0);window.scrollTo(0,0);
 }
 
@@ -375,7 +379,7 @@ function renderFreeResults(){
 
   try{
     const leads=JSON.parse(localStorage.getItem('mz_leads')||'[]');
-    leads.push({id:'inv_'+Date.now(),name:identity.nm,phone:identity.ph,company:identity.co,sector:identity.sector,investScore:total,investBand:band.en,pillarPcts:pcts,optIn:false,ts:Date.now(),type:'invest',date:new Date().toLocaleDateString('en-GB'),time:new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})});
+    leads.push({id:'inv_'+Date.now(),name:identity.nm,phone:identity.ph,email:identity.em||'',company:identity.co,sector:identity.sector,investScore:total,investBand:band.en,pillarPcts:pcts,optIn:false,ts:Date.now(),type:'invest',date:new Date().toLocaleDateString('en-GB'),time:new Date().toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})});
     localStorage.setItem('mz_leads',JSON.stringify(leads));
   }catch(e){}
 

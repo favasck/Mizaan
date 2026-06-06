@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Mizaan ميزان - Qatar Compliance Intelligence</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='7' fill='%237c1522'/><text x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='serif' font-size='20' fill='%23d4a843'>م</text></svg>">
+<meta name="description" content="Qatar compliance intelligence for SMEs. Know your tax liability, filing deadline, and penalty exposure in 60 seconds. Built on Qatar Income Tax Law No. 24 of 2018.">
+<meta property="og:title" content="Mizaan ميزان – Qatar Compliance Intelligence">
+<meta property="og:description" content="Know your GTA tax liability, filing deadline, and penalty exposure in 60 seconds. Free compliance check for Qatar-registered businesses.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://mizaan.qa">
+<meta property="og:image" content="https://mizaan.qa/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Mizaan ميزان – Qatar Compliance Intelligence">
+<meta name="twitter:description" content="Free Qatar GTA compliance check. Built on Law No. 24 of 2018.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Syne:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -287,7 +297,7 @@ input[type=range].rng::-webkit-slider-thumb:hover{box-shadow:0 0 0 6px rgba(124,
         <button class="h-tab" onclick="sTab(4,this)" id="tab4">Labour</button>
         <button class="h-tab" onclick="sTab(5,this)" id="tab5">QDB</button>
       </div>
-      <div class="h-panel on fade d3" id="pan0"><div class="p-icon">📊</div><div><div class="p-title" id="pt0">Income Tax - 10% / 35%</div><div class="p-desc" id="pd0">All entities must file via Dhareeba by 30 April - including fully Qatari-owned companies. CR registered before July 1 files for that calendar year. On or after July 1: 18-month first period, deadline April 30 two years later. Late filing penalty: QAR 500/day capped at QAR 180,000 per return.</div><div class="p-tags"><span class="p-tag">Law No. 24 of 2018</span><span class="p-tag">All entities must file</span><span class="p-tag">Penalty exemption available</span></div></div></div>
+      <div class="h-panel on fade d3" id="pan0"><div class="p-icon">📊</div><div><div class="p-title" id="pt0">Income Tax - 10% / 35%</div><div class="p-desc" id="pd0">All entities must file via Dhareeba — including fully Qatari-owned companies. FY 2025 deadline extended to 30 June 2026 (GTA extension). Standard deadline: 30 April annually. CR registered before July 1 files for that calendar year. On or after July 1: 18-month first period. Late filing penalty: QAR 500/day capped at QAR 180,000 per return.</div><div class="p-tags"><span class="p-tag">Law No. 24 of 2018</span><span class="p-tag">FY2025 → 30 Jun 2026</span><span class="p-tag">Penalty exemption available</span></div></div></div>
       <div class="h-panel" id="pan1"><div class="p-icon">🏢</div><div><div class="p-title" id="pt1">Capital Gains Tax - 10% / 35%</div><div class="p-desc" id="pd1">Triggered on disposal of real estate, shares, or business assets. A separate return must be filed within 30 days of disposal - independent of your annual income tax return. Rate: 10% general, 35% for petroleum operations.</div><div class="p-tags"><span class="p-tag">30-day filing window</span><span class="p-tag">Separate return</span></div></div></div>
       <div class="h-panel" id="pan2"><div class="p-icon">🌐</div><div><div class="p-title" id="pt2">Withholding Tax - 5%</div><div class="p-desc" id="pd2">Applies to payments made to non-residents for royalties, interest, commissions, and service fees. Remit 5% to GTA before the 16th of the following month. Double Tax Agreement benefits may reduce or eliminate this - check applicable DTA.</div><div class="p-tags"><span class="p-tag">Due 16th monthly</span><span class="p-tag">DTA exemptions may apply</span></div></div></div>
       <div class="h-panel" id="pan3"><div class="p-icon">📋</div><div><div class="p-title" id="pt3">CR & Trade License - Annual</div><div class="p-desc" id="pd3">Commercial Registration and Trade License must be renewed annually with MOCI. An expired CR blocks visa renewals, banking operations, and government tender bids. Trade license renewal requires a valid, municipality-approved lease agreement - an expired lease cascades into license failure.</div><div class="p-tags"><span class="p-tag">MOCI annual renewal</span><span class="p-tag">Valid lease required</span><span class="p-tag">Cascade risk</span></div></div></div>
@@ -335,6 +345,10 @@ input[type=range].rng::-webkit-slider-thumb:hover{box-shadow:0 0 0 6px rgba(124,
           <label class="fl" id="lphone">WhatsApp Number <em>*</em></label>
           <input class="fi" id="in-phone" type="tel" placeholder="+974 5XXX XXXX">
         </div>
+      </div>
+      <div class="fg">
+        <label class="fl" id="lemail">Email Address <span class="fl-h">(optional – for report delivery)</span></label>
+        <input class="fi" id="in-email" type="email" placeholder="ahmed@company.com">
       </div>
 
       <!-- CR & jurisdiction -->
@@ -513,7 +527,7 @@ input[type=range].rng::-webkit-slider-thumb:hover{box-shadow:0 0 0 6px rgba(124,
     <div class="up-card fade d3">
       <div class="up-top">
         <span class="up-badge" id="up-badge">Full Report</span>
-        <span style="font-size:12px;color:var(--ink4);font-family:'Syne',sans-serif">Price after details</span>
+        <span style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:500;color:var(--maroon)">QAR 149</span>
       </div>
       <div class="up-items">
         <div class="up-item">Print-ready audit report (PDF)</div>
@@ -623,7 +637,7 @@ input[type=range].rng::-webkit-slider-thumb:hover{box-shadow:0 0 0 6px rgba(124,
 </div>
 
 <script>
-const CFG={WA:'97455171999',FIRM:'Guardian Consulting',PRICE:149,INV:99};
+const CFG={WA:'97451715999',FIRM:'Guardian Consulting',PRICE:149,INV:99};
 let lang='en', R=null, mMode='report';
 
 // ── TRANSLATIONS ──────────────────────────────────
@@ -639,7 +653,7 @@ en:{
   'back1':'Back to home','back2':'Run another check',
   'fbadge':'Free Compliance Check','ftitle':'Tell us about your company',
   'fsub':'Instant results based on Qatar Income Tax Law No. 24 of 2018. Your details are used only for this compliance check.',
-  'lco':'Company Name','lname':'Your Name','lphone':'WhatsApp Number',
+  'lco':'Company Name','lname':'Your Name','lphone':'WhatsApp Number','lemail':'Email Address',
   'lcr':'CR Registration Date','ljur':'Jurisdiction',
   'lyrs':'Years in Operation','lacct':'Who Handles Accounting?',
   'lown':'Qatari / GCC Ownership','ownL':'0% - Fully foreign','ownR':'100% - Fully Qatari / GCC',
@@ -682,7 +696,7 @@ ar:{
   'back1':'العودة للرئيسية','back2':'فحص جديد',
   'fbadge':'فحص مجاني','ftitle':'أخبرنا عن شركتك',
   'fsub':'نتائج فورية وفق قانون ضريبة الدخل القطري رقم 24 لعام 2018. بياناتك سرية.',
-  'lco':'اسم الشركة','lname':'اسمك','lphone':'رقم واتساب',
+  'lco':'اسم الشركة','lname':'اسمك','lphone':'رقم واتساب','lemail':'البريد الإلكتروني',
   'lcr':'تاريخ تسجيل السجل التجاري','ljur':'جهة التسجيل',
   'lyrs':'سنوات التشغيل','lacct':'من يتولى المحاسبة؟',
   'lown':'نسبة الملكية القطرية / الخليجية','ownL':'0% - أجنبي بالكامل','ownR':'100% - قطري / خليجي',
@@ -779,7 +793,7 @@ function penCalc(unfiled,today){
   if(unfiled>=1){rows.push({lbl:lang==='ar'?'غرامة عدم التسجيل':'Registration failure',amt:20000});total+=20000;}
   for(let i=0;i<unfiled;i++){
     const fy=ty-1-i;
-    const ddl=new Date(fy+1,3,30);
+    const ddl=gtaDeadline(fy,false);
     if(today<=ddl)continue;
     const days=Math.ceil((today-ddl)/86400000);
     const pen=Math.min(days*500,180000);
@@ -787,6 +801,13 @@ function penCalc(unfiled,today){
     total+=pen;
   }
   return{rows,total};
+}
+
+// ── GTA DEADLINE HELPER ───────────────────────────
+// FY2025 deadline extended to 30 June 2026 (GTA extension – regional situation)
+function gtaDeadline(auditFY, qfc) {
+  if (auditFY === 2025) return new Date(2026, 5, 30); // 30 Jun 2026 for all, incl QFC
+  return qfc ? new Date(auditFY + 1, 5, 30) : new Date(auditFY + 1, 3, 30);
 }
 
 // ── ENGINE ────────────────────────────────────────
@@ -797,13 +818,13 @@ function engine(p){
   const late=m>=7,qfc=p.jur==='qfc';
 
   let ps,pe,dl;
-  if(!late){ps=new Date(y,0,1);pe=new Date(y,11,31);dl=qfc?new Date(y+1,5,30):new Date(y+1,3,30);}
-  else{ps=new Date(cr);pe=new Date(y+1,11,31);dl=qfc?new Date(y+2,5,30):new Date(y+2,3,30);}
+  if(!late){ps=new Date(y,0,1);pe=new Date(y,11,31);dl=gtaDeadline(y,qfc);}
+  else{ps=new Date(cr);pe=new Date(y+1,11,31);dl=gtaDeadline(y+1,qfc);}
 
   let rps=ps,rpe=pe,rdl=dl;
   if(today>dl){
-    const ty=today.getFullYear(),lastFY=today.getMonth()>=4?ty-1:ty-2;
-    rps=new Date(lastFY,0,1);rpe=new Date(lastFY,11,31);rdl=qfc?new Date(lastFY+1,5,30):new Date(lastFY+1,3,30);
+    const ty=today.getFullYear(),lastFY=today.getMonth()>=6?ty-1:ty-2;
+    rps=new Date(lastFY,0,1);rpe=new Date(lastFY,11,31);rdl=gtaDeadline(lastFY,qfc);
   }
 
   const ms=86400000,overdue=today>rdl;
@@ -832,7 +853,7 @@ function engine(p){
   else if(urgent)als.push({t:'a',h:a?'الموعد وشيك':'Deadline Approaching',b:a?`${dL} يوماً فقط على الموعد. قدّم إقرارك الآن.`:`Only ${dL} day${dL!==1?'s':''} remaining. File now to avoid QAR 500/day penalties.`});
   else als.push({t:'g',h:a?'الإيداع في الوقت المحدد':'Filing On Track',b:a?`متبقٍ ${dL} يوماً.`:`${dL} days until deadline. Engage a GTA-registered auditor early.`});
 
-  als.push({t:'b',h:a?'الإيداع إلزامي لجميع الكيانات':'All Entities Must File',b:a?'وفق إشعار هيئة الضرائب (ديسمبر 2025): جميع الشركات - بما فيها المُعفاة والمملوكة بالكامل لمواطنين قطريين/خليجيين - ملزمة بالإيداع عبر ضريبة بحلول 30 أبريل.':'Per GTA (Dec 2025): ALL entities - including tax-exempt and fully Qatari/GCC-owned - must file via Dhareeba by 30 April each year.'});
+  als.push({t:'b',h:a?'الإيداع إلزامي لجميع الكيانات':'All Entities Must File',b:a?'وفق إشعار هيئة الضرائب: جميع الشركات - بما فيها المُعفاة والمملوكة بالكامل لمواطنين قطريين/خليجيين - ملزمة بالإيداع. تم تمديد موعد السنة المالية 2025 إلى 30 يونيو 2026.':'Per GTA: ALL entities — including tax-exempt and fully Qatari/GCC-owned — must file via Dhareeba. FY 2025 deadline extended to 30 June 2026.'});
 
   if(pen.total>0)als.push({t:'r',h:a?'غرامات مالية متراكمة':'Financial Penalties Accumulated',b:a?`إجمالي الغرامات: ${qar(pen.total)}. مبادرة الإعفاء الكامل 100% لهيئة الضرائب قد تُعفيك بالكامل - أُعفي أكثر من 7,000 دافع ضريبي من غرامات فاقت 1.6 مليار ريال.`:`Total estimated penalties: ${qar(pen.total)}. The GTA 100% Penalty Exemption Initiative may waive all of this - over 7,000 taxpayers exempted from QAR 1.6bn+ so far.`});
 
@@ -852,6 +873,7 @@ function runCheck(){
   const cr=document.getElementById('in-cr').value;
   const nm=document.getElementById('in-name').value.trim();
   const ph=document.getElementById('in-phone').value.trim();
+  const em=document.getElementById('in-email').value.trim();
   const pf=document.getElementById('in-profit').value;
   const a=lang==='ar';
   if(!nm){toast(a?'الاسم مطلوب':'Name is required.');return;}
@@ -869,12 +891,38 @@ function runCheck(){
     wht:isOn('fl-wht'),cgt:isOn('fl-cgt'),exc:isOn('fl-exc'),qdb:isOn('fl-qdb')
   };
   R=engine(p);
-  R._name=nm;R._phone=ph;R._company=document.getElementById('in-co').value||'';R._p=p;
+  R._name=nm;R._phone=ph;R._email=em;R._company=document.getElementById('in-co').value||'';R._p=p;
+
+  // Save pre-population data for dashboard setup wizard
+  try {
+    const preload = {
+      name: R._company || '',
+      cr: '',
+      crDate: cr,
+      jur: p.jur,
+      act: p.act,
+      qPct: p.qPct,
+      rev: p.rev,
+      profit: p.profit,
+      unfiled: p.unfiled,
+      acct: p.acct,
+      gta: p.unfiled > 0 ? (p.unfiled >= 3 ? '3+' : '1-2') : 'current',
+      wps: 'yes',
+      muni: 'active',
+      qatarisation: 'above10',
+      gov: 'partial',
+      _leadName: nm,
+      _leadPhone: ph,
+      _leadEmail: em,
+      _fromCheck: true
+    };
+    localStorage.setItem('mz_check_preload', JSON.stringify(preload));
+  } catch(e) {}
 
   // Auto-save lead
   const leads=getLeads();
   leads.push({
-    id:'ld_'+Date.now(),name:nm,phone:ph,company:R._company,email:'',
+    id:'ld_'+Date.now(),name:nm,phone:ph,company:R._company,email:em,
     score:R.sc,tax:R.txA,penalty:R.pen.total,deadline:fd(R.rdl),overdue:R.overdue,
     activity:p.act,qatariPct:p.qPct,unfiled:p.unfiled,acct:p.acct,
     wht:p.wht,cgt:p.cgt,exc:p.exc,qdb:p.qdb,jur:p.jur,
