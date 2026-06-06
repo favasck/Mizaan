@@ -627,6 +627,45 @@ window.__clerk_publishable_key = 'pk_live_Y2xlcmsubWl6YWFuLnFhJA';
 // ── CONSTANTS ────────────────────────────────────
 const CFG = { KEY:'mz_workspace', COMPANIES_KEY:'mz_companies', USERS_KEY:'mz_users', ACTIVE_KEY:'mz_active_co', ACTIONS_KEY:'mz_custom_actions', COMPLETED_KEY:'mz_completed_actions' };
 
+// ── SUPABASE ──────────────────────────────────────
+const SB = {
+  url: 'https://qevdmaxplcpknvxnvjql.supabase.co',
+  key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFldmRtYXhwbGNwa252eG52anFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDc0NjA0NTMsImV4cCI6MjA2MzAzNjQ1M30.8g-hMJh4LbJBCSaxvdxJSBXMijjTc3XVMjwSRZFJ3I0',
+  async post(table, data) {
+    try {
+      const r = await fetch(`${this.url}/rest/v1/${table}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': this.key,
+          'Authorization': `Bearer ${this.key}`,
+          'Prefer': 'resolution=merge-duplicates,return=minimal'
+        },
+        body: JSON.stringify(data)
+      });
+      return r.ok;
+    } catch(e) { console.warn('SB.post failed:', e); return false; }
+  },
+  async upsert(table, data, onConflict) {
+    try {
+      const url = onConflict
+        ? `${this.url}/rest/v1/${table}?on_conflict=${onConflict}`
+        : `${this.url}/rest/v1/${table}`;
+      const r = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': this.key,
+          'Authorization': `Bearer ${this.key}`,
+          'Prefer': 'resolution=merge-duplicates,return=minimal'
+        },
+        body: JSON.stringify(data)
+      });
+      return r.ok;
+    } catch(e) { console.warn('SB.upsert failed:', e); return false; }
+  }
+};
+
 // ── STATE ─────────────────────────────────────────
 let WS = null;
 let lang = 'en';
@@ -674,6 +713,34 @@ async function initAuth() {
   document.getElementById('auth-guard').style.display = 'none';
   renderUserBar();
   loadData();
+  trackLogin(user);
+}
+
+async function trackLogin(user) {
+  const now = new Date().toISOString();
+  const email = user.primaryEmailAddress?.emailAddress || '';
+  const name = user.fullName || user.firstName || '';
+
+  // 1. Upsert user record (creates if new, updates last_seen if returning)
+  await SB.upsert('users', {
+    clerk_id: user.id,
+    email,
+    name,
+    avatar_url: user.imageUrl || null,
+    last_login: now,
+    login_count_increment: true   // handled by DB trigger — see SQL setup
+  }, 'clerk_id');
+
+  // 2. Insert a session log row (one row per login, never updated)
+  await SB.post('user_sessions', {
+    clerk_id: user.id,
+    email,
+    name,
+    logged_in_at: now,
+    user_agent: navigator.userAgent,
+    referrer: document.referrer || null,
+    page: window.location.pathname
+  });
 }
 
 function renderUserBar() {
