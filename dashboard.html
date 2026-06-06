@@ -616,7 +616,7 @@ input[type=range].rng::-webkit-slider-thumb{-webkit-appearance:none;width:18px;h
 <script>
 window.__clerk_publishable_key = 'pk_live_Y2xlcmsubWl6YWFuLnFhJA';
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+<script src="https://unpkg.com/@clerk/clerk-js@5.56.0/dist/clerk.browser.js" crossorigin="anonymous"></script>
 <script>
 // ── CONSTANTS ────────────────────────────────────
 const CFG = { KEY:'mz_workspace', COMPANIES_KEY:'mz_companies', USERS_KEY:'mz_users', ACTIVE_KEY:'mz_active_co', ACTIONS_KEY:'mz_custom_actions', COMPLETED_KEY:'mz_completed_actions' };
@@ -655,7 +655,7 @@ async function initAuth() {
     console.warn('Clerk load:', e);
   }
   if (!window.Clerk.user) {
-    window.location.replace('login.html');
+    window.location.replace('/login.html');
     return;
   }
   const user = window.Clerk.user;

@@ -116,7 +116,7 @@ window.__clerk_publishable_key = 'pk_live_Y2xlcmsubWl6YWFuLnFhJA';
 
     // Already signed in — go to dashboard
     if (window.Clerk.user) {
-      window.location.href = '/dashboard.html';
+      window.location.href = 'https://mizaan.qa/dashboard.html';
       return;
     }
 
@@ -126,8 +126,8 @@ window.__clerk_publishable_key = 'pk_live_Y2xlcmsubWl6YWFuLnFhJA';
 
     try {
       window.Clerk.mountSignIn(document.getElementById('clerk-auth'), {
-        afterSignInUrl: '/dashboard.html',
-        afterSignUpUrl: '/dashboard.html',
+        afterSignInUrl: 'https://mizaan.qa/dashboard.html',
+        afterSignUpUrl: 'https://mizaan.qa/dashboard.html',
         appearance: {
           variables: {
             colorPrimary: '#7c1522',
