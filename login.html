@@ -4,82 +4,47 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Mizaan ميزان – Sign In</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@400;500;600;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Syne:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --maroon:#7c1522;--maroon2:#9c2232;
-  --gold:#d4a843;--gold2:#b8892a;
-  --cream:#f8f4ef;--cream2:#f0ebe3;--cream3:#e4dcd2;
-  --ink:#0f0d0b;--ink3:#6b6058;--ink4:#9a8e87;
-}
+:root{--maroon:#7c1522;--maroon2:#9c2232;--gold:#d4a843;--cream:#f8f4ef;--cream3:#e4dcd2;--ink:#0f0d0b;--ink3:#6b6058;--ink4:#9a8e87}
 html,body{height:100%;font-family:'Syne',sans-serif;background:var(--cream)}
 body{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}
-
-/* LEFT PANEL */
 .left{background:var(--maroon);display:flex;flex-direction:column;justify-content:space-between;padding:48px;position:relative;overflow:hidden}
 .left::before{content:'';position:absolute;top:-80px;right:-80px;width:320px;height:320px;border-radius:50%;background:rgba(212,168,67,.08);pointer-events:none}
-.left::after{content:'';position:absolute;bottom:-60px;left:-60px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.04);pointer-events:none}
 .brand{display:flex;align-items:center;gap:12px;position:relative;z-index:1}
-.brand-mark{width:42px;height:42px;background:var(--gold);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--ink);flex-shrink:0}
+.brand-mark{width:42px;height:42px;background:var(--gold);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;color:var(--ink)}
 .brand-name{font-size:18px;font-weight:700;color:white}
-.brand-sub{font-size:11px;color:rgba(255,255,255,.45);margin-top:1px;font-weight:400}
+.brand-sub{font-size:11px;color:rgba(255,255,255,.45);margin-top:1px}
 .left-body{position:relative;z-index:1}
 .left-title{font-family:'Cormorant Garamond',serif;font-size:38px;font-weight:400;color:white;line-height:1.25;margin-bottom:16px}
 .left-title em{color:var(--gold);font-style:normal}
-.left-desc{font-size:13.5px;color:rgba(255,255,255,.6);line-height:1.75;margin-bottom:32px}
-.feature-list{display:flex;flex-direction:column;gap:12px}
+.left-desc{font-size:13px;color:rgba(255,255,255,.6);line-height:1.75;margin-bottom:28px}
+.feature-list{display:flex;flex-direction:column;gap:11px}
 .feature-item{display:flex;align-items:center;gap:12px}
 .fi-dot{width:6px;height:6px;border-radius:50%;background:var(--gold);flex-shrink:0}
 .fi-text{font-size:12.5px;color:rgba(255,255,255,.75)}
 .left-footer{font-size:11px;color:rgba(255,255,255,.3);position:relative;z-index:1}
-
-/* RIGHT PANEL */
 .right{display:flex;align-items:center;justify-content:center;padding:48px 40px;background:var(--cream)}
 .right-inner{width:100%;max-width:400px}
 .right-title{font-family:'Cormorant Garamond',serif;font-size:28px;font-weight:500;color:var(--ink);margin-bottom:6px}
-.right-sub{font-size:13px;color:var(--ink3);margin-bottom:32px;line-height:1.6}
-
-/* Clerk component container */
+.right-sub{font-size:13px;color:var(--ink3);margin-bottom:28px;line-height:1.6}
 #clerk-auth{width:100%}
-
-/* Override Clerk component styling to match Mizaan brand */
-.cl-rootBox{width:100%}
-.cl-card{background:white;border:1px solid var(--cream3);border-radius:16px;box-shadow:0 4px 24px rgba(0,0,0,.08);padding:28px!important}
-.cl-headerTitle{font-family:'Syne',sans-serif!important;font-size:16px!important;color:var(--ink)!important}
-.cl-headerSubtitle{font-family:'Syne',sans-serif!important;font-size:12px!important;color:var(--ink3)!important}
-.cl-formButtonPrimary{background:var(--maroon)!important;font-family:'Syne',sans-serif!important;font-weight:600!important;border-radius:10px!important;height:42px!important}
+.cl-formButtonPrimary{background:var(--maroon)!important;font-family:'Syne',sans-serif!important;font-weight:600!important;border-radius:10px!important}
 .cl-formButtonPrimary:hover{background:var(--maroon2)!important}
-.cl-footerActionLink{color:var(--maroon)!important;font-family:'Syne',sans-serif!important}
-.cl-formFieldInput{font-family:'Syne',sans-serif!important;border-radius:8px!important}
+.cl-footerActionLink{color:var(--maroon)!important}
 .cl-formFieldInput:focus{border-color:var(--maroon)!important;box-shadow:0 0 0 3px rgba(124,21,34,.1)!important}
-.cl-identityPreviewText{font-family:'Syne',sans-serif!important}
-.cl-internal-b3fm6y{font-family:'Syne',sans-serif!important}
-
-.divider{display:flex;align-items:center;gap:12px;margin:20px 0}
-.divider-line{flex:1;height:1px;background:var(--cream3)}
-.divider-text{font-size:11px;color:var(--ink4);font-weight:500}
-
+#auth-loading{text-align:center;padding:40px 20px}
+.loading-mark{width:48px;height:48px;background:var(--maroon);border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--gold);margin:0 auto 14px;animation:pulse 1.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+.loading-text{font-size:13px;color:var(--ink3)}
 .back-link{display:flex;align-items:center;gap:6px;color:var(--ink3);font-size:12px;text-decoration:none;margin-top:20px;transition:color .15s}
 .back-link:hover{color:var(--maroon)}
-
-/* Loading state */
-#auth-loading{text-align:center;padding:40px 20px}
-.loading-mark{width:48px;height:48px;background:var(--maroon);border-radius:12px;display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;color:var(--gold);margin:0 auto 16px}
-.loading-text{font-size:13px;color:var(--ink3)}
-
-@media(max-width:768px){
-  body{grid-template-columns:1fr}
-  .left{display:none}
-  .right{padding:32px 24px;align-items:flex-start;padding-top:48px}
-}
+@media(max-width:768px){body{grid-template-columns:1fr}.left{display:none}.right{padding:32px 24px}}
 </style>
 </head>
 <body>
 
-<!-- LEFT BRANDING PANEL -->
 <div class="left">
   <div class="brand">
     <div class="brand-mark">م</div>
@@ -102,7 +67,6 @@ body{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}
   <div class="left-footer">© 2026 Mizaan. Operated by Guardian Consulting · mizaan.qa</div>
 </div>
 
-<!-- RIGHT AUTH PANEL -->
 <div class="right">
   <div class="right-inner">
     <div class="right-title">Welcome back</div>
@@ -117,97 +81,82 @@ body{display:grid;grid-template-columns:1fr 1fr;min-height:100vh}
 </div>
 
 <script>
-async function initLogin() {
-  try {
-    const clerk = window.Clerk;
-    if (!clerk) { showLoginError(); return; }
-    await clerk.load({
-      afterSignInUrl: '/dashboard.html',
-      afterSignUpUrl: '/dashboard.html',
-    });
-    if (clerk.user) {
-      window.location.href = 'dashboard.html';
-      return;
-    }
-    document.getElementById('auth-loading').style.display = 'none';
-    document.getElementById('clerk-auth').style.display = 'block';
-    clerk.mountSignIn(document.getElementById('clerk-auth'), {
-      afterSignInUrl: '/dashboard.html',
-      afterSignUpUrl: '/dashboard.html',
-      appearance: {
-        variables: {
-          colorPrimary: '#7c1522',
-          fontFamily: 'Syne, sans-serif',
-          borderRadius: '10px'
-        }
-      }
-    });
-  } catch(e) {
-    console.error('Clerk init error:', e);
-    showLoginError();
-  }
-}
-function showLoginError() {
-  document.getElementById('auth-loading').innerHTML = '<div class="loading-text">Login unavailable. <a href="https://wa.me/97451715999" style="color:var(--maroon);font-weight:600">Contact us on WhatsApp</a> or refresh.</div>';
-}
-</script>
-<script>
+// Step 1 — set key FIRST, before any Clerk script loads
 window.__clerk_publishable_key = 'pk_live_Y2xlcmsubWl6YWFuLnFhJA';
 </script>
-<script src="https://cdn.jsdelivr.net/npm/@clerk/clerk-js@latest/dist/clerk.browser.js"></script>
+
+<!-- Step 2 — load Clerk from unpkg with pinned version (more stable than @latest) -->
+<script src="https://unpkg.com/@clerk/clerk-js@5.56.0/dist/clerk.browser.js" crossorigin="anonymous"></script>
+
 <script>
-(function() {
-  function showError() {
-    var el = document.getElementById('auth-loading');
-    if (el) el.innerHTML = '<div class="loading-text">Login unavailable. <a href="https://wa.me/97451715999" style="color:#7c1522;font-weight:600">Contact us on WhatsApp</a> or refresh.</div>';
+// Step 3 — mount after DOM + Clerk both ready
+(function boot() {
+  var MAX = 200; // 20 seconds max wait
+  var n = 0;
+
+  function tryMount() {
+    n++;
+    if (typeof window.Clerk !== 'undefined') {
+      mount();
+    } else if (n < MAX) {
+      setTimeout(tryMount, 100);
+    } else {
+      showErr('Login timed out. Please refresh the page.');
+    }
   }
 
-  async function mountClerk() {
+  async function mount() {
     try {
       await window.Clerk.load();
     } catch(e) {
-      console.warn('Clerk.load error:', e);
-      showError();
+      showErr('Could not load authentication. Please refresh.');
+      console.error('Clerk.load failed:', e);
       return;
     }
+
+    // Already signed in — go to dashboard
     if (window.Clerk.user) {
-      window.location.href = 'dashboard.html';
+      window.location.href = '/dashboard.html';
       return;
     }
-    var loading = document.getElementById('auth-loading');
-    var container = document.getElementById('clerk-auth');
-    if (loading) loading.style.display = 'none';
-    if (container) container.style.display = 'block';
+
+    // Show sign-in form
+    document.getElementById('auth-loading').style.display = 'none';
+    document.getElementById('clerk-auth').style.display = 'block';
+
     try {
-      window.Clerk.mountSignIn(container, {
+      window.Clerk.mountSignIn(document.getElementById('clerk-auth'), {
         afterSignInUrl: '/dashboard.html',
         afterSignUpUrl: '/dashboard.html',
         appearance: {
           variables: {
             colorPrimary: '#7c1522',
+            colorBackground: '#ffffff',
             fontFamily: 'Syne, sans-serif',
             borderRadius: '10px'
           }
         }
       });
     } catch(e) {
-      console.error('mountSignIn error:', e);
-      showError();
+      showErr('Could not render sign-in form. Please refresh.');
+      console.error('mountSignIn failed:', e);
     }
   }
 
-  // Poll until window.Clerk is available (handles both sync and async script loading)
-  var attempts = 0;
-  var poll = setInterval(function() {
-    attempts++;
-    if (window.Clerk) {
-      clearInterval(poll);
-      mountClerk();
-    } else if (attempts > 80) { // 8 seconds
-      clearInterval(poll);
-      showError();
-    }
-  }, 100);
+  function showErr(msg) {
+    var el = document.getElementById('auth-loading');
+    if (el) el.innerHTML =
+      '<div class="loading-text">' + msg + '<br><br>' +
+      '<a href="https://wa.me/97451715999" style="color:#7c1522;font-weight:600">Contact us on WhatsApp</a>' +
+      '</div>';
+  }
+
+  // Start polling once DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', tryMount);
+  } else {
+    tryMount();
+  }
 })();
 </script>
 </body>
