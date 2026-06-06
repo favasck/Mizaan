@@ -51,6 +51,8 @@ body.rtl{direction:rtl;font-family:'Noto Naskh Arabic','Syne',sans-serif}
 .nb-ghost:hover{background:rgba(255,255,255,.2);color:white}
 .nb-cta{background:var(--gold2);color:var(--ink)}
 .nb-cta:hover{background:white;color:var(--maroon)}
+.nb-signin{background:transparent;color:var(--gold2);border:1.5px solid var(--gold2);font-weight:500}
+.nb-signin:hover{background:rgba(212,168,67,.12);color:var(--gold)}
 
 /* LANDING */
 #screen-landing{align-items:stretch;padding-top:54px;background:var(--cream)}
@@ -273,6 +275,7 @@ input[type=range].rng::-webkit-slider-thumb:hover{box-shadow:0 0 0 6px rgba(124,
   </a>
   <div class="nav-right">
     <button class="nb nb-ghost" onclick="toggleLang()" id="lang-btn">العربية</button>
+    <button class="nb nb-signin" id="nav-signin" onclick="handleAuthNav()">Sign In</button>
     <button class="nb nb-cta" onclick="goTo('checker')" id="nav-cta">Check Compliance</button>
   </div>
 </nav>
@@ -740,7 +743,7 @@ function applyLang(){
   document.documentElement.dir=lang==='ar'?'rtl':'ltr';
   document.documentElement.lang=lang;
 }
-function toggleLang(){lang=lang==='en'?'ar':'en';applyLang();}
+function toggleLang(){lang=lang==='en'?'ar':'en';applyLang();updateAuthBtn();}
 
 // ── ROUTING ───────────────────────────────────────
 function goTo(s){
@@ -1083,10 +1086,35 @@ function toast(msg){
   document.body.appendChild(el);setTimeout(()=>el.remove(),3200);
 }
 
+// ── AUTH NAV ──────────────────────────────────────
+function isLoggedIn(){
+  // Clerk stores session token in localStorage
+  try{
+    const keys=Object.keys(localStorage);
+    return keys.some(k=>k.startsWith('__clerk')||k==='mz_workspace');
+  }catch(e){return false;}
+}
+function handleAuthNav(){
+  window.location.href=isLoggedIn()?'dashboard.html':'login.html';
+}
+function updateAuthBtn(){
+  const btn=document.getElementById('nav-signin');
+  if(!btn)return;
+  const a=lang==='ar';
+  if(isLoggedIn()){
+    btn.textContent=a?'لوحتي':'Dashboard';
+    btn.title='Go to your dashboard';
+  }else{
+    btn.textContent=a?'تسجيل الدخول':'Sign In';
+    btn.title='Sign in to your account';
+  }
+}
+
 // ── INIT ──────────────────────────────────────────
 document.addEventListener('DOMContentLoaded',()=>{
   document.getElementById('in-cr').max=new Date().toISOString().split('T')[0];
   setOwn(100);applyLang();goTo('landing');
+  updateAuthBtn();
   document.getElementById('in-rev').addEventListener('input',updAudit);
   document.getElementById('in-unfiled').addEventListener('change',updPP);
 });
